@@ -19,10 +19,10 @@ declare type MediaItem = {
   vote_count: number
 }
 
-declare type ItemListProps = {
+declare type MediaListProps = {
   items: MediaItem[] | []
 }
 
-declare type ItemCardProps = {
+declare type MediaCardProps = {
   item: MediaItem
 }

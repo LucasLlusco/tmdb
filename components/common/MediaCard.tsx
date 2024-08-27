@@ -12,7 +12,7 @@ import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
 import { formatDate, formatUserScore, formatUserScoreColor } from '@/lib/utils'
 
 
-const ItemCard = ({item}: ItemCardProps) => {
+const MediaCard = ({item}: MediaCardProps) => {
 
   const progressValue = formatUserScore(item?.vote_average);
   const progresscolor = formatUserScoreColor(formatUserScore(item?.vote_average));
@@ -63,4 +63,4 @@ const ItemCard = ({item}: ItemCardProps) => {
   )
 }
 
-export default ItemCard
+export default MediaCard

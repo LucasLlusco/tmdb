@@ -26,7 +26,7 @@ export const formatUserScoreColor = (userScore:number) => {
     track: "#571435",
     bar: "#db2360"
   }
-
+  
   if(userScore >= 40) {
     colors.track = "#423d0f"
     colors.bar = "#d2d531"

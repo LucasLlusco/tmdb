@@ -26,6 +26,9 @@ export default function RootLayout({
       )}>
         <Navbar />
         {children}
+        <footer className="bg-black text-white px-6 py-8 text-center">
+          <p>Hecho con Next.js 14 por Lucas Llusco.</p>
+        </footer>
       </body>
     </html>
   );

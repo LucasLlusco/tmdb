@@ -1,5 +1,5 @@
 "use client"
-import { Search as SearchIcon, User as UserIcon, X as CloseIcon } from 'lucide-react'
+import { Search as SearchIcon, User as UserIcon, X as CloseIcon} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,17 +10,23 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
+import MobileNav from './MobileNav'
 
 const Navbar = () => {
-  const [searchBarOpen , setSearchBarOpen ] = useState(false);
+  const [searchBarOpen ,setSearchBarOpen] = useState(false);
 
   return (
     <header className='text-white bg-black'>
-      <div className="container flex justify-between py-4">
-        <nav className='flex gap-5 items-center'>
+      <div className="container flex justify-between items-center py-4">
+        <div className='flex sm:hidden'>
+          <MobileNav />
+        </div>
+        <nav className='flex items-center gap-5'>
           <h1 className='mr-2 text-xl font-bold'>TheMovieDB</h1>
-          <a href="/">Movies</a>
-          <a href="/">Tv series</a>
+          <div className="hidden gap-5 items-center sm:flex">
+            <a href="/">Movies</a>
+            <a href="/">Tv series</a>            
+          </div>            
         </nav>
         <div className='flex gap-5 items-center'>
           <DropdownMenu>

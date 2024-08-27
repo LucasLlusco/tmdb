@@ -1,14 +1,15 @@
 import React from 'react'
-import ItemCard from './ItemCard'
+import MediaCard from './MediaCard'
 
-const ItemList = ({items}:ItemListProps) => {
+
+const MediaList = ({items}:MediaListProps) => {
   return (
     <article className='flex flex-row gap-[10px] overflow-x-scroll'>
       {items.map((item:MediaItem) => (
-        <ItemCard key={item.id} item={item}  />   
+        <MediaCard key={item.id} item={item}  />   
       ))}
     </article>
   )
 }
 
-export default ItemList
+export default MediaList
