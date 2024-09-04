@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-hero {
+  background-image: url('/background-movies.jpg');
+}
 
 .circularProgress {
   position: relative;
@@ -30,12 +33,12 @@
   color: white;
 }
 
-.searchPreview-input {
+.searchBarPreview-input {
   /*border-radius: 30px !important;*/
   border: none !important;
 }
 
-.searchPreview-input:focus-visible {
+.searchBarPreview-input:focus-visible {
   --tw-ring-offset-width: 0px !important;
   --tw-ring-shadow: 0 0 #000 !important;
 }
