@@ -26,7 +26,6 @@ const TrendingPreview = () => {
   useEffect(() => {
     handleGetTrending(FILTERS[0].value);
   }, [])
-
   
   return (
     <section className='container my-8 px-6'>

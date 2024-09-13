@@ -27,9 +27,6 @@ const PopularPreview = () => {
     handleGetPopular(FILTERS[0].value);
   }, [])
 
-
-  
-
   return (
     <section className='container my-8 px-6'>
       <div className="flex gap-7 items-center mb-6 ">

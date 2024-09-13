@@ -11,9 +11,10 @@ import {
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import MobileNav from './MobileNav'
+import Link from 'next/link'
 
 const Navbar = () => {
-  const [searchBarOpen ,setSearchBarOpen] = useState(false);
+  const [searchBarOpen, setSearchBarOpen] = useState(false);
 
   return (
     <header className='text-white bg-black'>
@@ -22,7 +23,7 @@ const Navbar = () => {
           <MobileNav />
         </div>
         <nav className='flex items-center gap-5'>
-          <h1 className='mr-2 text-xl font-bold'>TheMovieDB</h1>
+          <h1 className='mr-2 text-xl font-bold'><Link href={"/"}>TheMovieDB</Link></h1>
           <div className="hidden gap-5 items-center sm:flex">
             <a href="/">Movies</a>
             <a href="/">Tv series</a>            
