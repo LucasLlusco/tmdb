@@ -11,6 +11,7 @@
   height: 40px;
   width: 40px;
   border-radius: 50%;
+  /* background: conic-gradient(#7d2ae8 134deg, #ededed 0deg); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +20,7 @@
 .circularProgress::before {
   content: "";
   position: absolute;
-  height: 32px;
+  height: 32px; /*40 y 40*/
   width: 32px;
   border-radius: 50%;
   background-color: black;
@@ -33,6 +34,7 @@
 }
 
 .searchBarPreview-input {
+  /*border-radius: 30px !important;*/
   border: none !important;
 }
 
@@ -69,7 +71,7 @@
 }
 
 .main-section {
-  flex: 3 1 0%; 
+  flex: 3 1 0%; /*1 1 0%  small devices */
 }
 
 @layer base {

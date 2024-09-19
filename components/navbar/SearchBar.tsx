@@ -19,12 +19,12 @@ const SearchBar = ({searchBarOpen, setSearchBarOpen} : searchBarProps) => {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    router.push(`/search/?query=${searchValue}`);
+    router.push(`/search/movie?query=${searchValue}`);
   }
 
   useEffect(() => {
 
-    if(pathname === "/search" ) { 
+    if(pathname.startsWith("/search")) {
       setSearchValue(searchParams.get("query")!); 
     } else { 
       setSearchValue(""); 
@@ -49,8 +49,6 @@ const SearchBar = ({searchBarOpen, setSearchBarOpen} : searchBarProps) => {
       </div>      
     )}
     </>
-
-
   )
 }
 

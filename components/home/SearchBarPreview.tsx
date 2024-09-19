@@ -11,7 +11,7 @@ const SearchBarPreview = () => {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`/search/?query=${searchValue}`);
+    router.push(`/search/movie?query=${searchValue}`);
 
   }
 
