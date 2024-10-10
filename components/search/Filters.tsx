@@ -1,7 +1,7 @@
 "use client"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { searchFilters } from "@/constants"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
 interface SearchFiltersProps {
@@ -12,12 +12,15 @@ interface SearchFiltersProps {
 
 const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
 
   const updateSearchParams = (type:string) => {
-    const searchParams = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams); 
+    params.set("page", "1"); 
 
-    const newPathname = `/search/${type}?${searchParams.toString()}`; 
-    router.push(newPathname); 
+    const newUrl = `/search/${type}?${params.toString()}`; 
+    router.replace(newUrl); 
   }
 
 

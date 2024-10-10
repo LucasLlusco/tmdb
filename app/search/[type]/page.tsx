@@ -2,6 +2,7 @@ import MediaList from '@/components/common/MediaList';
 import { getSearchedItems } from '@/lib/actions/search.actions';
 import React from 'react'
 import Filters from '@/components/search/Filters';
+import SearchPagination from '@/components/search/SearchPagination';
 
 interface SearchPageProps {
   params: {
@@ -9,23 +10,26 @@ interface SearchPageProps {
   }
   searchParams: {
     query: string,
-    page?: string 
+    page?: string
   }
 }
 
 const SearchPage = async ({searchParams, params}: SearchPageProps) => {
 
   const formattedParams = (type:string) => { 
-
-    return { 
+    return {
       type: params.type === type ? params.type : type, 
       query: searchParams.query,
-      page: searchParams.page || 1 
+      page: searchParams.page || 1
     }
   }
 
   const movieResults = await getSearchedItems(formattedParams("movie"));
   const tvResults = await getSearchedItems(formattedParams("tv"));
+
+  const currentPage = params.type === "movie" ? movieResults.page : tvResults.page;
+  const maxPage = params.type === "movie" ? movieResults.total_pages : tvResults.total_pages;
+
 
   return (
     <main className='container my-8 flex flex-row gap-5'>
@@ -45,6 +49,7 @@ const SearchPage = async ({searchParams, params}: SearchPageProps) => {
         {params.type === "tv" && movieResults?.results && (
           <MediaList items={tvResults.results} />
         )} */}
+        <SearchPagination currentPage={currentPage} maxPage={maxPage} />
       </section>
     </main>
   )
