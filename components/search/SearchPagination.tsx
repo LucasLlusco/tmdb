@@ -12,7 +12,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface PaginationProps {
-  currentPage: number,
+  currentPage: number, 
   maxPage: number
 }
 
@@ -28,20 +28,21 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
     last: 0
   });
 
-
   const pageNumbers = Array.from({length: maxPage}, (_, i) => i + 1);
-  const firstPage = pageNumbers[0];
+  const firstPage = pageNumbers[0]; 
   const lastPage = pageNumbers[pageNumbers.length -1]; 
   
   const handleNavigation = (newPage:number) => {
-    
     const params = new URLSearchParams(searchParams); 
     params.set("page", newPage.toString()); 
 
     const newUrl = `${pathname}?${params.toString()}`; 
-    console.log(newUrl);
-    router.replace(newUrl); 
+    router.replace(newUrl);
   }
+
+  useEffect(() => {
+    setCurrentPageItem(currentPage);
+  }, [searchParams.get("query")])
 
   useEffect(() => {
     let startIndex = currentPageItem -5; 
@@ -51,9 +52,9 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
       lastIndex = 9; 
     }
     const currentPageNumbers = pageNumbers.slice(startIndex, lastIndex); 
-    const firstEle = currentPageNumbers[0];
+    const firstEle = currentPageNumbers[0]; 
     const lastEle = currentPageNumbers[currentPageNumbers.length -1]; 
-
+ 
     if(!firstAndLastItem.first && !firstAndLastItem.last || currentPageItem === firstPage || currentPageItem === lastPage) { 
       setFirstAndLastItem({
         first: firstEle,
@@ -70,14 +71,16 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
       })
     }
 
-    if(currentPageItem === firstAndLastItem.first && firstAndLastItem.first != firstPage) { 
+    if(currentPageItem === firstAndLastItem.first && firstAndLastItem.first != firstPage) {
       let startIndex = firstAndLastItem.first - 5;
       let lastIndex = firstAndLastItem.first + 4; 
+
       if(startIndex < 1) { 
         startIndex = 0; 
         lastIndex = 9; 
       }
       
+
       const currentPageNumbers = pageNumbers.slice(startIndex, lastIndex); 
       const firstEle = currentPageNumbers[0]; 
       const lastEle = currentPageNumbers[currentPageNumbers.length -1]; 
@@ -88,7 +91,7 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
       })
     }
 
-  }, [currentPageItem])
+  }, [currentPageItem, searchParams.get("query")]) 
 
   const isPageInCurrentItems = (page:number) => {
     const index = currentPageItems.findIndex((pageItem) => pageItem === page);
@@ -97,7 +100,7 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
 
   
   return (
-    <Pagination>
+    <Pagination className='mt-6'>
       <PaginationContent>
         {currentPage > 1 && (
           <PaginationItem className="cursor-pointer">
