@@ -1,6 +1,6 @@
 "use client"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { searchFilters } from "@/constants"
+import { SEARCH_FILTERS } from "@/constants"
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
@@ -14,7 +14,6 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
   const router = useRouter();
   const searchParams = useSearchParams();
 
-
   const updateSearchParams = (type:string) => {
     const params = new URLSearchParams(searchParams); 
     params.set("page", "1"); 
@@ -23,12 +22,10 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
     router.replace(newUrl); 
   }
 
-
-
   return (
     <Tabs defaultValue={defaultType}>
       <TabsList className='tabsList-col'>
-        {searchFilters.map((filter) => (
+        {SEARCH_FILTERS.map((filter) => (
           <TabsTrigger 
             key={filter.value} 
             value={filter.value} 

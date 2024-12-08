@@ -1,19 +1,9 @@
 "use client"
-import { getPopular } from '@/lib/actions/movies.actions';
 import React, { useEffect, useState } from 'react'
-import ButtonGroup from './ButtonGroup';
-import MediaList from '../common/MediaList';
-
-const FILTERS = [
-  {
-    name: "Movies",
-    value: "movie"
-  },
-  {
-    name: "TV",
-    value: "tv"
-  }
-]
+import MediaList from '../shared/MediaList';
+import { getPopular } from '@/services/tmdb/shared';
+import { POPULAR_FILTERS } from '@/constants';
+import Filters from './Filters';
 
 const PopularPreview = () => {
   const [popularList, setPopularList] = useState([]);
@@ -24,14 +14,14 @@ const PopularPreview = () => {
   }
 
   useEffect(() => {
-    handleGetPopular(FILTERS[0].value);
+    handleGetPopular(POPULAR_FILTERS[0].value);
   }, [])
-
+  
   return (
     <section className='container my-8 px-6'>
       <div className="flex gap-7 items-center mb-6 ">
         <h3 className='text-xl'>What's popular</h3>
-        <ButtonGroup buttons={FILTERS} onClick={handleGetPopular} />
+        <Filters filters={POPULAR_FILTERS} onClick={handleGetPopular} defaultValue={POPULAR_FILTERS[0].value} />
       </div>
       {popularList && (
         <MediaList items={popularList} />

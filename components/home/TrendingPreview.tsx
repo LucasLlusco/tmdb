@@ -1,19 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import ButtonGroup from './ButtonGroup';
-import MediaList from '../common/MediaList';
-import { getTrending } from '@/lib/actions/movies.actions';
-
-const FILTERS = [
-  {
-    name: "Today",
-    value: "day"
-  },
-  {
-    name: "This week",
-    value: "week"
-  }
-]
+import MediaList from '../shared/MediaList';
+import { getTrending } from '@/services/tmdb/shared';
+import { TRENDING_FILTERS } from '@/constants';
+import Filters from './Filters';
 
 const TrendingPreview = () => {
   const [trendingList, setTrendingList] = useState([]);
@@ -24,14 +14,14 @@ const TrendingPreview = () => {
   }
 
   useEffect(() => {
-    handleGetTrending(FILTERS[0].value);
+    handleGetTrending(TRENDING_FILTERS[0].value);
   }, [])
   
   return (
     <section className='container my-8 px-6'>
       <div className="flex gap-7 items-center mb-6 ">
         <h3 className='text-xl'>Trending</h3>
-        <ButtonGroup buttons={FILTERS} onClick={handleGetTrending} />
+        <Filters filters={TRENDING_FILTERS} onClick={handleGetTrending} defaultValue={TRENDING_FILTERS[0].value} />
       </div>
       {trendingList && (
         <MediaList items={trendingList} />
