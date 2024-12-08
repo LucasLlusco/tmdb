@@ -1,19 +1,21 @@
-import { getSearchedItems } from '@/lib/actions/search.actions';
 import React from 'react'
-import MediaList from '../common/MediaList';
+import MediaList from '../shared/MediaList';
 import SearchPagination from './SearchPagination';
+import { getSearchedItems } from '@/services/tmdb/shared';
 
 interface ResultsListProps {
-  params: {
+  searchParams:{
     type: string,
-    query: string,
-    page: number
+    params: {
+      query: string,
+      page: number
+    }    
   }
 }
 
 
-const ResultsList = async ({params}:ResultsListProps) => {
-  const results = await getSearchedItems(params);
+const ResultsList = async ({searchParams}:ResultsListProps) => {
+  const results = await getSearchedItems(searchParams);
 
   const currentPage = results.page;
   const maxPage = results.total_pages;
@@ -26,7 +28,7 @@ const ResultsList = async ({params}:ResultsListProps) => {
         <SearchPagination currentPage={currentPage} maxPage={maxPage} />
       </>
     ) : (
-      <p>There are no {params.type === "movie" ? "movies" : "TV shows"} that matched your query.</p>
+      <p>There are no {searchParams.type === "movie" ? "movies" : "TV shows"} that matched your query.</p>
     )}
     </>
   )
