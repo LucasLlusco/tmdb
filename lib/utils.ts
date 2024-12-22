@@ -37,3 +37,15 @@ export const formatUserScoreColor = (userScore:number) => {
   }
   return colors;
 }
+
+export const formatYear = (date:string) => {
+  const newDate = new Date(date);
+  const formattedYear = newDate.getFullYear(); 
+  return formattedYear;
+}
+
+export const formatRuntime = (runtime: number) => { 
+  const hours = Math.floor(runtime / 60); 
+  const minutes = runtime % 60; 
+  return {hours, minutes};
+}

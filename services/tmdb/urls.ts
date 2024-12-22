@@ -6,7 +6,7 @@ export const tmdbUrls = {
     "search": (type:string) => `search/${type}`,
   },
   movies: {
-    "" : ""
+    "byId" : (id:string) => `movie/${id}`,
   },
   tv: {
     "" : ""
