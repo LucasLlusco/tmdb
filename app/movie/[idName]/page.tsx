@@ -1,6 +1,8 @@
 import MovieCast from '@/components/movie/MovieCast';
 import MovieInfo from '@/components/movie/MovieInfo';
 import MovieMedia from '@/components/movie/MovieMedia';
+import MovieRecommendations from '@/components/movie/MovieRecommendations';
+import { Separator } from '@/components/ui/separator';
 import { getMovieById } from '@/services/tmdb/movies';
 import React from 'react'
 
@@ -19,7 +21,10 @@ const MoviePage = async ({params}: moviePageProps) => {
       <MovieInfo movie={movie} />
       <MovieCast movieId={id} />
       <MovieMedia movieId={id} />
-      <section>RELATED</section>
+      <div className="container my-8 px-6">
+        <Separator />
+      </div>
+      <MovieRecommendations movieId={id} />
     </main>
   )
 }

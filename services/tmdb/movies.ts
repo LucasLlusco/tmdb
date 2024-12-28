@@ -41,3 +41,13 @@ export const getMovieVideosById = async (id:string) => {
     console.log(error)
   }
 }
+
+export const getMovieRecommendationsById = async (id:string) => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.movies.recommendationsById(id));
+    const data = response.data; 
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}
