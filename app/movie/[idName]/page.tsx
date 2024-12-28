@@ -1,4 +1,6 @@
+import MovieCast from '@/components/movie/MovieCast';
 import MovieInfo from '@/components/movie/MovieInfo';
+import MovieMedia from '@/components/movie/MovieMedia';
 import { getMovieById } from '@/services/tmdb/movies';
 import React from 'react'
 
@@ -15,8 +17,8 @@ const MoviePage = async ({params}: moviePageProps) => {
   return (
     <main>
       <MovieInfo movie={movie} />
-      <section>CAST</section>
-      <section>MEDIA</section>
+      <MovieCast movieId={id} />
+      <MovieMedia movieId={id} />
       <section>RELATED</section>
     </main>
   )
