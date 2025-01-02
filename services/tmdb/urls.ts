@@ -12,7 +12,11 @@ export const tmdbUrls = {
     "videosById": (id:string) => `movie/${id}/videos`,
     "recommendationsById": (id:string) => `movie/${id}/recommendations`,
   },
-  tv: {
-    "" : ""
+  tvShows: {
+    "byId" : (id:string) => `tv/${id}`,
+    "creditsById":(id:string) => `tv/${id}/credits`,
+    "imagesById": (id:string) => `tv/${id}/images`,
+    "videosById": (id:string) => `tv/${id}/videos`,
+    "recommendationsById": (id:string) => `tv/${id}/recommendations`,
   }
 }
