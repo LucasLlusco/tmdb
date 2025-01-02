@@ -45,12 +45,13 @@ const MovieMedia = async ({movieId}:MovieMediaProps) => {
         <TabsContent value="backdrops" className='media-list'>
           <div className="flex flex-row">
             {backdrops.slice(0,6).map((image) => (
-              <Image 
+              <Image
+                key={image.file_path}
                 src={`https://image.tmdb.org/t/p/w533_and_h300_bestv2/${image.file_path}`} 
-                alt={image.file_path} 
+                alt={image.file_path}
                 width={529}
-                height={300}     
-                className='h-[300px]'             
+                height={300}
+                className='h-[300px]'
               />
             ))}
           </div>
@@ -58,12 +59,13 @@ const MovieMedia = async ({movieId}:MovieMediaProps) => {
         <TabsContent value="posters" className='media-list'>
           <div className="flex flex-row">
             {posters.slice(0,7).map((image) => (
-              <Image 
-                src={`https://image.tmdb.org/t/p/w500/${image.file_path}`} 
-                alt={image.file_path} 
+              <Image
+                key={image.file_path}
+                src={`https://image.tmdb.org/t/p/w500/${image.file_path}`}
+                alt={image.file_path}
                 width={200}
-                height={300}   
-                className='h-[300px]'               
+                height={300}
+                className='h-[300px]'
               />
             ))}
           </div>

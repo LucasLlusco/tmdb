@@ -52,7 +52,7 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
               <p>Budget: ${movie.budget.toLocaleString()}</p>
               <p>Revenue: ${movie.revenue.toLocaleString()}</p>
               <p>Genres: {movie.genres?.map((genre) => 
-                <span>{genre.name}</span>
+                <span key={genre.id}>{genre.name}</span>
               ).reduce((prev, curr):any => [prev, ", ", curr])}
               </p>
               <div className='flex gap-2 items-center'>
