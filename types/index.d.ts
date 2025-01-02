@@ -22,11 +22,13 @@ declare type MediaItem = {
 declare type MediaListProps = {
   items: MediaItem[] | []
   direction?: "row" | "column"
+  itemType?: string
 }
 
 declare type MediaCardProps = {
   item: MediaItem
   direction?: "row" | "column"
+  itemType?: string
 }
 
 declare type Movie = {

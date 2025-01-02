@@ -13,7 +13,6 @@ interface ResultsListProps {
   }
 }
 
-
 const ResultsList = async ({searchParams}:ResultsListProps) => {
   const results = await getSearchedItems(searchParams);
 
@@ -24,7 +23,7 @@ const ResultsList = async ({searchParams}:ResultsListProps) => {
     <>
     {results.total_results > 0 ? (
       <>
-        <MediaList items={results.results} direction="column" />
+        <MediaList items={results.results} direction="column" itemType={searchParams.type} />
         <SearchPagination currentPage={currentPage} maxPage={maxPage} />
       </>
     ) : (
