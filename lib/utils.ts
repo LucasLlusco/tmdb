@@ -20,7 +20,6 @@ export const formatUserScore = (userScore:number) => {
   return Number(formattedUserScore.replace(",", "").replace("%", ""));
 }
 
-
 export const formatUserScoreColor = (userScore:number) => {
   let colors = {
     track: "#571435",
@@ -48,4 +47,15 @@ export const formatRuntime = (runtime: number) => {
   const hours = Math.floor(runtime / 60); 
   const minutes = runtime % 60; 
   return {hours, minutes};
+}
+
+export const isDatePassed = (date: string) => { 
+  const currentDate = new Date();
+  const date1 = new Date(date);
+
+  if(date1 < currentDate) {
+    return true
+  } else {
+    return false;
+  }
 }

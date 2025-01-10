@@ -160,16 +160,7 @@ declare type TvShow = {
   poster_path: string,
   //production_companies
   //production_countries
-  seasons: [{
-    air_date: string,
-    episode_count: number,
-    id: number,
-    name: string,
-    overview: string,
-    poster_path: string,
-    season_number: number,
-    vote_average: number
-  }],
+  seasons: TvShowSeason[],
   spoken_languages: [{
     english_name: string,
     iso_639_1: string,
@@ -180,4 +171,15 @@ declare type TvShow = {
   type: string,
   vote_average: number
   vote_count: number
+}
+
+declare type TvShowSeason = {
+  air_date: string,
+  episode_count: number,
+  id: number,
+  name: string,
+  overview: string,
+  poster_path: string,
+  season_number: number,
+  vote_average: number
 }

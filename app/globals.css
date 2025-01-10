@@ -125,6 +125,14 @@
   border-radius: 8px;
 }
 
+.link-white:hover {
+  color: #ffffffb3;;
+}
+
+.link-black:hover {
+  color: #00000080;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
