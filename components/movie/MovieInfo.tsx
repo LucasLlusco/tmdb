@@ -1,4 +1,4 @@
-import { formatDate, formatRuntime, formatUserScore, formatUserScoreColor, formatYear } from '@/lib/utils';
+import { getFormattedDate, getRuntime, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
 import Image from 'next/image';
 import React from 'react'
 import { Separator } from '../ui/separator';
@@ -12,8 +12,8 @@ interface MovieInfoProps {
 }
 
 const MovieInfo = ({movie}: MovieInfoProps) => {
-  const progressValue = formatUserScore(movie?.vote_average);
-  const progresscolor = formatUserScoreColor(formatUserScore(movie?.vote_average));
+  const progressValue = getUserScore(movie?.vote_average);
+  const progresscolor = getUserScoreColor(getUserScore(movie?.vote_average));
   const circularProgressStyles = {
     background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
   }
@@ -44,11 +44,11 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
           <div className="flex flex-col gap-4 justify-center pl-5">
             <div className="flex flex-row gap-2 items-end">
               <h2 className='text-3xl font-bold'>{movie.title}</h2>
-              <span className='text-2xl opacity-70'>({formatYear(movie.release_date)})</span> 
+              <span className='text-2xl opacity-70'>({getYear(movie.release_date)})</span> 
             </div>
             <div className="flex flex-col">
-              <p>Realease date: {formatDate(movie.release_date)}</p>
-              <p>Runtime: {formatRuntime(movie.runtime).hours}h {formatRuntime(movie.runtime).minutes}min</p>
+              <p>Realease date: {getFormattedDate(movie.release_date)}</p>
+              <p>Runtime: {getRuntime(movie.runtime).hours}h {getRuntime(movie.runtime).minutes}min</p>
               <p>Budget: ${movie.budget.toLocaleString()}</p>
               <p>Revenue: ${movie.revenue.toLocaleString()}</p>
               <p>Genres: {movie.genres?.map((genre) => 

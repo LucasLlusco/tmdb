@@ -5,13 +5,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const formatDate = (date:string) => {
+export const getFormattedDate = (date:string, fullMonth:boolean = true) => {
   const newDate = new Date(date);
-  const formattedDate = newDate.toLocaleDateString('en-GB'); 
-  return formattedDate;
+
+  const options: Intl.DateTimeFormatOptions = { 
+    year: 'numeric', 
+    month: fullMonth ? 'long' : 'short',
+    day: 'numeric' 
+  };
+  
+  return new Intl.DateTimeFormat('en-US', options).format(newDate);
 }
 
-export const formatUserScore = (userScore:number) => {
+export const getUserScore = (userScore:number) => {
   const formattedUserScore = new Intl.NumberFormat("default", {
     style: "percent",
     minimumFractionDigits: 1,
@@ -20,7 +26,7 @@ export const formatUserScore = (userScore:number) => {
   return Number(formattedUserScore.replace(",", "").replace("%", ""));
 }
 
-export const formatUserScoreColor = (userScore:number) => {
+export const getUserScoreColor = (userScore:number) => {
   let colors = {
     track: "#571435",
     bar: "#db2360"
@@ -37,13 +43,13 @@ export const formatUserScoreColor = (userScore:number) => {
   return colors;
 }
 
-export const formatYear = (date:string) => {
+export const getYear = (date:string) => {
   const newDate = new Date(date);
   const formattedYear = newDate.getFullYear(); 
   return formattedYear;
 }
 
-export const formatRuntime = (runtime: number) => { 
+export const getRuntime = (runtime: number) => { 
   const hours = Math.floor(runtime / 60); 
   const minutes = runtime % 60; 
   return {hours, minutes};

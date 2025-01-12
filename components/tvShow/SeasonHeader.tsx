@@ -1,4 +1,4 @@
-import { formatYear } from '@/lib/utils'
+import { getYear } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,7 +7,6 @@ import React from 'react'
 interface SeasonHeaderProps {
   basePathname: string,
   tvShow: TvShow
-
 }
 
 const SeasonHeader = ({basePathname, tvShow}: SeasonHeaderProps) => {
@@ -41,7 +40,7 @@ const SeasonHeader = ({basePathname, tvShow}: SeasonHeaderProps) => {
                   {tvShow.name}
                 </Link>
               </h2>
-              <span className='text-2xl opacity-70'>({formatYear(tvShow.first_air_date)})</span>             
+              <span className='text-2xl opacity-70'>({getYear(tvShow.first_air_date)})</span>             
             </div>
             <Link href={basePathname} className='w-fit flex items-center gap-[5px] font-bold text-gray-400 link-white'>
               <ArrowLeft className='w-[17px] h-[17px]' />

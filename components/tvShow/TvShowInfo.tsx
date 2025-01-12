@@ -1,4 +1,4 @@
-import { formatDate, formatRuntime, formatUserScore, formatUserScoreColor, formatYear } from '@/lib/utils';
+import { getFormattedDate, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
 import Image from 'next/image';
 import React from 'react'
 import { Separator } from '../ui/separator';
@@ -13,8 +13,8 @@ interface TvShowInfoProps {
 }
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
-  const progressValue = formatUserScore(tvShow?.vote_average);
-  const progresscolor = formatUserScoreColor(formatUserScore(tvShow?.vote_average));
+  const progressValue = getUserScore(tvShow?.vote_average);
+  const progresscolor = getUserScoreColor(getUserScore(tvShow?.vote_average));
   const circularProgressStyles = {
     background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
   }
@@ -45,13 +45,13 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
           <div className="flex flex-col gap-4 justify-center pl-5">
             <div className="flex flex-row gap-2 items-end">
               <h2 className='text-3xl font-bold'>{tvShow.name}</h2>
-              <span className='text-2xl opacity-70'>({formatYear(tvShow.first_air_date)})</span> 
+              <span className='text-2xl opacity-70'>({getYear(tvShow.first_air_date)})</span> 
             </div>
             <div className="flex flex-col">
               <p>Seasons: {tvShow.number_of_seasons}</p>
               <p>Episodes {tvShow.number_of_episodes}</p>
-              <p>First air date: {formatDate(tvShow.first_air_date)}</p>
-              <p>Last air date: {formatDate(tvShow.last_air_date)}</p>  
+              <p>First air date: {getFormattedDate(tvShow.first_air_date)}</p>
+              <p>Last air date: {getFormattedDate(tvShow.last_air_date)}</p>  
               <p>Genres: {tvShow.genres?.map((genre) => 
                 <span key={genre.id}>{genre.name}</span>
               ).reduce((prev, curr):any => [prev, ", ", curr])}
@@ -67,7 +67,6 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
                   </div>                   
               </div>
             </div>
-
             <div className="flex flex-col">
               <p className='opacity-70 italic'>{tvShow.tagline}</p>
               <h4 className='font-bold'>Overview</h4>
@@ -107,7 +106,6 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
         </div>
       </div>      
     </section>
-
   )
 }
 

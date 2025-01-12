@@ -9,12 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
-import { cn, formatDate, formatUserScore, formatUserScoreColor } from '@/lib/utils'
+import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
 
 const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
 
-  const progressValue = formatUserScore(item?.vote_average);
-  const progresscolor = formatUserScoreColor(formatUserScore(item?.vote_average));
+  const progressValue = getUserScore(item?.vote_average);
+  const progresscolor = getUserScoreColor(getUserScore(item?.vote_average));
   const circularProgressStyles = {
     background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
   }
@@ -26,11 +26,11 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
     mediaType = item.media_type === "movie" ? "movie" : "tv";
   }
   const itemName = item.name ? item.name : item.title;
-  const url = `/${mediaType}/${item.id}-${itemName}`;
+  const itemPathname = `/${mediaType}/${item.id}-${itemName}`;
 
   return (
     <div className={cn('flex', direction === "column" ? "flex-row gap-[10px] card-boxshadow rounded-[5px]" : "flex-col relative")}>
-      <Link href={url} className={cn(direction === "column" ? "h-[141px] w-[94px] min-w-[94px]" : "h-[225px] w-[150px]")}>
+      <Link href={itemPathname} className={cn(direction === "column" ? "h-[141px] w-[94px] min-w-[94px]" : "h-[225px] w-[150px]")}>
         <Image 
           src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} 
           alt={item.name! || item.title!} 
@@ -69,8 +69,8 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
             {item?.name}
           </p>
           <span className='text-xs text-gray-500'>
-            {item?.release_date && formatDate(item?.release_date!)}
-            {item?.first_air_date && formatDate(item?.first_air_date!)}
+            {item?.release_date && getFormattedDate(item?.release_date!, false)}
+            {item?.first_air_date && getFormattedDate(item?.first_air_date!, false)}
           </span>          
         </div>
         {direction === "column" && (
