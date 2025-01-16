@@ -1,4 +1,4 @@
-import SeasonCard from '@/components/tvShow/SeasonCard';
+import SeasonMediaCard from '@/components/tvShow/SeasonMediaCard';
 import SeasonHeader from '@/components/tvShow/SeasonHeader';
 import { getTvShowById } from '@/services/tmdb/tvShows';
 import React from 'react'
@@ -17,11 +17,19 @@ const SeasonsPage = async({params} : SeasonsPageProps) => {
 
   return (
     <main>
-      <SeasonHeader basePathname={basePathname} tvShow={tvShow} />
+      <SeasonHeader 
+        basePathname={basePathname}
+        name={tvShow.name}
+        date={tvShow.first_air_date}
+        image={tvShow.poster_path}
+        bgImg={tvShow.backdrop_path}
+        backLinkPathname={basePathname}
+        backLinkText='Back to main'
+      />
       <section className='container py-4'>
         <article className='flex flex-col gap-[14px]'>
           {tvShow.seasons.map((season) => (
-            <SeasonCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />
+            <SeasonMediaCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />
           ))}          
         </article>
       </section>

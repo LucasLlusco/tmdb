@@ -51,3 +51,13 @@ export const getTvShowRecommendationsById = async (id:string) => {
     console.log(error)
   }
 }
+
+export const getTvShowSeasonById = async (id:string, season_number:string) => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.tvShows.seasonById(id, season_number));
+    const data = response.data; 
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}

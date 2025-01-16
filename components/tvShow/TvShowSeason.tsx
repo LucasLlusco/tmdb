@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import SeasonCard from './SeasonCard'
+import SeasonMediaCard from './SeasonMediaCard'
 import { isDatePassed } from '@/lib/utils'
 
 interface TvShowSeasonProps {
@@ -23,7 +23,7 @@ const TvShowSeason = ({tvShow, basePathname}: TvShowSeasonProps) => {
       <h3 className='text-xl mb-6'>
         {isLastSeason ? "Last Season" : "Current Season"}
       </h3>
-      <SeasonCard season={lastSeason} basePathname={basePathname} tvShowName={tvShow.name} />
+      <SeasonMediaCard season={lastSeason} basePathname={basePathname} tvShowName={tvShow.name} />
       <p className="mt-6">
         <Link href={`${basePathname}/seasons`} className='link-black'>
           View All Seasons

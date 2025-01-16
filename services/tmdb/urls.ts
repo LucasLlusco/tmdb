@@ -18,5 +18,6 @@ export const tmdbUrls = {
     "imagesById": (id:string) => `tv/${id}/images`,
     "videosById": (id:string) => `tv/${id}/videos`,
     "recommendationsById": (id:string) => `tv/${id}/recommendations`,
+    "seasonById": (id:string, season_number: string) => `tv/${id}/season/${season_number}`,
   }
 }
