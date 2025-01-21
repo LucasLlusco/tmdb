@@ -26,7 +26,12 @@ const SeasonsPage = async({params} : SeasonsPageProps) => {
         backLinkPathname={basePathname}
         backLinkText='Back to main'
       />
+      <section className='container py-4 text-[14px]'>
+        <h3 className='text-xl mb-1 font-bold'>Overview</h3>
+        <p>{tvShow.overview}</p>
+      </section>
       <section className='container py-4'>
+        <h3 className='text-xl mb-6 font-bold'>Seasons <span className='font-normal'>{tvShow.number_of_seasons}</span></h3>
         <article className='flex flex-col gap-[14px]'>
           {tvShow.seasons.map((season) => (
             <SeasonMediaCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />

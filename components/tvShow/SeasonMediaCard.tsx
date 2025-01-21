@@ -31,7 +31,7 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
       <div className={"flex flex-col py-[5px]"}>
         <p className='text-base font-bold flex gap-2'>
           {episode && (
-            <span>{episode.episode_number}</span>
+            <span className='font-normal'>{episode.episode_number}</span>
           )}
           <Link href={seasonPathname} className='link-black'>
             {season?.name}
