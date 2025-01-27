@@ -23,20 +23,19 @@ const SearchBar = ({searchBarOpen, setSearchBarOpen} : searchBarProps) => {
   }
 
   useEffect(() => {
-
     if(pathname.startsWith("/search")) {
       setSearchValue(searchParams.get("query")!); 
-    } else { 
-      setSearchValue(""); 
-      setSearchBarOpen(false); 
+    } else {
+      setSearchValue("");
+      setSearchBarOpen(false);
     }
   },[pathname, searchParams]); 
 
   return (
     <>
     {searchBarOpen && (
-      <div className='bg-white'>
-        <form className='container py-1 flex items-center' onSubmit={handleSearch}>
+      <div className='bg-white card-boxshadow'>
+        <form className='container !py-1 flex items-center' onSubmit={handleSearch}>
           <SearchIcon className='text-black' />
           <Input 
             type="search" 

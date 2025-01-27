@@ -10,8 +10,8 @@ const TvShowCast = async ({tvShowId}: TvShowCastProps) => {
   const tvShowCredits = await getTvShowCreditsById(tvShowId);  
 
   return (
-    <section className='container my-8 px-6'>
-      <h3 className='text-xl mb-6'>Top billed cast</h3>
+    <section className='container'>
+      <h3 className='section-title'>Top billed cast</h3>
       <PersonList cast={tvShowCredits.cast} />
     </section>
   )

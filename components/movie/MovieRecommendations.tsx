@@ -10,8 +10,8 @@ const MovieRecommendations = async ({movieId}:MovieRecommendationsProps) => {
   const recommendedMovies = await getMovieRecommendationsById(movieId);
 
   return (
-    <section className='container my-8 px-6'>
-      <h3 className='text-xl mb-6'>Recommendations</h3>
+    <section className='container'>
+      <h3 className='section-title'>Recommendations</h3>
       <MediaList
         items={recommendedMovies.results} 
       />

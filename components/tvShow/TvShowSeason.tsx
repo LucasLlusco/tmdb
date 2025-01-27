@@ -19,8 +19,8 @@ const TvShowSeason = ({tvShow, basePathname}: TvShowSeasonProps) => {
   const isLastSeason = tvShow.status === "Ended" ? true : false;
 
   return (
-    <section className='container my-8'>
-      <h3 className='text-xl mb-6'>
+    <section className='container'>
+      <h3 className='section-title'>
         {isLastSeason ? "Last Season" : "Current Season"}
       </h3>
       <SeasonMediaCard season={lastSeason} basePathname={basePathname} tvShowName={tvShow.name} />

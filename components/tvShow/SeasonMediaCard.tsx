@@ -1,8 +1,9 @@
+"use client"
 import { getFormattedDate, getRuntime, getUserScore, getYear, isDatePassed } from '@/lib/utils'
 import { StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
 interface SeasonMediaCardProps {
   season?: TvShowSeason,
@@ -12,20 +13,24 @@ interface SeasonMediaCardProps {
 }
 
 const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMediaCardProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${season?.poster_path || episode?.still_path}`);
+  const imgSrcAlt = "/default-media-img.svg";
+  
   const seasonPathname = season ? `${basePathname}/season/${season.season_number}` : "";
 
-  const height = season ? 141 : 127;
-  const width = season ? 94 : 227;
+  const height = season ? "141" : "127";
+  const width = season ? "94" : "227";
 
   return (
     <div className='flex flex-row gap-[10px] card-boxshadow rounded-[5px]'>
       <Link href={seasonPathname} className={`h-[${height}px] w-[${width}px] min-w-[${width}px]`}>
         <Image 
-          src={`https://image.tmdb.org/t/p/w500/${season?.poster_path || episode?.still_path}`} 
+          src={imgSrc}
           alt={season?.name! || episode?.name!} 
-          className={"mediaCard-radius"}
+          className={`mediaCard-radius bg-[#dbdbdb] max-w-none h-[${height}px]`}
           width={width}
-          height={height} 
+          height={height}
+          onError={() => setImgSrc(imgSrcAlt)}
         />
       </Link>   
       <div className={"flex flex-col py-[5px]"}>

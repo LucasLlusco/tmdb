@@ -19,8 +19,8 @@ const MovieMedia = async ({movieId}:MovieMediaProps) => {
   const posters: Image[] = images.posters;
 
   return (
-    <section className='container my-8 px-6'>
-      <h3 className='text-xl mb-6'>Media images & videos</h3>
+    <section className='container'>
+      <h3 className='section-title'>Media images & videos</h3>
       <Tabs defaultValue="trailers">
         <TabsList>
           <TabsTrigger value="trailers">Trailers {trailers.length}</TabsTrigger>

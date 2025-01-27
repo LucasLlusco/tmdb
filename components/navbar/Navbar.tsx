@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <header className='text-white bg-black'>
-      <div className="container flex justify-between items-center py-4">
+      <div className="container flex justify-between items-center !py-4 ">
         <div className='flex sm:hidden'>
           <MobileNav />
         </div>

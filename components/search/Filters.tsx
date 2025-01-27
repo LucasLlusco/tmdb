@@ -16,14 +16,14 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
 
   const updateSearchParams = (type:string) => {
     const params = new URLSearchParams(searchParams); 
-    params.set("page", "1"); 
+    params.set("page", "1");
 
-    const newUrl = `/search/${type}?${params.toString()}`; 
+    const newUrl = `/search/${type}?${params.toString()}`;
     router.replace(newUrl); 
   }
 
   return (
-    <Tabs defaultValue={defaultType}>
+    <Tabs defaultValue={defaultType} className="mt-1">
       <TabsList className='tabsList-col'>
         {SEARCH_FILTERS.map((filter) => (
           <TabsTrigger 

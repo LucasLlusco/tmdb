@@ -1,16 +1,21 @@
+"use client"
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 
 const PersonCard = ({person} : PersonCardProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${person.profile_path}`);
+  const imgSrcAlt = "/default-person-img.svg";
+   
   return (
     <div className='flex flex-col'>
       <div className="h-[225px] w-[150px]">
         <Image 
-          src={`https://image.tmdb.org/t/p/w500/${person.profile_path}`} 
+          src={imgSrc} 
           alt={person.name! || person.original_name!} 
-          className='h-full w-full rounded-[8px]'
+          className='h-full w-full rounded-[8px] bg-[#dbdbdb]'
           width={150}
           height={225} 
+          onError={() => setImgSrc(imgSrcAlt)}
         />
       </div>
       <div className="w-[150px] pt-[10px] px-[5px] pb-[10px]">

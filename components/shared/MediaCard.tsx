@@ -1,6 +1,7 @@
+"use client"
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,8 @@ import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
 
 const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${item.poster_path}`);
+  const imgSrcAlt = "/default-media-img.svg";
 
   const progressValue = getUserScore(item?.vote_average);
   const progresscolor = getUserScoreColor(getUserScore(item?.vote_average));
@@ -28,15 +31,19 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
   const itemName = item.name ? item.name : item.title;
   const itemPathname = `/${mediaType}/${item.id}-${itemName}`;
 
+  const height = direction === "column" ? "141" : "225";
+  const width = direction === "column" ? "94" : "150";
+
   return (
     <div className={cn('flex', direction === "column" ? "flex-row gap-[10px] card-boxshadow rounded-[5px]" : "flex-col relative")}>
-      <Link href={itemPathname} className={cn(direction === "column" ? "h-[141px] w-[94px] min-w-[94px]" : "h-[225px] w-[150px]")}>
+      <Link href={itemPathname} className={`h-[${height}px] w-[${width}px] min-w-[${width}px]`}>
         <Image 
-          src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} 
+          src={imgSrc} 
           alt={item.name! || item.title!} 
-          className={cn('h-full w-full', direction === "column" ? "mediaCard-radius " : "rounded-[8px]")}
-          width={150}
-          height={225} 
+          className={cn('h-full w-full bg-[#dbdbdb]', direction === "column" ? "mediaCard-radius " : "rounded-[8px]")}
+          width={width}
+          height={height}
+          onError={() => setImgSrc(imgSrcAlt)}
         />
       </Link>
       {direction != "column" && (
@@ -63,11 +70,11 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
             </div>
           </div>          
         )}
-        <div>
-          <p className='text-base font-bold'>
+        <div className={cn("flex flex-col", direction === "column" ? "gap-[2px]" : "gap-[4px]")}>
+          <Link href={itemPathname} className='link-black font-bold w-fit leading-tight'>
             {item?.title}
             {item?.name}
-          </p>
+          </Link>
           <span className='text-xs text-gray-500'>
             {item?.release_date && getFormattedDate(item?.release_date!, false)}
             {item?.first_air_date && getFormattedDate(item?.first_air_date!, false)}

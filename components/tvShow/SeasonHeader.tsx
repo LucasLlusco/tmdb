@@ -1,8 +1,9 @@
+"use client"
 import { getYear } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
 interface SeasonHeaderProps {
   basePathname?: string,
@@ -15,6 +16,8 @@ interface SeasonHeaderProps {
 }
 
 const SeasonHeader = ({basePathname, name, date, image, bgImg, backLinkPathname, backLinkText}: SeasonHeaderProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${image}`);
+  const imgSrcAlt = "/default-media-img.svg";
 
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${bgImg})`,
@@ -29,14 +32,15 @@ const SeasonHeader = ({basePathname, name, date, image, bgImg, backLinkPathname,
   return (
     <section style={backgroundStyles}>
       <div style={backgroundOverlayStyles}>
-        <div className="container py-4 flex flex-row gap-[10px] items-center text-white">
+        <div className="container flex flex-row gap-[10px] items-center text-white">
           <Link href={basePathname ? basePathname : ""}>
             <Image 
-              src={`https://image.tmdb.org/t/p/w500/${image}`} 
+              src={imgSrc} 
               alt={name} 
-              className={"rounded-[5px]"}
+              className={"rounded-[5px] bg-[#dbdbdb]"}
               width={58}
-              height={87}   
+              height={87}
+              onError={() => setImgSrc(imgSrcAlt)} 
             />            
           </Link>
           <div className="flex flex-col gap-2">

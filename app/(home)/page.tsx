@@ -4,11 +4,11 @@ import TrendingPreview from '@/components/home/TrendingPreview'
 import React from 'react'
 
 const Home = async () => {
-
+  
   return (
     <main>
-      <section className={"py-16 text-white bg-hero"}>
-        <div className='container px-6'>
+      <section className={"py-8 text-white bg-hero"}>
+        <div className='container'>
           <h2 className='text-[50px] font-bold'>Welcome.</h2>
           <h3 className='text-[32px]'>Millions of movies, TV shows to discover. Explore now.</h3>   
           <SearchBarPreview /> 

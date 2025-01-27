@@ -1,6 +1,7 @@
+"use client"
 import { getFormattedDate, getRuntime, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
 import Image from 'next/image';
-import React from 'react'
+import React, { useState } from 'react'
 import { Separator } from '../ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
@@ -12,6 +13,9 @@ interface MovieInfoProps {
 }
 
 const MovieInfo = ({movie}: MovieInfoProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${movie.poster_path}`);
+  const imgSrcAlt = "/default-media-img.svg";
+    
   const progressValue = getUserScore(movie?.vote_average);
   const progresscolor = getUserScoreColor(getUserScore(movie?.vote_average));
   const circularProgressStyles = {
@@ -31,15 +35,16 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
   return (
     <section style={backgroundStyles}>
       <div style={backgroundOverlayStyles}>
-        <div className="flex flex-row container py-8 text-white">
+        <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
             <Image
-              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} 
+              src={imgSrc} 
               alt={movie.title} 
-              className='rounded-[8px] max-w-none'
+              className='rounded-[8px] max-w-none bg-[#dbdbdb]'
               width={300}
-              height={450} 
-            />
+              height={450}
+              onError={() => setImgSrc(imgSrcAlt)}
+              />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
             <div className="flex flex-row gap-2 items-end">
@@ -66,7 +71,6 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
                   </div>                   
               </div>
             </div>
-
             <div className="flex flex-col">
               <p className='opacity-70 italic'>{movie.tagline}</p>
               <h4 className='font-bold'>Overview</h4>
@@ -88,7 +92,6 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
                   <DropdownMenuItem className='flex items-center gap-2'>Watchlist 3</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-    
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

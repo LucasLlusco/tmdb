@@ -20,7 +20,7 @@ const Filters = ({filters, onClick, defaultValue}: FiltersProps) => {
   }
 
   return (
-    <Tabs defaultValue={defaultValue}>
+    <Tabs defaultValue={defaultValue} className='mb-6'>
       <TabsList>
         {filters.map((filter:FilterOption) => (
           <TabsTrigger 

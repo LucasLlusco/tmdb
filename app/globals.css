@@ -133,6 +133,18 @@
   color: #00000080;
 }
 
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

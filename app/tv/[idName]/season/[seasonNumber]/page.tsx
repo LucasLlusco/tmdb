@@ -33,29 +33,29 @@ const SeasonPage = async({params}: SeasonPageProps) => {
         backLinkPathname={backLinkPathname}
         backLinkText='Back to seasons list'
       />
-      <div className='container py-4'>
+      <div className='container !py-4'>
         <SeasonPagination currentSeason={season.season_number} totalSeasons={tvShow.number_of_seasons} basePathname={basePathname} />
         <Separator />
       </div>
-      <section className='container py-4 text-[14px]'>
+      <section className='container text-[14px] !py-4'>
         {!isDatePassed(season.air_date) ? (
           <p>Season {season.season_number} of {tvShow.name} is set to premiere on {getFormattedDate(season.air_date!)}</p>
         ) : (
           <>
-            <h3 className='text-xl mb-1 font-bold'>Overview</h3>
+            <h3 className='section-title !mb-1'>Overview</h3>
             <p>{season.overview}</p>
           </>
         )}
       </section>
-      <section className='container py-4'>
-        <h3 className='text-xl mb-6 font-bold'>Episodes <span className='font-normal'>{season.episodes.length}</span></h3>
+      <section className='container'>
+        <h3 className='section-title'>Episodes <span className='font-normal'>{season.episodes.length}</span></h3>
         <article className='flex flex-col gap-[14px]'>
           {season.episodes.map((episode) => (
             <SeasonMediaCard key={episode.id} episode={episode} />
           ))}
         </article>
       </section>
-      <div className='container py-4'>
+      <div className='container !py-4'>
         <SeasonPagination currentSeason={season.season_number} totalSeasons={tvShow.number_of_seasons} basePathname={basePathname} />
       </div>
     </main>

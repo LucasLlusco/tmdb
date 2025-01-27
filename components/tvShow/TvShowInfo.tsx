@@ -1,6 +1,7 @@
+"use client"
 import { getFormattedDate, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
 import Image from 'next/image';
-import React from 'react'
+import React, { useState } from 'react'
 import { Separator } from '../ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
@@ -13,6 +14,9 @@ interface TvShowInfoProps {
 }
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
+  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`);
+  const imgSrcAlt = "/default-media-img.svg";
+    
   const progressValue = getUserScore(tvShow?.vote_average);
   const progresscolor = getUserScoreColor(getUserScore(tvShow?.vote_average));
   const circularProgressStyles = {
@@ -32,14 +36,15 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
   return (
     <section style={backgroundStyles}>
       <div style={backgroundOverlayStyles}>
-        <div className="flex flex-row container py-8 text-white">
+        <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
             <Image
-              src={`https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`} 
+              src={imgSrc} 
               alt={tvShow.name} 
-              className='rounded-[8px] max-w-none'
+              className='rounded-[8px] max-w-none bg-[#dbdbdb]'
               width={300}
-              height={450} 
+              height={450}
+              onError={() => setImgSrc(imgSrcAlt)}
             />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">

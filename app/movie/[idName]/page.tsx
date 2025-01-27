@@ -21,7 +21,7 @@ const MoviePage = async ({params}: moviePageProps) => {
       <MovieInfo movie={movie} />
       <MovieCast movieId={id} />
       <MovieMedia movieId={id} />
-      <div className="container my-8 px-6">
+      <div className="container !py-4">
         <Separator />
       </div>
       <MovieRecommendations movieId={id} />

@@ -25,15 +25,14 @@ const SearchPage = async ({searchParams, params}: SearchPageProps) => {
     }
   }
 
-
   const movieResults = await getSearchedItems(formattedParams("movie"));
   const tvResults = await getSearchedItems(formattedParams("tv"));
 
   return (
-    <main className='container my-8 flex flex-row gap-5'>
+    <main className='container flex flex-row gap-5'>
       <aside className="aside-section">
         <div className="aside-box card-boxshadow ">          
-          <h2 className='font-bold'>Search Results</h2>    
+          <h2 className='section-title !mb-1'>Search Results</h2>    
           <p>type: {params.type}</p>
           <p>query: {searchParams.query}</p>
           <Filters moviesResults={movieResults?.total_results} tvResults={tvResults?.total_results} defaultType={params.type!} /> 
