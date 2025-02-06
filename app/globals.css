@@ -65,7 +65,11 @@
 }
 
 .aside-section {
-  flex: 1 1 0%;
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .aside-box {
@@ -76,9 +80,8 @@
 .card-boxshadow {
   box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
 }
-
 .main-section {
-  flex: 3 1 0%; /*1 1 0%  small devices */
+  flex: 3 1 0%; 
 }
 
 .overflow-txt {
@@ -143,6 +146,28 @@
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin-bottom: 1.5rem;
+}
+
+.providers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 5px;
+}
+
+.providers-grid button[data-state="on"] .provider-active{
+  display: flex;
+}
+
+.provider-active {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #01b4e4e6;
+  color: white;
+  border-radius: 6px;
 }
 
 @layer base {

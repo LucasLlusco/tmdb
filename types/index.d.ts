@@ -36,10 +36,7 @@ declare type Movie = {
   backdrop_path: string,
   belongs_to_collection: string,
   budget: number,
-  genres: [{
-    id: number,
-    name: string
-  }],
+  genres: Genre[],
   homepage: string,
   id: number,
   imdb_id: string,
@@ -119,10 +116,7 @@ declare type TvShow = {
   }],
   episode_run_time: number[],
   first_air_date: string,
-  genres: [{
-    id: number, 
-    name: string
-  }],
+  genres: Genre[],
   homepage: string,
   id: number,
   in_production: boolean,
@@ -201,4 +195,31 @@ declare type TvShowSeasonEpisode = {
   vote_count: number,
   crew: [],
   guest_stars: []
+}
+
+declare type Region = {
+  iso_3166_1: string,
+  english_name: string,
+  native_name: string
+}
+
+declare type Provider = {
+  display_priorities: object
+  display_priority: number,
+  logo_path: string,
+  provider_name: string,
+  provider_id: number
+}
+
+declare type Genre = {
+  id: number,
+  name: string
+}
+
+declare type DiscoverFiltersType = {
+  selectedSort: string,
+  selectedRegion: string,
+  selectedProviders: string[],
+  selectedGenres: string[],
+  filtersHasChanged: boolean
 }

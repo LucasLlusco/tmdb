@@ -45,3 +45,43 @@ export const getSearchedItems = async ({type, params}:any) => {
     console.log(error)
   }
 }
+
+export const getDiscoveredItems = async ({type, params}:any) => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.shared.discover(type), {params});
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getAvailableRegions = async () => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.shared.availableRegions);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getProvidersByRegion = async ({type, params}: any) => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.shared.providersByRegion(type), {params});
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getGenres = async (type:string) => {
+  try {
+    const response = await tmdbClient.get(tmdbUrls.shared.genres(type));
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+}

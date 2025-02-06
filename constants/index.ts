@@ -31,3 +31,22 @@ export const SEARCH_FILTERS = [
     value: "tv"
   }
 ]
+
+export const SORT_OPTIONS = [
+  {
+    name: "Popularity Ascending",
+    value: "popularity.asc"
+  },
+  {
+    name: "Popularity Descending",
+    value: "popularity.desc"
+  },
+  {
+    name: "Rating Ascending",
+    value: "vote_average.asc"
+  },
+  {
+    name: "Rating Descending",
+    value: "vote_average.desc"
+  }
+]
