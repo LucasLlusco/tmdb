@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet"
 import { Menu } from 'lucide-react'
 import { Separator } from "@/components/ui/separator"
+import Link from 'next/link'
 
 const MobileNav = () => {
 
@@ -17,8 +18,8 @@ const MobileNav = () => {
       <SheetTrigger><Menu/></SheetTrigger>
       <SheetContent side={"left"}>
         <div className="flex flex-col gap-3">
-          <a href="/">Movies</a>
-          <a href="/">Tv series</a>  
+          <Link href={"/discover/movie"}>Movies</Link>
+          <Link href={"/discover/tv"}>TV Shows</Link>
         </div>
         <Separator className='my-4' />
         <div className="flex flex-col gap-3">

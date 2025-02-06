@@ -25,8 +25,8 @@ const Navbar = () => {
         <nav className='flex items-center gap-5'>
           <h1 className='mr-2 text-xl font-bold'><Link href={"/"}>TheMovieDB</Link></h1>
           <div className="hidden gap-5 items-center sm:flex">
-            <a href="/">Movies</a>
-            <a href="/">Tv series</a>            
+            <Link href={"/discover/movie"}>Movies</Link>
+            <Link href={"/discover/tv"}>TV Shows</Link>
           </div>            
         </nav>
         <div className='flex gap-5 items-center'>
