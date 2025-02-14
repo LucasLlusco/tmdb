@@ -24,7 +24,7 @@ const TrendingPreview = () => {
         <Filters filters={TRENDING_FILTERS} onClick={handleGetTrending} defaultValue={TRENDING_FILTERS[0].value} />
       </div>
       {trendingList && (
-        <MediaList items={trendingList} />
+        <MediaList items={trendingList} direction='row'/>
       )}
     </section>
   )

@@ -23,11 +23,11 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
 
   return (
     <div className='flex flex-row gap-[10px] card-boxshadow rounded-[5px]'>
-      <Link href={seasonPathname} className={`h-[${height}px] w-[${width}px] min-w-[${width}px]`}>
+      <Link href={seasonPathname} className={`h-[${height}px] w-[${width}px] min-w-max`}>
         <Image 
           src={imgSrc}
           alt={season?.name! || episode?.name!} 
-          className={`mediaCard-radius bg-[#dbdbdb] max-w-none h-[${height}px]`}
+          className={`rounded-l-[5px] h-full max-w-none bg-[#dbdbdb]`}
           width={width}
           height={height}
           onError={() => setImgSrc(imgSrcAlt)}

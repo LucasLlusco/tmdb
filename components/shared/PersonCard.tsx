@@ -18,7 +18,7 @@ const PersonCard = ({person} : PersonCardProps) => {
           onError={() => setImgSrc(imgSrcAlt)}
         />
       </div>
-      <div className="w-[150px] pt-[10px] px-[5px] pb-[10px]">
+      <div className="px-[8px] py-[15px]">
         <p className='text-base font-bold'>
           {person?.name}
         </p>

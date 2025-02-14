@@ -32,7 +32,7 @@ const SeasonsPage = async({params} : SeasonsPageProps) => {
       </section>
       <section className='container'>
         <h3 className='section-title'>Seasons <span className='font-normal'>{tvShow.number_of_seasons}</span></h3>
-        <article className='flex flex-col gap-[14px]'>
+        <article className='flex flex-col gap-5'>
           {tvShow.seasons.map((season) => (
             <SeasonMediaCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />
           ))}          

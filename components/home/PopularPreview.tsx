@@ -24,7 +24,7 @@ const PopularPreview = () => {
         <Filters filters={POPULAR_FILTERS} onClick={handleGetPopular} defaultValue={POPULAR_FILTERS[0].value} />
       </div>
       {popularList && (
-        <MediaList items={popularList} />
+        <MediaList items={popularList} direction='row' />
       )}
     </section>
   )
