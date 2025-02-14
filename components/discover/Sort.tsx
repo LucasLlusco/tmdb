@@ -14,7 +14,8 @@ const Sort = ({filters, setFilters}: SortProps) => {
   const handleSelectedSort = (value:string) => {
     setFilters(prevFilters => ({
       ...prevFilters,
-      selectedSort: value
+      selectedSort: value,
+      filtersHasChanged: true
     }))
   }
 

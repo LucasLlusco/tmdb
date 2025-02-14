@@ -47,7 +47,8 @@ const Providers = ({type, filters, setFilters}:ProvidersProps) => {
   const handleSelectedProviders = (providersId: string[]) => {
     setFilters(prevFilters => ({
       ...prevFilters,
-      selectedProviders: providersId
+      selectedProviders: providersId,
+      filtersHasChanged: true
     }))
   }
   

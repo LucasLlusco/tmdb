@@ -26,6 +26,7 @@ const Genres = ({type, filters, setFilters}:GenresProps) => {
     setFilters(prevFilters => ({
       ...prevFilters,
       selectedGenres: genres,
+      filtersHasChanged: true
     }))
   }
   

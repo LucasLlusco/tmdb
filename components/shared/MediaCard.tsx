@@ -12,7 +12,14 @@ import {
 import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
 
-const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
+interface MediaCardProps {
+  item: MediaItem
+  direction?: "row" | "column" | "grid",
+  itemType?: string,
+  itemRef?: (node?: Element | null) => void
+}
+
+const MediaCard = ({item, direction, itemType, itemRef}: MediaCardProps) => {
   const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${item.poster_path}`);
   const imgSrcAlt = "/default-media-img.svg";
 
@@ -35,12 +42,23 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
   const width = direction === "column" ? "94" : "150";
 
   return (
-    <div className={cn('flex', direction === "column" ? "flex-row gap-[10px] card-boxshadow rounded-[5px]" : "flex-col relative")}>
-      <Link href={itemPathname} className={`h-[${height}px] w-[${width}px] min-w-[${width}px]`}>
+    <div ref={itemRef} className={cn('flex', {
+      "flex-col relative" : direction === "row" || "grid",
+      "flex-row gap-[10px] card-boxshadow rounded-[5px]" : direction === "column"
+      })}>
+      <Link href={itemPathname} className={cn({
+        "h-[141px] w-[94px] min-w-max rounded-l-[5px]" : direction === "column",
+        "h-[225px] w-[150px] min-w-max rounded-[8px]" : direction === "row",
+        "rounded-t-[8px]" : direction === "grid"
+      })}>
         <Image 
           src={imgSrc} 
           alt={item.name! || item.title!} 
-          className={cn('h-full w-full bg-[#dbdbdb]', direction === "column" ? "mediaCard-radius " : "rounded-[8px]")}
+          className={cn(' bg-[#dbdbdb]', {
+            "rounded-l-[5px] h-full max-w-none" : direction === "column",
+            "rounded-[8px] h-full w-full" : direction === "row",
+            "rounded-t-[8px] h-full w-full" : direction === "grid"
+          })}
           width={width}
           height={height}
           onError={() => setImgSrc(imgSrcAlt)}
@@ -62,7 +80,11 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
           </DropdownMenu>        
         </div>        
       )}
-      <div className={cn(direction === "column" ? "flex flex-col gap-[10px] py-[5px]" : "w-[150px] relative pt-[15px] px-[5px] pb-[10px]")}>
+      <div className={cn({
+        "flex flex-col gap-[10px] py-[5px]": direction === "column",
+        "relative px-[8px] py-[15px]" : direction === "row",
+        "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid"
+        })}>
         {direction != "column" && (
           <div className="absolute top-[-27px] w-[40px] h-[40px] rounded-full bg-black">
             <div className="circularProgress" style={circularProgressStyles}>
@@ -70,7 +92,10 @@ const MediaCard = ({item, direction, itemType}: MediaCardProps) => {
             </div>
           </div>          
         )}
-        <div className={cn("flex flex-col", direction === "column" ? "gap-[2px]" : "gap-[4px]")}>
+        <div className={cn("flex flex-col", {
+          "gap-[2px]" : direction === "column",
+          "gap-[4px]" : direction === "row" || "grid"
+          })}>
           <Link href={itemPathname} className='link-black font-bold w-fit leading-tight'>
             {item?.title}
             {item?.name}

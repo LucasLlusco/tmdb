@@ -19,18 +19,6 @@ declare type MediaItem = {
   vote_count: number
 }
 
-declare type MediaListProps = {
-  items: MediaItem[] | []
-  direction?: "row" | "column"
-  itemType?: string
-}
-
-declare type MediaCardProps = {
-  item: MediaItem
-  direction?: "row" | "column"
-  itemType?: string
-}
-
 declare type Movie = {
   adult: boolean,
   backdrop_path: string,
@@ -221,5 +209,7 @@ declare type DiscoverFiltersType = {
   selectedRegion: string,
   selectedProviders: string[],
   selectedGenres: string[],
+  page: number,
   filtersHasChanged: boolean
+  showLoadMoreBtn: boolean
 }
