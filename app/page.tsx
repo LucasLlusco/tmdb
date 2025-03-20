@@ -4,7 +4,7 @@ import TrendingPreview from '@/components/home/TrendingPreview'
 import React from 'react'
 
 const Home = async () => {
-  
+
   return (
     <main>
       <section className={"py-8 text-white bg-hero"}>
