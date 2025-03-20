@@ -1,9 +1,10 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
@@ -12,29 +13,28 @@ import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
 
 const MobileNav = () => {
+  const [user, setUser] = useState(false);
 
   return (
     <Sheet>
       <SheetTrigger><Menu/></SheetTrigger>
       <SheetContent side={"left"}>
-        <div className="flex flex-col gap-3">
-          <Link href={"/discover/movie"}>Movies</Link>
-          <Link href={"/discover/tv"}>TV Shows</Link>
+        <SheetTitle className='mb-3'>
+          <SheetClose asChild key={"title"}><Link href={"/"}>TheMovieDB</Link></SheetClose>
+        </SheetTitle>
+        <SheetDescription className={"hidden"} />
+        <div className="flex flex-col gap-3 items-start">
+          <SheetClose asChild key={"movie"}><Link href={"/discover/movie"}>Movies</Link></SheetClose>
+          <SheetClose asChild key={"tv"}><Link href={"/discover/tv"}>TV Shows</Link></SheetClose>
         </div>
         <Separator className='my-4' />
-        <div className="flex flex-col gap-3">
-          <a href="/">Sign in</a>
-          <a href="/">Sign up</a>  
-          <a href="/">Logout</a>  
+        <div className="flex flex-col gap-3 items-start">
+          {user ? (
+            <SheetClose asChild key={"logout"}><p onClick={() => setUser(false)} className='cursor-pointer'>Logout</p></SheetClose>
+          ) : (
+            <SheetClose asChild key={"login"}><Link href={"/login"}>Login</Link></SheetClose>
+          )} 
         </div>
-
-          {/* <SheetHeader>
-            <SheetTitle>Are you absolutely sure?</SheetTitle>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
-            </SheetDescription>
-          </SheetHeader> */}
       </SheetContent>
     </Sheet>
   )

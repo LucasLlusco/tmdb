@@ -15,10 +15,11 @@ import Link from 'next/link'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
+  const [user, setUser] = useState(true);
 
   return (
     <header className='text-white bg-black'>
-      <div className="container flex justify-between items-center !py-4 ">
+      <div className="container flex justify-between items-center !py-4">
         <div className='flex sm:hidden'>
           <MobileNav />
         </div>
@@ -30,23 +31,44 @@ const Navbar = () => {
           </div>            
         </nav>
         <div className='flex gap-5 items-center'>
+          {!user && (
+            <>
+              <Link href={"/login"} className='hidden sm:block'>Login</Link>
+              <Link href={"/signup"} className='hidden sm:block'>Sign up</Link>
+            </>
+          )}
           <DropdownMenu>
-            <DropdownMenuTrigger><UserIcon /></DropdownMenuTrigger>
+            {user ? (
+              <DropdownMenuTrigger><UserIcon /></DropdownMenuTrigger>         
+            ) : (
+              <DropdownMenuTrigger className='sm:hidden'><UserIcon /></DropdownMenuTrigger>
+            )}
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Lists</DropdownMenuItem>
-              <DropdownMenuItem>Favorites</DropdownMenuItem>
-              <DropdownMenuItem>Watchlist</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit profile</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              {user ? (
+                <>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Lists</DropdownMenuItem>
+                  <DropdownMenuItem>Favorites</DropdownMenuItem>
+                  <DropdownMenuItem>Watchlist</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Edit profile</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setUser(false)}>Logout</DropdownMenuItem>
+                </>                 
+              ) : (
+                <>
+                  <DropdownMenuItem><Link href={"/login"}>Login</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem><Link href={"/signup"}>Sign up</Link></DropdownMenuItem>                  
+                </> 
+              )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
           {searchBarOpen ? (
             <CloseIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer' />
-          ): (
+          ) : (
             <SearchIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer'/>  
           )}          
         </div>
