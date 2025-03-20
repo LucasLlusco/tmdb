@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -65,3 +66,9 @@ export const isDatePassed = (date: string) => {
     return false;
   }
 }
+
+export const authFormSchema = (type: 'sign-in' | 'sign-up') => z.object({
+  username: type === 'sign-in' ? z.string().optional() : z.string().min(2).max(20),
+  email: z.string().email(),
+  password: z.string().min(8)
+})
