@@ -12,10 +12,11 @@ interface AuthFormFieldProps {
   control: Control<z.infer<typeof formSchema>>,
   name: FieldPath<z.infer<typeof formSchema>>,
   label: string,
-  placeholder: string
+  placeholder: string,
+  type: string
 }
 
-const AuthFormField = ({control, name, label, placeholder} : AuthFormFieldProps) => {
+const AuthFormField = ({control, name, label, placeholder, type} : AuthFormFieldProps) => {
   return (
     <FormField
       control={control}
@@ -24,7 +25,11 @@ const AuthFormField = ({control, name, label, placeholder} : AuthFormFieldProps)
         <FormItem className='text-left'>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input 
+              placeholder={placeholder} 
+              {...field} 
+              type={type} 
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

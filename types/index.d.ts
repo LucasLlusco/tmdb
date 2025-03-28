@@ -213,3 +213,18 @@ declare type DiscoverFiltersType = {
   filtersHasChanged: boolean
   showLoadMoreBtn: boolean
 }
+
+declare type AuthUserType = {
+  name: string,
+  email: string,  
+  phone: string,
+  $id: string,
+  $createdAt: string,
+  $updatedAt: string,
+  accessedAt: string,
+  emailVerification: boolean,
+  passwordUpdate: string,
+  phoneVerification: boolean,
+  registration: string,
+  status: boolean
+}

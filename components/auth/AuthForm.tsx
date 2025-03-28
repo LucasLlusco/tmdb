@@ -1,19 +1,21 @@
 "use client"
 import { authFormSchema } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form } from '../ui/form';
 import AuthFormField from './AuthFormField';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { login, signup } from '@/lib/actions/auth.actions';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up'
 }
 
 const AuthForm = ({type}: AuthFormProps) => {
+  const [loading, setLoading] = useState(false);
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -24,8 +26,22 @@ const AuthForm = ({type}: AuthFormProps) => {
     }
   })
 
-  const onSubmit = (values:z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    setLoading(true);
+    try {
+      if(type === 'sign-in') {
+        const user = await login(data.email, data.password);
+        console.log(user);
+      }
+      if(type === 'sign-up') {
+        const user = await signup(data.email, data.password, data.username!);
+        console.log(user);
+      } 
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -35,11 +51,33 @@ const AuthForm = ({type}: AuthFormProps) => {
           {type === "sign-in" ? "Login" : "Sign up"}
         </h2>
         {type === "sign-up" && (
-          <AuthFormField control={form.control} name="username" label="Username" placeholder="Enter your username" />
+          <AuthFormField 
+            control={form.control} 
+            name="username" 
+            label="Username" 
+            placeholder="Enter your username" 
+            type="name" 
+          />
         )}
-        <AuthFormField control={form.control} name="email" label="Email" placeholder="Enter your email" />
-        <AuthFormField control={form.control} name="password" label="Password" placeholder="Enter your password" />
-        <Button type="submit" className='my-5 w-full max-w-[100px] font-bold'>
+        <AuthFormField 
+          control={form.control} 
+          name="email" 
+          label="Email" 
+          placeholder="Enter your email" 
+          type="email" 
+        />
+        <AuthFormField 
+          control={form.control} 
+          name="password" 
+          label="Password" 
+          placeholder="Enter your password" 
+          type="password" 
+        />
+        <Button 
+          type="submit" 
+          className='my-5 w-full max-w-[100px] font-bold disabled:cursor-not-allowed' 
+          disabled={loading}
+        >
           {type === "sign-in" ? "Login" : "Sign up"}
         </Button>
         <p className='text-sm'>
