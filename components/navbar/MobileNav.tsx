@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Sheet,
   SheetClose,
@@ -11,10 +11,20 @@ import {
 import { Menu } from 'lucide-react'
 import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
+import { useAuthContext } from '@/context/AuthContextProvider'
+import { logout } from '@/lib/actions/auth.actions'
 
 const MobileNav = () => {
-  const [user, setUser] = useState(false);
-
+  const {user, setUser} = useAuthContext();
+  
+  const handleLogout = async () => {
+    try {
+     await logout();
+     setUser(null); 
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Sheet>
       <SheetTrigger><Menu/></SheetTrigger>
@@ -30,7 +40,7 @@ const MobileNav = () => {
         <Separator className='my-4' />
         <div className="flex flex-col gap-3 items-start">
           {user ? (
-            <SheetClose asChild key={"logout"}><p onClick={() => setUser(false)} className='cursor-pointer'>Logout</p></SheetClose>
+            <SheetClose asChild key={"logout"}><p onClick={handleLogout} className='cursor-pointer'>Logout</p></SheetClose>
           ) : (
             <SheetClose asChild key={"login"}><Link href={"/login"}>Login</Link></SheetClose>
           )} 

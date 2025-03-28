@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar/Navbar";
+import { AuthContextProvider } from "@/context/AuthContextProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,8 +27,10 @@ export default function RootLayout({
         "min-h-screen bg-background font-sans antialiased",
         fontSans.variable
       )}>
-        <Navbar />
-        {children}
+        <AuthContextProvider>
+          <Navbar />
+          {children}
+        </AuthContextProvider>
         <footer className="bg-black text-white px-6 py-8 text-center">
           <p>Hecho con Next.js 14 por Lucas Llusco.</p>
         </footer>

@@ -9,6 +9,7 @@ import AuthFormField from './AuthFormField';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { login, signup } from '@/lib/actions/auth.actions';
+import { useAuthContext } from '@/context/AuthContextProvider';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up'
@@ -16,6 +17,7 @@ interface AuthFormProps {
 
 const AuthForm = ({type}: AuthFormProps) => {
   const [loading, setLoading] = useState(false);
+  const { setUser } = useAuthContext();
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -31,11 +33,11 @@ const AuthForm = ({type}: AuthFormProps) => {
     try {
       if(type === 'sign-in') {
         const user = await login(data.email, data.password);
-        console.log(user);
+        setUser(user);
       }
       if(type === 'sign-up') {
         const user = await signup(data.email, data.password, data.username!);
-        console.log(user);
+        setUser(user);
       } 
     } catch (error) {
       console.log(error);
@@ -88,7 +90,7 @@ const AuthForm = ({type}: AuthFormProps) => {
           )}
         </p>
       </form>
-    </Form>    
+    </Form>
   )
 }
 

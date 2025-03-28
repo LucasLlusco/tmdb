@@ -12,10 +12,21 @@ import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import MobileNav from './MobileNav'
 import Link from 'next/link'
+import { useAuthContext } from '@/context/AuthContextProvider'
+import { logout } from '@/lib/actions/auth.actions'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-  const [user, setUser] = useState(true);
+  const {user, setUser} = useAuthContext();
+  
+  const handleLogout = async () => {
+    try {
+     await logout();
+     setUser(null); 
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <header className='text-white bg-black'>
@@ -54,7 +65,7 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Edit profile</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => setUser(false)}>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                 </>                 
               ) : (
                 <>
