@@ -13,14 +13,17 @@ import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
 import { useAuthContext } from '@/context/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
+import { useRouter } from 'next/navigation'
 
 const MobileNav = () => {
   const {user, setUser} = useAuthContext();
+  const route = useRouter();
   
   const handleLogout = async () => {
     try {
      await logout();
      setUser(null); 
+     route.push("/login");
     } catch (error) {
       console.log(error);
     }

@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { login, signup } from '@/lib/actions/auth.actions';
 import { useAuthContext } from '@/context/AuthContextProvider';
+import { useRouter } from 'next/navigation';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up'
@@ -19,6 +20,7 @@ const AuthForm = ({type}: AuthFormProps) => {
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuthContext();
   const formSchema = authFormSchema(type);
+  const route = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,10 +36,12 @@ const AuthForm = ({type}: AuthFormProps) => {
       if(type === 'sign-in') {
         const user = await login(data.email, data.password);
         setUser(user);
+        route.push("/profile");
       }
       if(type === 'sign-up') {
         const user = await signup(data.email, data.password, data.username!);
         setUser(user);
+        route.push("/profile");
       } 
     } catch (error) {
       console.log(error);

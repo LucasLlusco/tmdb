@@ -14,15 +14,18 @@ import MobileNav from './MobileNav'
 import Link from 'next/link'
 import { useAuthContext } from '@/context/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
+import { useRouter } from 'next/navigation'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
   const {user, setUser} = useAuthContext();
+  const route = useRouter();
   
   const handleLogout = async () => {
     try {
      await logout();
      setUser(null); 
+     route.push("/login");
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +66,7 @@ const Navbar = () => {
                   <DropdownMenuItem>Favorites</DropdownMenuItem>
                   <DropdownMenuItem>Watchlist</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Edit profile</DropdownMenuItem>
+                  <DropdownMenuItem><Link href={"/profile"}>Edit profile</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                 </>                 
