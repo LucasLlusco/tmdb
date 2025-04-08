@@ -2,6 +2,7 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
+import { createUserDocument, getUserDocument } from "./user.actions";
 
 export const login = async (email:string, password:string) => {
   try {
@@ -15,13 +16,14 @@ export const login = async (email:string, password:string) => {
       secure: true,
     });
 
-    const user = await getLoggedInUser();
+    const user = await getUserDocument(session.userId);
     return user;
   } catch (error) {
     console.log(error);
     return null;
   }
 }
+
 export const signup = async (email:string, password:string, username:string) => {
   try {
     const { account } = await createAdminClient();
@@ -35,8 +37,13 @@ export const signup = async (email:string, password:string, username:string) => 
       secure: true,
     });
 
-    const user = await getLoggedInUser();
-    return user;
+    const newUser = await createUserDocument(session.userId, {
+      email, 
+      username,
+      userId: session.userId,
+    });
+
+    return newUser;
   } catch (error) {
     console.log(error);
     return null;
@@ -47,8 +54,9 @@ export const getLoggedInUser = async () => {
   try {
     const sessionCokie = cookies().get("appwrite-session");
     const { account } = await createSessionClient(sessionCokie!.value);
+    const result = await account.get();
 
-    const user: AuthUserType = await account.get();
+    const user = await getUserDocument(result.$id);
     return user;
   } catch (error) {
     console.log("Error session")

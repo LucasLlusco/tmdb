@@ -214,17 +214,15 @@ declare type DiscoverFiltersType = {
   showLoadMoreBtn: boolean
 }
 
-declare type AuthUserType = {
-  name: string,
-  email: string,  
-  phone: string,
+declare type UserType = {
   $id: string,
+  $databaseId: string,
+  $collectionId: string,
   $createdAt: string,
   $updatedAt: string,
-  accessedAt: string,
-  emailVerification: boolean,
-  passwordUpdate: string,
-  phoneVerification: boolean,
-  registration: string,
-  status: boolean
+  $permissions: [],
+  username: string,
+  email: string,
+  userId: string,
+  avatarUrl?: string,
 }
