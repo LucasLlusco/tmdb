@@ -4,7 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -15,6 +14,7 @@ import Link from 'next/link'
 import { useAuthContext } from '@/context/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
 import { useRouter } from 'next/navigation'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -32,7 +32,7 @@ const Navbar = () => {
   }
 
   return (
-    <header className='text-white bg-black'>
+    <header className='text-white bg-black min-h-[64px]'>
       <div className="container flex justify-between items-center !py-4">
         <div className='flex sm:hidden'>
           <MobileNav />
@@ -53,33 +53,47 @@ const Navbar = () => {
           )}
           <DropdownMenu>
             {user ? (
-              <DropdownMenuTrigger><UserIcon /></DropdownMenuTrigger>         
+              <DropdownMenuTrigger>
+                {user.avatarUrl ? (
+                  <Avatar className={"w-8 h-8"} >
+                    <AvatarImage src={user.avatarUrl} />
+                    <AvatarFallback>{user.username}</AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <span className='bg-cyan-600 text-white flex items-center justify-center rounded-full w-8 h-8 uppercase font-bold'>
+                    {user.username[0]}
+                  </span>
+                )}
+              </DropdownMenuTrigger>         
             ) : (
               <DropdownMenuTrigger className='sm:hidden'><UserIcon /></DropdownMenuTrigger>
             )}
-            <DropdownMenuContent>
+            <DropdownMenuContent className='w-40'>
               {user ? (
                 <>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuItem>
+                    <Link href={`/user/${user.userId}`} className='font-semibold flex flex-col w-full'>
+                      {user.username}<span className='font-normal text-[10px]'>View profile</span>
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Lists</DropdownMenuItem>
-                  <DropdownMenuItem>Favorites</DropdownMenuItem>
-                  <DropdownMenuItem>Watchlist</DropdownMenuItem>
+                  <DropdownMenuItem><Link href={`/user/${user.userId}/lists`} className='w-full'>Your lists</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href={`/user/${user.userId}/ratings`} className='w-full'>Your ratings</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href={`/user/${user.userId}/watchlist`} className='w-full'>Your watchlist</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem><Link href={"/profile"}>Edit profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href={"/settings/profile"} className='w-full'>Edit profile</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className='cursor-pointer w-full'>Logout</DropdownMenuItem>
                 </>                 
               ) : (
                 <>
-                  <DropdownMenuItem><Link href={"/login"}>Login</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href={"/login"} className='w-full'>Login</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem><Link href={"/signup"}>Sign up</Link></DropdownMenuItem>                  
+                  <DropdownMenuItem><Link href={"/signup"} className='w-full'>Sign up</Link></DropdownMenuItem>     
                 </> 
               )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+            </DropdownMenuContent>
+          </DropdownMenu>
           {searchBarOpen ? (
             <CloseIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer' />
           ) : (
