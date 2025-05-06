@@ -1,5 +1,5 @@
 "use server"
-import { Client, Databases, Account } from 'node-appwrite'
+import { Client, Databases, Account, Storage } from 'node-appwrite'
 
 export const createSessionClient = async (session:string) => {
   const client = new Client()
@@ -27,8 +27,11 @@ export const createAdminClient = async () => {
     get account() {
       return new Account(client);
     },
-    get database() { 
+    get database() {
       return new Databases(client);
     },
+    get storage() {
+      return new Storage(client);
+    }
   };
 }

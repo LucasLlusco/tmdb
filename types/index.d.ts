@@ -224,5 +224,15 @@ declare type UserType = {
   username: string,
   email: string,
   userId: string,
-  avatarUrl?: string,
+  avatarId?: string, 
+  avatarPath?: string, 
+  bio?:string 
+}
+
+declare type NewUserDataType = {
+  username?: string,
+  email?: string,
+  avatarId?: string,
+  avatarPath?: string,
+  bio?:string 
 }

@@ -18,7 +18,6 @@ export const createUserDocument = async (userId: string, user:{email:string, use
   return newUser;
 }
 
-
 export const getUserDocument = async (userId: string) => {
   const { database } = await createAdminClient();
   const user:UserType = await database.getDocument(
@@ -27,5 +26,17 @@ export const getUserDocument = async (userId: string) => {
     userId,
   )
 
+  return user;
+}
+
+export const updateUserDocument = async (userId: string, newUserData:NewUserDataType) => {
+  const { database } = await createAdminClient();
+  const user:UserType = await database.updateDocument(
+    DATABASE_ID!,
+    USERS_COLLECTION_ID!,
+    userId,
+    newUserData
+  )
+  
   return user;
 }
