@@ -9,6 +9,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "img.youtube.com"
+      },
+      {
+        protocol: "https",
+        hostname: "fra.cloud.appwrite.io"
       }
     ]
   }

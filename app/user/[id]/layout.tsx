@@ -28,14 +28,15 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
   }, [])  
 
   const isOwner = user?.userId === userProfile?.userId;
+  const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
 
   return (
     <>
       <section className="bg-[#1f1f1f] text-white">
         <div className='container flex gap-5'>
-          {userProfile?.avatarUrl ? (
+          {userProfile?.avatarPath ? (
             <Image
-              src={userProfile.avatarUrl}
+              src={avatarUrl}
               alt={userProfile.username}
               width={125}
               height={125}
@@ -51,8 +52,7 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
             {userProfile && (
               <p className='opacity-70'>joined {getFormattedDate(userProfile.$createdAt!)}</p>
             )}
-            <p className='mt-2'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit ex ullam aliquam quisquam, vel ipsam assum
-              enda nemo? Vel dolores fugiat tempore perferendis ad. Velit maiores quisquam illo quidem perferendis asperiores?</p>
+            <p className='mt-2'>{userProfile?.bio}</p>
             <div className="flex gap-2 mt-6">
               {isOwner && (
                 <Button asChild><Link href={"/settings/profile"}><Edit/>Edit profile</Link></Button>    

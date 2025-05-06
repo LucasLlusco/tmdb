@@ -6,15 +6,16 @@ import React from 'react'
 
 const SettingsLayout = ({children}: Readonly<{children:React.ReactNode}>) => {
   const { user } = useAuthContext();
+  const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
 
   return (
     <>
       <section className="bg-[#1f1f1f] text-white">
         <div className='container flex gap-5 items-center'>
           <Link href={`/user/${user?.userId}`}>
-            {user?.avatarUrl ? (
+            {user?.avatarPath ? (
               <Image
-                src={user.avatarUrl}
+                src={avatarUrl}
                 alt={user.username}
                 width={55}
                 height={55}
@@ -32,7 +33,7 @@ const SettingsLayout = ({children}: Readonly<{children:React.ReactNode}>) => {
         </div>  
       </section>
       <section className='container flex flex-row gap-5'>
-        <nav className="card-boxshadow w-[355px] flex flex-col">
+        <nav className="card-boxshadow w-[355px] flex flex-col h-fit">
           <Link href={"/settings/profile"} className='p-3'>Edit profile</Link>
           <Link href={"/settings/delete"} className='p-3'>Delete account</Link>
         </nav>

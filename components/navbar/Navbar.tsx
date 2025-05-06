@@ -31,6 +31,8 @@ const Navbar = () => {
     }
   }
 
+  const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
+
   return (
     <header className='text-white bg-black min-h-[64px]'>
       <div className="container flex justify-between items-center !py-4">
@@ -54,9 +56,9 @@ const Navbar = () => {
           <DropdownMenu>
             {user ? (
               <DropdownMenuTrigger>
-                {user.avatarUrl ? (
+                {user.avatarPath ? (
                   <Avatar className={"w-8 h-8"} >
-                    <AvatarImage src={user.avatarUrl} />
+                    <AvatarImage src={avatarUrl} />
                     <AvatarFallback>{user.username}</AvatarFallback>
                   </Avatar>
                 ) : (
