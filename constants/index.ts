@@ -50,3 +50,10 @@ export const SORT_OPTIONS = [
     value: "vote_average.desc"
   }
 ]
+
+export const ACCEPTED_IMAGE_TYPES = [
+  "image/jpg",
+  "image/jpeg",
+  "image/png",
+  "image/svg",
+]
