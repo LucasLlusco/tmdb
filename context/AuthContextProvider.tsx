@@ -3,14 +3,14 @@ import { getLoggedInUser } from "@/lib/actions/auth.actions";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: AuthUserType | null
-  setUser: (user: AuthUserType | null) => void
+  user: UserType | null
+  setUser: (user: UserType | null) => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [user, setUser] = useState<AuthUserType | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     const handleGetLoggedInUser = async () => {

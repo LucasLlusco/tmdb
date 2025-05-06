@@ -66,9 +66,3 @@ export const isDatePassed = (date: string) => {
     return false;
   }
 }
-
-export const authFormSchema = (type: 'sign-in' | 'sign-up') => z.object({
-  username: type === 'sign-in' ? z.string().optional() : z.string().min(2).max(20),
-  email: z.string().email(),
-  password: z.string().min(8)
-})

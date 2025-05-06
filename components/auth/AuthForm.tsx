@@ -1,5 +1,4 @@
 "use client"
-import { authFormSchema } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -11,6 +10,7 @@ import Link from 'next/link';
 import { login, signup } from '@/lib/actions/auth.actions';
 import { useAuthContext } from '@/context/AuthContextProvider';
 import { useRouter } from 'next/navigation';
+import { authFormSchema } from '@/lib/schemas';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up'
@@ -36,12 +36,12 @@ const AuthForm = ({type}: AuthFormProps) => {
       if(type === 'sign-in') {
         const user = await login(data.email, data.password);
         setUser(user);
-        route.push("/profile");
+        route.push(`/user/${user?.userId}`);
       }
       if(type === 'sign-up') {
         const user = await signup(data.email, data.password, data.username!);
         setUser(user);
-        route.push("/profile");
+        route.push(`/user/${user?.userId}`);
       } 
     } catch (error) {
       console.log(error);
