@@ -3,12 +3,12 @@ import React from 'react'
 import SeasonMediaCard from './SeasonMediaCard'
 import { isDatePassed } from '@/lib/utils'
 
-interface TvShowSeasonProps {
+interface TvShowCurrentSeasonProps {
   tvShow: TvShow,
   basePathname: string
 }
 
-const TvShowSeason = ({tvShow, basePathname}: TvShowSeasonProps) => {
+const TvShowCurrentSeason = ({tvShow, basePathname}: TvShowCurrentSeasonProps) => {
   const lastSeasonNumber = tvShow.seasons.length -1;
   let lastSeason =  tvShow.seasons[lastSeasonNumber];
 
@@ -27,10 +27,10 @@ const TvShowSeason = ({tvShow, basePathname}: TvShowSeasonProps) => {
       <p className="mt-6">
         <Link href={`${basePathname}/seasons`} className='link-black'>
           View All Seasons
-        </Link>        
+        </Link>
       </p>
     </section>
   )
 }
 
-export default TvShowSeason
+export default TvShowCurrentSeason

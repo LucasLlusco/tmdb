@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 interface MediaListProps {
   items: MediaItem[] | []
   direction?: "row" | "column" | "grid"
-  itemType?: string
+  itemType?: "movie" | "tv"
   itemRef?: (node?: Element | null) => void
 }
 

@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 
 interface DiscoverPageProps {
   params: {
-    type?: string //movie or tv
+    type: "movie" | "tv"
   }
 }
 
@@ -54,7 +54,7 @@ const DiscoverPage = ({params}: DiscoverPageProps) => {
     }
   }
 
-  //initial, apply filters, and for infiniteScroll.
+  //initial, apply_filters, and for infiniteScroll.
   const handleGetDiscoveredItems = async (nextPageNumber?:number) => {
     const res = await getDiscoveredItems(formattedParams(nextPageNumber));
 
@@ -85,7 +85,7 @@ const DiscoverPage = ({params}: DiscoverPageProps) => {
     <main>
       <div className='container flex items-end justify-between !pb-6'>
         <h2 className='section-title !mb-0 !text-[22px]'>{sortName} {typeName}</h2>
-        <span className='text-[14px] opacity-70'>showing 1-{results.results.length} results of {results.total_results.toLocaleString()}</span>        
+        <span className='text-[14px] opacity-70'>showing 1 - {results.results.length} of {results.total_results.toLocaleString()}</span>        
       </div>
       <div className='container flex flex-row gap-5 !pt-0'>
         <aside className="aside-section">
@@ -103,7 +103,7 @@ const DiscoverPage = ({params}: DiscoverPageProps) => {
             setFilters={setFilters}
             handleGetDiscoveredItems={handleGetDiscoveredItems} 
             results={results?.results}
-            total_pages={results.total_pages}
+            total_pages={results?.total_pages}
           />
         </section>        
       </div>

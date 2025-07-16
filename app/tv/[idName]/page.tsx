@@ -2,7 +2,7 @@ import TvShowCast from '@/components/tvShow/TvShowCast';
 import TvShowInfo from '@/components/tvShow/TvShowInfo';
 import TvShowMedia from '@/components/tvShow/TvShowMedia';
 import TvShowRecommendations from '@/components/tvShow/TvShowRecommendations';
-import TvShowSeason from '@/components/tvShow/TvShowSeason';
+import TvShowCurrentSeason from '@/components/tvShow/TvShowCurrentSeason';
 import { Separator } from '@/components/ui/separator';
 import { getTvShowById } from '@/services/tmdb/tvShows';
 import React from 'react'
@@ -24,7 +24,7 @@ const tvShowPage = async ({params}: tvShowPageProps) => {
       <TvShowInfo tvShow={tvShow} />
       <TvShowCast tvShowId={id} />
       <TvShowMedia tvShowId={id} />
-      <TvShowSeason tvShow={tvShow} basePathname={basePathname} />
+      <TvShowCurrentSeason tvShow={tvShow} basePathname={basePathname} />
       <div className="container !py-4">
         <Separator />
       </div>

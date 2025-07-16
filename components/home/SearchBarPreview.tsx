@@ -8,13 +8,10 @@ const SearchBarPreview = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
 
-
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     router.push(`/search/movie?query=${searchValue}`);
-
   }
-
 
   return (
     <form className='mt-10 rounded-[30px] flex w-full items-center bg-white' onSubmit={handleSearch}>

@@ -18,8 +18,8 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
     const params = new URLSearchParams(searchParams); 
     params.set("page", "1");
 
-    const newUrl = `/search/${type}?${params.toString()}`;
-    router.replace(newUrl); 
+    const newPathname = `/search/${type}?${params.toString()}`;
+    router.replace(newPathname);
   }
 
   return (

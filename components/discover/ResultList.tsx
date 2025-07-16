@@ -4,9 +4,8 @@ import MediaList from '../shared/MediaList'
 import { Button } from '../ui/button'
 import { useInView } from "react-intersection-observer";
 
-
 interface ResultListProps {
-  type: string,
+  type: "movie" | "tv",
   filters: DiscoverFiltersType,
   setFilters: React.Dispatch<React.SetStateAction<DiscoverFiltersType>>,
   handleGetDiscoveredItems: (nextPageNumber?:number) => Promise<void>,

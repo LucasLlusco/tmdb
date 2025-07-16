@@ -15,7 +15,7 @@ import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/uti
 interface MediaCardProps {
   item: MediaItem
   direction?: "row" | "column" | "grid",
-  itemType?: string,
+  itemType?: "movie" | "tv",
   itemRef?: (node?: Element | null) => void
 }
 
