@@ -19,3 +19,21 @@ export const editProfileFormSchema = () => z.object({
     .max(1000, {message: "Bio must contain at most 1000 characters"
   }).optional(),
 })
+
+export const ChangeEmailFormSchema = () => z.object({
+  password: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+  newEmail: z.string().email(),
+  confirmNewEmail: z.string().email(),
+}).refine((data) => data.newEmail === data.confirmNewEmail, {
+  message: "Emails do not match",
+  path: ["confirmNewEmail"]
+})
+
+export const ChangePasswordFormSchema = () => z.object({
+  currentPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+  newPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+  confirmNewPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "Passwords do not match",
+  path: ["confirmNewPassword"]
+})

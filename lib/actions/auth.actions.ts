@@ -2,7 +2,7 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, getUserDocument } from "./user.actions";
+import { createUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
 
 export const login = async (email:string, password:string) => {
   try {
@@ -52,8 +52,8 @@ export const signup = async (email:string, password:string, username:string) => 
 
 export const getLoggedInUser = async () => {
   try {
-    const sessionCokie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCokie!.value);
+    const sessionCookie = cookies().get("appwrite-session");
+    const { account } = await createSessionClient(sessionCookie!.value);
     const result = await account.get();
 
     const user = await getUserDocument(result.$id);
@@ -66,12 +66,47 @@ export const getLoggedInUser = async () => {
 
 export const logout = async () => {
   try {
-    const sessionCokie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCokie!.value);
+    const sessionCookie = cookies().get("appwrite-session");
+    const { account } = await createSessionClient(sessionCookie!.value);
 
     cookies().delete("appwrite-session");
     await account.deleteSession("current");
   } catch (error) {
     console.log(error);
+  }
+}
+
+export const updateEmail = async (newEmail:string, password:string) => {
+  try {
+    const sessionCookie = cookies().get("appwrite-session");
+    const { account } = await createSessionClient(sessionCookie!.value);
+
+    const result = await account.updateEmail(
+      newEmail,
+      password
+    );
+
+    const updatedUser = await updateUserDocument(result.$id, {email: newEmail});
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export const updatePassword = async (newPassword:string, currentPassword:string) => {
+  try {
+    const sessionCookie = cookies().get("appwrite-session");
+    const { account } = await createSessionClient(sessionCookie!.value);
+
+    const result = await account.updatePassword(
+      newPassword,
+      currentPassword
+    );
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }

@@ -8,9 +8,9 @@ export async function middleware(req: NextRequest) {
     if(user) {
       return NextResponse.redirect(new URL(`/user/${user.userId}`, req.url));
     }
-  } else { 
+  } else {
     if(!user) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/login", req.url)); 
     }
   }
 
@@ -18,5 +18,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/signup", "/settings/delete", "/settings/profile"],
+  matcher: ["/login", "/signup", "/settings/delete", "/settings/profile", "/settings/change-email", "/settings/change-password"]
 };
