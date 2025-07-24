@@ -128,3 +128,28 @@ export const deleteAccount = async (email:string, password:string, avatarId?:str
     console.log(error);
   }
 }
+
+export const requestPasswordReset = async (email:string) => {
+  try {
+    const { account } = await createAdminClient();
+    const result = await account.createRecovery(
+      email,
+      "http://localhost:3000/reset-password"
+    );
+  } catch (error) {
+    console.log("error requesting password reset: ", error);
+  }
+}
+
+export const confirmPasswordReset = async (userId: string, secret:string, newPassword:string) => {
+  try {
+    const { account } = await createAdminClient();
+    const result = await account.updateRecovery(
+      userId,
+      secret,
+      newPassword
+    );
+  } catch (error) {
+    console.log("error confirming password reset: ", error);
+  }
+}

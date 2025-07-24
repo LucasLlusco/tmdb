@@ -79,13 +79,18 @@ const AuthForm = ({type}: AuthFormProps) => {
           placeholder="Enter your password" 
           type="password" 
         />
-        <Button 
-          type="submit" 
-          className='my-5 w-full max-w-[100px] font-bold disabled:cursor-not-allowed' 
-          disabled={loading}
-        >
-          {type === "sign-in" ? "Login" : "Sign up"}
-        </Button>
+        {type === "sign-in" && (
+          <Link href={"/forgot-password"} className='text-[#01b4e4e6] text-sm block text-start w-fit'>Forgot password?</Link>
+        )}
+        <div className="text-center my-5">
+          <Button 
+            type="submit" 
+            className='font-bold disabled:cursor-not-allowed' 
+            disabled={loading}
+          >
+            {type === "sign-in" ? "Login" : "Sign up"}
+          </Button>          
+        </div>
         <p className='text-sm'>
           {type === "sign-in" ? (
             <>Don't have an account yet? <Link href={"/signup"} className='text-[#01b4e4e6]'>Sign up</Link></>

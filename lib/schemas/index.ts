@@ -42,3 +42,15 @@ export const deleteAccountFormSchema = () => z.object({
   email: z.string().email(),
   password: z.string().min(8, {message: "Password is required"})
 })
+
+export const requestPasswordResetSchema = () => z.object({
+  email: z.string().email()
+})
+
+export const confirmPasswordResetSchema = () => z.object({
+  password: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+  confirmPassword:  z.string().min(8, {message: "Password must contain at least 8 characters"})
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"]
+})
