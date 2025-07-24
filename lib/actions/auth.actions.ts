@@ -2,7 +2,7 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
+import { createUserDocument, deleteUserAvatar, deleteUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
 
 export const login = async (email:string, password:string) => {
   try {
@@ -108,5 +108,23 @@ export const updatePassword = async (newPassword:string, currentPassword:string)
   } catch (error) {
     console.log(error);
     return null;
+  }
+}
+
+export const deleteAccount = async (email:string, password:string, avatarId?:string) => {
+  try {
+    const { account, users } = await createAdminClient();
+    const session = await account.createEmailPasswordSession(email, password);
+
+    if(avatarId) {
+      await deleteUserAvatar(avatarId);
+    }
+
+    await deleteUserDocument(session.userId);
+
+    await users.delete(session.userId);
+    return { success:true };
+  } catch (error) {
+    console.log(error);
   }
 }
