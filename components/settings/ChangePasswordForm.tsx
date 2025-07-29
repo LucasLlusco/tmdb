@@ -1,6 +1,6 @@
 "use client"
 import { updatePassword } from '@/lib/actions/auth.actions';
-import { ChangePasswordFormSchema } from '@/lib/schemas';
+import { changePasswordFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 const ChangePasswordForm = () => {
   const [loading, setLoading] = useState(false);
 
-  const formSchema = ChangePasswordFormSchema();
+  const formSchema = changePasswordFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

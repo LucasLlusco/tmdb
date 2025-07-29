@@ -8,13 +8,13 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { updateEmail } from '@/lib/actions/auth.actions'
 import { useAuthContext } from '@/context/AuthContextProvider'
-import { ChangeEmailFormSchema } from '@/lib/schemas'
+import { changeEmailFormSchema } from '@/lib/schemas'
 
 const ChangeEmailForm = () => {
   const [loading, setLoading] = useState(false);
   const {setUser} = useAuthContext();
   
-  const formSchema = ChangeEmailFormSchema();
+  const formSchema = changeEmailFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

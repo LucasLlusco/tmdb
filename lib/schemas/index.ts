@@ -20,8 +20,8 @@ export const editProfileFormSchema = () => z.object({
   }).optional()
 })
 
-export const ChangeEmailFormSchema = () => z.object({
-  password: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+export const changeEmailFormSchema = () => z.object({
+  password: z.string().min(8, {message: "Password is required"}),
   newEmail: z.string().email(),
   confirmNewEmail: z.string().email(),
 }).refine((data) => data.newEmail === data.confirmNewEmail, {
@@ -29,8 +29,8 @@ export const ChangeEmailFormSchema = () => z.object({
   path: ["confirmNewEmail"]
 })
 
-export const ChangePasswordFormSchema = () => z.object({
-  currentPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
+export const changePasswordFormSchema = () => z.object({
+  currentPassword: z.string().min(8, {message: "Password is required"}),
   newPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
   confirmNewPassword: z.string().min(8, {message: "Password must contain at least 8 characters"}),
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
