@@ -8,15 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { updateUserDocument } from '@/lib/actions/user.actions';
+import { deleteUserAvatar, updateUserDocument } from '@/lib/actions/user.actions';
 import { useAuthContext } from '@/context/AuthContextProvider';
-import { useRouter } from 'next/navigation';
 import { editProfileFormSchema } from '@/lib/schemas';
 
 const EditProfileForm = () => {
   const { user, setUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const route = useRouter();
 
   const formSchema = editProfileFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,8 +30,7 @@ const EditProfileForm = () => {
   const onSubmit = async (data:z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-       let avatarId, avatarPath;
-      
+       let newAvatarId, newAvatarPath;
        if(data.newAvatar) {
         const formData = new FormData();
         formData.append("file", data.newAvatar);
@@ -43,21 +40,24 @@ const EditProfileForm = () => {
           body: formData
         })
         const result = await res.json();
-        avatarId = result.avatarId;
-        avatarPath = result.avatarPath;
+        newAvatarId = result.avatarId;
+        newAvatarPath = result.avatarPath;
+
+        if(user?.avatarId) {
+          await deleteUserAvatar(user.avatarId);
+        }
        }
 
        const updatedUser = await updateUserDocument(user?.userId!, {
-        ...(!!data.newAvatar) && {avatarId: avatarId},
-        ...(!!data.newAvatar) && {avatarPath: avatarPath},
+        ...(!!data.newAvatar) && {avatarId: newAvatarId},
+        ...(!!data.newAvatar) && {avatarPath: newAvatarPath},
         ...(!!data.newUsername) && {username: data.newUsername},
         ...(!!data.newBio) && {bio: data.newBio}
        });
 
        setUser(updatedUser);
-       route.push(`/user/${updatedUser?.userId}`);
     } catch (error) {
-      console.log(error);
+      console.log("Error editing profile: ", error);
     } finally {
       setLoading(false);
     }
@@ -104,7 +104,7 @@ const EditProfileForm = () => {
           name={"newUsername"}
           render={({ field }) => (
             <FormItem className='text-left'>
-              <FormLabel>username</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input 
                   {...field} 
@@ -120,7 +120,7 @@ const EditProfileForm = () => {
           name={"newBio"}
           render={({ field }) => (
             <FormItem className='text-left'>
-              <FormLabel>bio</FormLabel>
+              <FormLabel>Bio</FormLabel>
               <FormControl>
                 <Textarea 
                   {...field}
@@ -132,7 +132,7 @@ const EditProfileForm = () => {
         />
         <Button type='submit' disabled={loading}>Save</Button>
       </form> 
-    </Form>   
+    </Form>
   )
 }
 
