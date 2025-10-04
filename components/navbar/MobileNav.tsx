@@ -11,23 +11,32 @@ import {
 import { Menu } from 'lucide-react'
 import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
-import { useAuthContext } from '@/context/AuthContextProvider'
+import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
 import { useRouter } from 'next/navigation'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const MobileNav = () => {
   const {user, setUser} = useAuthContext();
   const route = useRouter();
-  
-  const handleLogout = async () => {
-    try {
-     await logout();
-     setUser(null); 
-     route.push("/login");
-    } catch (error) {
-      console.log(error);
+
+  const { mutate } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setUser(null);
+      toast.success("You have been logged out");
+      route.push("/login");
+    },
+    onError: () => {
+      toast.error("Error logging out. Please try again");
     }
+  });
+  
+  const handleLogout = () => {
+    mutate();
   }
+
   return (
     <Sheet>
       <SheetTrigger><Menu/></SheetTrigger>

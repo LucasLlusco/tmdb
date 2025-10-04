@@ -1,5 +1,5 @@
 "use client"
-import { useAuthContext } from '@/context/AuthContextProvider'
+import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'

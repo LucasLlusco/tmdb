@@ -1,7 +1,7 @@
 "use client"
 import { requestPasswordResetSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -10,12 +10,11 @@ import { Button } from '../ui/button';
 import { requestPasswordReset } from '@/lib/actions/auth.actions';
 import { ChevronLeftIcon } from 'lucide-react';
 import Link from 'next/link';
-
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const RequestPasswordResetForm = () => {
-  const [loading, setLoading] = useState(false);
   const formSchema = requestPasswordResetSchema();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -23,16 +22,22 @@ const RequestPasswordResetForm = () => {
     }
   })
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-      await requestPasswordReset(data.email!);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: (email:string) => requestPasswordReset(email),
+    onSuccess: () => {
+      toast.success("Password reset link sent. Check your email");
+    },
+    onError: (error) => {
+      toast.error("Failed to send reset link", {
+        description: error.message
+      })
     }
+  });
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate(data.email);
   }
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 container max-w-[700px] text-center">
@@ -60,7 +65,7 @@ const RequestPasswordResetForm = () => {
         />
         <Button 
           type='submit' 
-          disabled={loading}
+          disabled={isPending}
           className='font-bold disabled:cursor-not-allowed' 
         >
           Send

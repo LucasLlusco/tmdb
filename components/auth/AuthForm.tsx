@@ -1,6 +1,6 @@
 "use client"
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form } from '../ui/form';
@@ -8,20 +8,27 @@ import AuthFormField from './AuthFormField';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { login, signup } from '@/lib/actions/auth.actions';
-import { useAuthContext } from '@/context/AuthContextProvider';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { useRouter } from 'next/navigation';
 import { authFormSchema } from '@/lib/schemas';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up'
 }
 
-const AuthForm = ({type}: AuthFormProps) => {
-  const [loading, setLoading] = useState(false);
-  const { setUser } = useAuthContext();
-  const formSchema = authFormSchema(type);
-  const route = useRouter();
+interface AuthPayload {
+  email: string
+  password: string
+  username?: string
+}
 
+const AuthForm = ({type}: AuthFormProps) => {
+  const { setUser } = useAuthContext();
+  const route = useRouter();
+  
+  const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,23 +37,33 @@ const AuthForm = ({type}: AuthFormProps) => {
     }
   })
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({email, password, username}: AuthPayload) => type === "sign-in" ? login(email, password) : signup(email, password, username!),
+    onSuccess: (data) => {
+      setUser(data);
+      toast.success(type === "sign-in" ? `Welcome back ${data.username}!` : `Welcome ${data.username}!`);
+      route.push(`/user/${data?.userId}`);
+    },
+    onError: (error) => {
+      toast.error(type === "sign-in" ? "Login failed" : "Sign up failed", {
+        description: error.message
+      })
+    }
+  });  
+
   const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-      if(type === 'sign-in') {
-        const user = await login(data.email, data.password);
-        setUser(user);
-        route.push(`/user/${user?.userId}`);
-      }
-      if(type === 'sign-up') {
-        const user = await signup(data.email, data.password, data.username!);
-        setUser(user);
-        route.push(`/user/${user?.userId}`);
-      } 
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    if(type === 'sign-in') {
+      mutate({
+        email: data.email,
+        password: data.password
+      });
+    }
+    if(type === 'sign-up') {
+      mutate({
+        email: data.email,
+        password: data.password,
+        username: data.username
+      });
     }
   }
 
@@ -86,7 +103,7 @@ const AuthForm = ({type}: AuthFormProps) => {
           <Button 
             type="submit" 
             className='font-bold disabled:cursor-not-allowed' 
-            disabled={loading}
+            disabled={isPending}
           >
             {type === "sign-in" ? "Login" : "Sign up"}
           </Button>          

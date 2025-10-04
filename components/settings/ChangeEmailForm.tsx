@@ -1,19 +1,24 @@
 "use client"
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { updateEmail } from '@/lib/actions/auth.actions'
-import { useAuthContext } from '@/context/AuthContextProvider'
+import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { changeEmailFormSchema } from '@/lib/schemas'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
+interface UpdateEmailPayload {
+  newEmail: string
+  password: string
+}
 
 const ChangeEmailForm = () => {
-  const [loading, setLoading] = useState(false);
-  const {setUser} = useAuthContext();
-  
+  const { setUser } = useAuthContext();
   const formSchema = changeEmailFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -24,17 +29,25 @@ const ChangeEmailForm = () => {
     }
   })
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-      const updatedUser = await updateEmail(data.newEmail, data.password);
-      setUser(updatedUser);
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({newEmail, password}: UpdateEmailPayload) => updateEmail(newEmail, password),
+    onSuccess: (data) => {
+      setUser(data); 
+      toast.success("Email changed successfully");
       form.reset();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to update email", {
+        description: error.message
+      })
     }
+  });  
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate({
+      newEmail: data.newEmail,
+      password: data.password
+    });
   }  
   
   return (
@@ -91,7 +104,7 @@ const ChangeEmailForm = () => {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={loading}>Save</Button>
+        <Button type='submit' disabled={isPending}>Save</Button>
       </form>
     </Form>
   )

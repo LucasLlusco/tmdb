@@ -2,24 +2,30 @@
 import { confirmPasswordResetSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { confirmPasswordReset } from '@/lib/actions/auth.actions';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface PasswordResetFormProps {
   userId: string
   secret: string
 }
 
-const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
-  const [loading, setLoading] = useState(false);
-  const formSchema = confirmPasswordResetSchema();
-  const route = useRouter();
+interface ConfirmPasswordResetPayload {
+  userId: string
+  secret: string
+  password: string
+}
 
+const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
+  const route = useRouter();
+  const formSchema = confirmPasswordResetSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,16 +34,25 @@ const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
     }
   })
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {      
-      await confirmPasswordReset(userId!, secret!, data.password);
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({userId, secret, password}: ConfirmPasswordResetPayload) => confirmPasswordReset(userId, secret, password),
+    onSuccess: () => {
+      toast.success("Password reset successful. You can now log in");
       route.push("/login");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to reset password", {
+        description: error.message
+      })
     }
+  });
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate({
+      userId,
+      secret,
+      password: data.password
+    });
   }
 
   return (
@@ -81,7 +96,7 @@ const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
         />
         <Button 
           type='submit' 
-          disabled={loading}
+          disabled={isPending}
           className='font-bold disabled:cursor-not-allowed' 
         >
           Reset password

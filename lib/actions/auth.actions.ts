@@ -5,151 +5,111 @@ import { cookies } from "next/headers";
 import { createUserDocument, deleteUserAvatar, deleteUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
 
 export const login = async (email:string, password:string) => {
-  try {
-    const { account } = await createAdminClient();
-    const session = await account.createEmailPasswordSession(email, password);
+  const { account } = await createAdminClient();
+  const session = await account.createEmailPasswordSession(email, password);
 
-    cookies().set("appwrite-session", session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
+  cookies().set("appwrite-session", session.secret, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+  });
 
-    const user = await getUserDocument(session.userId);
-    return user;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  const user = await getUserDocument(session.userId);
+  return user;
 }
 
 export const signup = async (email:string, password:string, username:string) => {
-  try {
-    const { account } = await createAdminClient();
-    await account.create(ID.unique(), email, password, username);
+  const { account } = await createAdminClient();
+  await account.create(ID.unique(), email, password, username);
 
-    const session = await account.createEmailPasswordSession(email, password);
-    cookies().set("appwrite-session", session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
+  const session = await account.createEmailPasswordSession(email, password);
+  cookies().set("appwrite-session", session.secret, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+  });
 
-    const newUser = await createUserDocument(session.userId, {
-      email, 
-      username,
-      userId: session.userId,
-    });
+  const newUser = await createUserDocument(session.userId, {
+    email, 
+    username,
+    userId: session.userId, 
+  });
 
-    return newUser;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  return newUser;
 }
 
 export const getLoggedInUser = async () => {
-  try {
-    const sessionCookie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCookie!.value);
-    const result = await account.get();
-
-    const user = await getUserDocument(result.$id);
-    return user;
-  } catch (error) {
-    console.log("Error session")
+  const sessionCookie = cookies().get("appwrite-session");
+  if(!sessionCookie) {
     return null;
   }
+
+  const { account } = await createSessionClient(sessionCookie.value);
+  const result = await account.get();
+
+  const user = await getUserDocument(result.$id); 
+  return user; 
 }
 
 export const logout = async () => {
-  try {
-    const sessionCookie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCookie!.value);
+  const sessionCookie = cookies().get("appwrite-session");
+  const { account } = await createSessionClient(sessionCookie!.value);
 
-    cookies().delete("appwrite-session");
-    await account.deleteSession("current");
-  } catch (error) {
-    console.log(error);
-  }
+  cookies().delete("appwrite-session"); 
+  await account.deleteSession("current"); 
 }
 
 export const updateEmail = async (newEmail:string, password:string) => {
-  try {
-    const sessionCookie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCookie!.value);
+  const sessionCookie = cookies().get("appwrite-session");
+  const { account } = await createSessionClient(sessionCookie!.value);
 
-    const result = await account.updateEmail(
-      newEmail,
-      password
-    );
+  const result = await account.updateEmail(
+    newEmail,
+    password
+  );
 
-    const updatedUser = await updateUserDocument(result.$id, {email: newEmail});
-    return updatedUser;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  const updatedUser = await updateUserDocument(result.$id, {email: newEmail});
+  return updatedUser; 
 }
 
 export const updatePassword = async (newPassword:string, currentPassword:string) => {
-  try {
-    const sessionCookie = cookies().get("appwrite-session");
-    const { account } = await createSessionClient(sessionCookie!.value);
+  const sessionCookie = cookies().get("appwrite-session");
+  const { account } = await createSessionClient(sessionCookie!.value);
 
-    const result = await account.updatePassword(
-      newPassword,
-      currentPassword
-    );
-
-    return result;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  await account.updatePassword(
+    newPassword,
+    currentPassword 
+  );
 }
 
 export const deleteAccount = async (email:string, password:string, avatarId?:string) => {
-  try {
-    const { account, users } = await createAdminClient();
-    const session = await account.createEmailPasswordSession(email, password);
+  const { account, users } = await createAdminClient();
+  const session = await account.createEmailPasswordSession(email, password);
 
-    if(avatarId) {
-      await deleteUserAvatar(avatarId);
-    }
-
-    await deleteUserDocument(session.userId);
-
-    await users.delete(session.userId);
-    return { success:true };
-  } catch (error) {
-    console.log(error);
+  if(avatarId) {
+    await deleteUserAvatar(avatarId);
   }
+
+  await deleteUserDocument(session.userId);
+  await users.delete(session.userId); 
+  cookies().delete("appwrite-session");   
 }
 
 export const requestPasswordReset = async (email:string) => {
-  try {
-    const { account } = await createAdminClient();
-    const result = await account.createRecovery(
-      email,
-      "http://localhost:3000/reset-password"
-    );
-  } catch (error) {
-    console.log("error requesting password reset: ", error);
-  }
+  const { account } = await createAdminClient();
+  await account.createRecovery(
+    email,
+    "http://localhost:3000/reset-password" 
+  );
 }
 
-export const confirmPasswordReset = async (userId: string, secret:string, newPassword:string) => {
-  try {
-    const { account } = await createAdminClient();
-    const result = await account.updateRecovery(
-      userId,
-      secret,
-      newPassword
-    );
-  } catch (error) {
-    console.log("error confirming password reset: ", error);
-  }
+export const confirmPasswordReset = async (userId: string, secret:string, newPassword:string) => {  
+  const { account } = await createAdminClient();
+  await account.updateRecovery(
+    userId,
+    secret,
+    newPassword
+  );
 }

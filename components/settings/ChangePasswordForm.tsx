@@ -2,16 +2,21 @@
 import { updatePassword } from '@/lib/actions/auth.actions';
 import { changePasswordFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+interface UpdatePasswordPayload {
+  newPassword: string
+  currentPassword: string
+}
 
 const ChangePasswordForm = () => {
-  const [loading, setLoading] = useState(false);
-
   const formSchema = changePasswordFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -22,16 +27,24 @@ const ChangePasswordForm = () => {
     }
   })
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-      const updateResult = await updatePassword(data.newPassword, data.currentPassword);
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({newPassword, currentPassword}: UpdatePasswordPayload) => updatePassword(newPassword, currentPassword),
+    onSuccess: () => {
+      toast.success("Password changed successfully");
       form.reset();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to change password", {
+        description: error.message
+      })
     }
+  });
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate({
+      newPassword: data.newPassword,
+      currentPassword: data.currentPassword
+    });
   }
 
   return (
@@ -88,7 +101,7 @@ const ChangePasswordForm = () => {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={loading}>Save</Button>
+        <Button type='submit' disabled={isPending}>Save</Button>
       </form>
     </Form>
   )

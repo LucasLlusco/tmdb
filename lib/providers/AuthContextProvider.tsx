@@ -11,7 +11,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<UserType | null>(null);
-
+  
   useEffect(() => {
     const handleGetLoggedInUser = async () => {
       try {
@@ -24,7 +24,7 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
     }
     handleGetLoggedInUser();
   }, [])
-  
+    
   return (
     <AuthContext.Provider value={{user, setUser}}>
       {children}

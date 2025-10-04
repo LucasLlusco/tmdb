@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from '../ui/button';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -9,17 +9,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { deleteUserAvatar, updateUserDocument } from '@/lib/actions/user.actions';
-import { useAuthContext } from '@/context/AuthContextProvider';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { editProfileFormSchema } from '@/lib/schemas';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
 
 const EditProfileForm = () => {
   const { user, setUser } = useAuthContext();
-  const [loading, setLoading] = useState(false);
 
   const formSchema = editProfileFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    values: { 
       newUsername: user?.username || "",
       newBio: user?.bio || ""
     }
@@ -27,18 +28,19 @@ const EditProfileForm = () => {
 
   const fileRef = form.register("newAvatar");
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-       let newAvatarId, newAvatarPath;
-       if(data.newAvatar) {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (values:z.infer<typeof formSchema>) => {
+      let newAvatarId, newAvatarPath;
+
+      if(values.newAvatar) {
         const formData = new FormData();
-        formData.append("file", data.newAvatar);
+        formData.append("file", values.newAvatar);
 
         const res = await fetch("/api/upload", {
           method: "POST",
           body: formData
         })
+
         const result = await res.json();
         newAvatarId = result.avatarId;
         newAvatarPath = result.avatarPath;
@@ -46,21 +48,28 @@ const EditProfileForm = () => {
         if(user?.avatarId) {
           await deleteUserAvatar(user.avatarId);
         }
-       }
+      }
 
-       const updatedUser = await updateUserDocument(user?.userId!, {
-        ...(!!data.newAvatar) && {avatarId: newAvatarId},
-        ...(!!data.newAvatar) && {avatarPath: newAvatarPath},
-        ...(!!data.newUsername) && {username: data.newUsername},
-        ...(!!data.newBio) && {bio: data.newBio}
-       });
-
-       setUser(updatedUser);
-    } catch (error) {
-      console.log("Error editing profile: ", error);
-    } finally {
-      setLoading(false);
+      const updatedUser = await updateUserDocument(user?.userId!, {
+        ...(!!values.newAvatar) && {avatarId: newAvatarId},
+        ...(!!values.newAvatar) && {avatarPath: newAvatarPath},
+        ...(!!values.newUsername) && {username: values.newUsername},
+        ...(!!values.newBio) && {bio: values.newBio}
+      });
+       
+      return updatedUser;
+    },
+    onSuccess: (data) => {
+      setUser(data);
+      toast.success("Profile updated successfully");
+    },
+    onError: () => {
+      toast.error("Could not update profile. Please try again");
     }
+  });  
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate(data);
   }  
 
   const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
@@ -130,7 +139,7 @@ const EditProfileForm = () => {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={loading}>Save</Button>
+        <Button type='submit' disabled={isPending}>Save</Button>
       </form> 
     </Form>
   )

@@ -11,24 +11,32 @@ import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import MobileNav from './MobileNav'
 import Link from 'next/link'
-import { useAuthContext } from '@/context/AuthContextProvider'
+import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
 import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
   const {user, setUser} = useAuthContext();
   const route = useRouter();
   
-  const handleLogout = async () => {
-    try {
-     await logout();
-     setUser(null); 
-     route.push("/login");
-    } catch (error) {
-      console.log(error);
+  const { mutate } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setUser(null);
+      toast.success("You have been logged out");
+      route.push("/login");
+    },
+    onError: () => {
+      toast.error("Error logging out. Please try again");
     }
+  });  
+
+  const handleLogout = () => {
+    mutate();
   }
 
   const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;

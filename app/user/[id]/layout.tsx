@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { useAuthContext } from '@/context/AuthContextProvider';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { getUserDocument } from '@/lib/actions/user.actions';
 import { getFormattedDate } from '@/lib/utils';
 import { Edit } from 'lucide-react';

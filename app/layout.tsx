@@ -3,7 +3,9 @@ import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar/Navbar";
-import { AuthContextProvider } from "@/context/AuthContextProvider";
+import { AuthContextProvider } from "@/lib/providers/AuthContextProvider";
+import { ReactQueryProvider } from "@/lib/providers/ReactQueryProvider";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,10 +29,13 @@ export default function RootLayout({
         "min-h-screen bg-background font-sans antialiased",
         fontSans.variable
       )}>
-        <AuthContextProvider>
-          <Navbar />
-          {children}
-        </AuthContextProvider>
+        <ReactQueryProvider>
+          <AuthContextProvider>
+            <Navbar />
+            <Toaster position="top-right" richColors />
+            {children}               
+          </AuthContextProvider>
+        </ReactQueryProvider>
         <footer className="bg-black text-white px-6 py-8 text-center">
           <p>Hecho con Next.js 14 por Lucas Llusco.</p>
         </footer>

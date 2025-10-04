@@ -1,19 +1,26 @@
 "use client"
-import { useAuthContext } from '@/context/AuthContextProvider';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { deleteAccountFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { deleteAccount } from '@/lib/actions/auth.actions';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+interface DeleteAccountPayload {
+  email: string
+  password: string
+  avatarId?: string
+}
 
 const DeleteAccountForm = () => {
   const { user, setUser } = useAuthContext();
-  const [loading, setLoading] = useState(false);
   const route = useRouter();
   
   const formSchema = deleteAccountFormSchema();
@@ -25,20 +32,26 @@ const DeleteAccountForm = () => {
     }
   })
 
-  const onSubmit = async (data:z.infer<typeof formSchema>) => {
-    setLoading(true);
-    try {
-      const result = await deleteAccount(data.email, data.password, user?.avatarId);
-      
-      if(result?.success) {
-        setUser(null);
-        route.push("/");
-      }
-    } catch (error) {
-      console.log("Error deleting account: ", error);
-    } finally {
-      setLoading(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({email, password, avatarId}:DeleteAccountPayload) => deleteAccount(email, password, avatarId),
+    onSuccess: () => {
+      toast.success("Your account has been deleted");
+      setUser(null);
+      route.push("/");
+    },
+    onError: (error) => {
+      toast.error("Failed to delete account. Please try again", {
+        description: error.message
+      });
     }
+  });
+
+  const onSubmit = async (data:z.infer<typeof formSchema>) => {
+    mutate({ 
+      email: data.email,
+      password: data.password,
+      avatarId: user?.avatarId
+    });
   }
 
   return (
@@ -78,7 +91,7 @@ const DeleteAccountForm = () => {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={loading} variant={"destructive"}>Delete</Button>
+        <Button type='submit' disabled={isPending} variant={"destructive"}>Delete</Button>
       </form> 
     </Form>
   )
