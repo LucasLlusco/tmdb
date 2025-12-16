@@ -6,20 +6,27 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
+import AddListItemForm from '../user/AddListItemForm'
 
 interface MediaCardProps {
   item: MediaItem
   direction?: "row" | "column" | "grid",
   itemType?: "movie" | "tv",
-  itemRef?: (node?: Element | null) => void
+  itemRef?: (node?: Element | null) => void,
+  user: UserType | null
 }
 
-const MediaCard = ({item, direction, itemType, itemRef}: MediaCardProps) => {
+const MediaCard = ({item, direction, itemType, itemRef, user}: MediaCardProps) => {
   const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${item.poster_path}`);
   const imgSrcAlt = "/default-media-img.svg";
 
@@ -71,11 +78,30 @@ const MediaCard = ({item, direction, itemType, itemRef}: MediaCardProps) => {
               <Ellipsis className='w-auto h-[19px]' />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem className='flex items-center gap-2'><Heart className='h-[19px] w-[19px]'/>Favorite</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className='flex items-center gap-2'><Bookmark className='h-[19px] w-[19px]'/>Watchlist</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className='flex items-center gap-2'><List className='h-[19px] w-[19px]'/>Add to list</DropdownMenuItem>
+              {user? (
+                <div className='flex flex-col'>
+                  <DropdownMenuItem><Heart className='w-4 h-4 mr-2' />Add to favorites</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem><Bookmark className='w-4 h-4 mr-2' />Add to watchlist</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger><List className='w-4 h-4 mr-2' />Add to list</DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <AddListItemForm userId={user?.$id!} itemId={item.id} itemTitle={itemName!} itemType={itemType!} isInDropDown={true} />
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                </div>
+              ) : (
+                <>
+                  <DropdownMenuLabel>Want to rate or add this item to a list?</DropdownMenuLabel>
+                  <DropdownMenuItem><Link href={"/login"} className='w-full'>Login</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Don't have an account yet?</DropdownMenuLabel>
+                  <DropdownMenuItem><Link href={"/signup"} className='w-full'>Sign up</Link></DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>        
         </div>        
@@ -97,8 +123,7 @@ const MediaCard = ({item, direction, itemType, itemRef}: MediaCardProps) => {
           "gap-[4px]" : direction === "row" || "grid"
           })}>
           <Link href={itemPathname} className='link-black font-bold w-fit leading-tight'>
-            {item?.title}
-            {item?.name}
+            {itemName}
           </Link>
           <span className='text-xs text-gray-500'>
             {item?.release_date && getFormattedDate(item?.release_date!, false)}

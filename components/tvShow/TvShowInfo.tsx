@@ -3,17 +3,18 @@ import { getFormattedDate, getUserScore, getUserScoreColor, getYear } from '@/li
 import Image from 'next/image';
 import React, { useState } from 'react'
 import { Separator } from '../ui/separator';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
-  DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Heart, List } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import AddListItemForm from '../user/AddListItemForm';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 
 interface TvShowInfoProps {
   tvShow: TvShow
 }
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
+  const { user } = useAuthContext(); 
   const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`);
   const imgSrcAlt = "/default-media-img.svg";
     
@@ -79,21 +80,7 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className='rounded-full bg-slate-800' size={'icon'}>
-                    <List />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Add to my watchlists</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className='flex items-center gap-2'>Watchlist 1</DropdownMenuItem>
-                  <DropdownMenuItem className='flex items-center gap-2'>Watchlist 2</DropdownMenuItem>
-                  <DropdownMenuItem className='flex items-center gap-2'>Watchlist 3</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-    
+              <AddListItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

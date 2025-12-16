@@ -14,6 +14,7 @@ const MovieRecommendations = async ({movieId}:MovieRecommendationsProps) => {
       <h3 className='section-title'>Recommendations</h3>
       <MediaList
         items={recommendedMovies.results} 
+        direction='row'
       />
     </section>
   )

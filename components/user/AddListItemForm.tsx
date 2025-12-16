@@ -1,0 +1,97 @@
+"use client"
+import React from 'react'
+import { getListDocuments } from '@/lib/actions/user.actions'
+import { useQuery } from '@tanstack/react-query'
+import { Button } from '../ui/button'
+import { List } from 'lucide-react'
+import ListCardPreview from './ListCardPreview'
+import CreateListForm from './CreateListForm'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import Link from 'next/link'
+
+interface AddListItemFormProps {
+  userId: string
+  itemId: number
+  itemTitle: string
+  itemType: "movie" | "tv" 
+  isInDropDown?: boolean 
+}
+
+const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddListItemFormProps) => {
+
+  if (!userId) return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button size="icon" className='rounded-full'>
+            <List />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-[10px] w-80 p-3">
+          <div className="flex flex-col space-y-1.5 text-center sm:text-left mb-[6px]">
+            <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
+            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
+          </div>
+          <Link href={"/login"} className='text-[#01b4e4e6] block text-start w-fit' >Log in to create or view a list.</Link>
+        </PopoverContent>
+      </Popover>
+    )
+
+  const { data, status } = useQuery({
+    queryKey: ["lists", userId],
+    queryFn: () => getListDocuments(userId)
+  });
+
+  if (status === "pending") return <p>Loading...</p>;
+  if (status === "error") return <p>Error loading lists</p>;
+  
+  return (
+    <>
+    {isInDropDown ? (
+      <div className="flex flex-col gap-[10px] w-80 p-3">
+        <div className="flex flex-col space-y-1.5 text-center sm:text-left mb-[6px]">
+          <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
+          <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
+        </div>
+        <CreateListForm userId={userId} />
+        {data?.map((list) => (
+          <ListCardPreview 
+            key={list.$id} 
+            userId={userId} 
+            list={list} 
+            itemId={itemId}
+            itemTitle={itemTitle}
+            itemType={itemType}
+          />         
+        ))}
+      </div>
+    ) : (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button size="icon" className='rounded-full'>
+            <List />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-[10px] w-80 p-3">
+          <div className="flex flex-col space-y-1.5 text-center sm:text-left mb-[6px]">
+            <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
+            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
+          </div>
+          <CreateListForm userId={userId} />
+          {data?.map((list) => (
+            <ListCardPreview 
+              key={list.$id} 
+              userId={userId} 
+              list={list} 
+              itemId={itemId}
+              itemTitle={itemTitle}
+              itemType={itemType}
+            />         
+          ))}
+        </PopoverContent>
+      </Popover>
+    )}
+    </>
+  )
+}
+
+export default AddListItemForm

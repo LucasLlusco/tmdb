@@ -236,3 +236,29 @@ declare type NewUserDataType = {
   avatarPath?: string,
   bio?:string 
 }
+
+declare type ListType = {
+  $id: string, 
+  $databaseId: string,
+  $collectionId: string,
+  $createdAt: string,
+  $updatedAt: string
+  $permissions: [],
+  userId: string,
+  title: string
+  isPublic: boolean,
+  items?: number[], 
+  itemsMediaType?: ("movie" | "tv")[] 
+}
+
+declare type DocumentsListType = { 
+  total: number,
+  documents: ListType[]
+}
+
+declare type newListDataType = {
+  title?: string;
+  isPublic?: boolean;
+  items?: number[];
+  itemsMediaType?: ("movie" | "tv")[];
+}

@@ -13,7 +13,8 @@ const TvShowRecommendations = async ({tvShowId}: TvShowRecommendationsProps) => 
     <section className='container'>
       <h3 className='section-title'>Recommendations</h3>
       <MediaList
-        items={recommendedTvShows.results} 
+        items={recommendedTvShows.results}
+        direction='row'
       />
     </section>
   )
