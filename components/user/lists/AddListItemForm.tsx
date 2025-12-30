@@ -2,22 +2,32 @@
 import React from 'react'
 import { getListDocuments } from '@/lib/actions/user.actions'
 import { useQuery } from '@tanstack/react-query'
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import { List } from 'lucide-react'
-import ListCardPreview from './ListCardPreview'
 import CreateListForm from './CreateListForm'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import ListCardPreview from './ListCardPreview'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import Link from 'next/link'
 
+
 interface AddListItemFormProps {
-  userId: string
+  userId: string 
   itemId: number
   itemTitle: string
-  itemType: "movie" | "tv" 
+  itemType: "movie" | "tv"
   isInDropDown?: boolean 
 }
 
 const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddListItemFormProps) => {
+
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["lists", userId],
+    queryFn: () => getListDocuments(userId!),
+    enabled: !!userId // Only run query when userId exists
+  });
+
+  if (isFetching) return <p>Loading...</p>;
+  if (isError) return <p>Error loading lists</p>;
 
   if (!userId) return (
       <Popover>
@@ -31,18 +41,10 @@ const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: Ad
             <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
             <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
           </div>
-          <Link href={"/login"} className='text-[#01b4e4e6] block text-start w-fit' >Log in to create or view a list.</Link>
+          <Link href={"/login"} className='text-[#01b4e4e6] block text-start w-fit'>Log in to create or view a list.</Link>
         </PopoverContent>
       </Popover>
     )
-
-  const { data, status } = useQuery({
-    queryKey: ["lists", userId],
-    queryFn: () => getListDocuments(userId)
-  });
-
-  if (status === "pending") return <p>Loading...</p>;
-  if (status === "error") return <p>Error loading lists</p>;
   
   return (
     <>

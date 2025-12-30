@@ -2,12 +2,12 @@
 import { getFormattedDate } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import React from 'react'
 import { getMovieById } from '@/services/tmdb/movies'
 import { getTvShowById } from '@/services/tmdb/tvShows'
 import EditListForm from './EditListForm'
 import DeleteListForm from './DeleteListForm'
+import { useQuery } from '@tanstack/react-query'
 
 interface ListCardProps {
   list: ListType
@@ -15,45 +15,34 @@ interface ListCardProps {
 }
 
 const ListCard = ({list, isOwner}: ListCardProps) => {
-  const [imgSrc, setImgSrc] = useState("/default-media-img.svg");
-  const imgSrcAlt = "/default-media-img.svg";
-
   const height = "141";
   const width = "94";
 
-  const pathname = usePathname();
-  const listPathname = `${pathname}/${list.$id}`;
+  const listPathname = `/list/${list.$id}`;
+  let listImageSrc = "/default-media-img.svg";
 
-  const handleGetFirstMediaItem = async () => {
-    const mediaType = list.itemsMediaType![0];
-    const mediaId = list.items![0];
+  //get first element from list.
+  const mediaType = list.itemsMediaType![0];
+  const mediaId = list.items![0];
+  const { data, isSuccess } = useQuery({
+    queryKey: ["list-image", list.$id],
+    queryFn: () => mediaType === "movie" ? getMovieById(String(mediaId)) : getTvShowById(String(mediaId)),
+    enabled: !!list.items.length //only run when there is items.
+  });
 
-    if(mediaType == "movie") {
-      const movie = await getMovieById(String(mediaId));
-      setImgSrc(`https://image.tmdb.org/t/p/w500/${movie.poster_path}`);
-    } else {
-      const tvShow = await getTvShowById(String(mediaId));
-      setImgSrc(`https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`);
-    }
+  if(isSuccess) {
+    listImageSrc = `https://image.tmdb.org/t/p/w500/${data.poster_path}`;
   }
 
-
-  useEffect(() => {
-    if(list.items?.length! > 0) {
-      handleGetFirstMediaItem();
-    }
-  }, [])
-  
   return (
     <div className='flex flex-row gap-[10px] card-boxshadow rounded-[5px]'>
       <Link href={listPathname} className={`h-[${height}px] w-[${width}px] min-w-max`}>
         <Image 
-          src={imgSrc}
+          src={listImageSrc}
           alt={list.title} 
           className={`rounded-l-[5px] h-full max-w-none bg-[#dbdbdb]`}
           width={width}
           height={height}
-          onError={() => setImgSrc(imgSrcAlt)}
         />
       </Link>   
       <div className={"flex flex-col py-[5px] justify-between"}>
@@ -67,8 +56,8 @@ const ListCard = ({list, isOwner}: ListCardProps) => {
         </div>
         {isOwner && (
           <div className="flex gap-2 items-end">
-            <EditListForm listId={list.$id} title={list.title} isPublic={list.isPublic} />
-            <DeleteListForm listId={list.$id} title={list.title} />
+            <EditListForm list={list} />
+            <DeleteListForm list={list} />
           </div>
         )}
       </div>

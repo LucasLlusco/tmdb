@@ -4,21 +4,20 @@ import { deleteListDocument } from '@/lib/actions/user.actions'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Button } from '../ui/button'
 import { Trash } from 'lucide-react'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 interface DeleteLisFormProps {
-  listId: string
-  title: string
+  list: ListType
 }
 
-const DeleteListForm = ({listId, title}: DeleteLisFormProps) => {
+const DeleteListForm = ({list}: DeleteLisFormProps) => {
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => deleteListDocument(listId),
+    mutationFn: () => deleteListDocument(list.$id),
     onSuccess: () => {
       toast.success("List deleted successfully");
       queryClient.invalidateQueries({queryKey: ["lists", user?.userId]});
@@ -43,7 +42,7 @@ const DeleteListForm = ({listId, title}: DeleteLisFormProps) => {
         <DialogHeader>
           <DialogTitle>Delete List</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete <span className='font-bold'>{title}</span>?
+            Are you sure you want to delete <span className='font-bold'>{list.title}</span>?
           </DialogDescription>
         </DialogHeader>
           <div className='flex gap-2 justify-end'>

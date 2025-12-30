@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import AddListItemForm from '../user/AddListItemForm';
+import AddListItemForm from '../user/lists/AddListItemForm';
 
 interface MovieInfoProps {
   movie: Movie

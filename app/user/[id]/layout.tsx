@@ -6,7 +6,8 @@ import { getFormattedDate } from '@/lib/utils';
 import { Edit } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useQuery } from '@tanstack/react-query';
 
 interface UserLayoutProps {
   children: Readonly<{children:React.ReactNode}>
@@ -16,19 +17,16 @@ interface UserLayoutProps {
 }
 
 const UserLayout = ({children, params}: UserLayoutProps) => {
+  const userId = params.id;
   const { user } = useAuthContext();
-  const [userProfile, setUserProfile] = useState<UserType | null>(null);
 
-  useEffect(() => {
-    const handleGetUserDocument = async () => {
-      const userDoc = await getUserDocument(params.id);
-      setUserProfile(userDoc);
-    }
-    handleGetUserDocument();
-  }, [])  
+  const { data: userProfile } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUserDocument(userId),
+  });
 
   const isOwner = user?.userId === userProfile?.userId;
-  const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
+  const avatarUrl = `https://fra.cloud.appwrite.io/v1${userProfile?.avatarPath}`;
 
   return (
     <>
@@ -50,10 +48,10 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
           <div className='flex flex-col gap-1'>
             <h2 className='text-4xl font-bold'>{userProfile?.username}</h2>
             {userProfile && (
-              <p className='opacity-70'>joined {getFormattedDate(userProfile.$createdAt!)}</p>
+              <p className='opacity-70 text-sm'>joined {getFormattedDate(userProfile.$createdAt!)}</p>
             )}
             <p className='mt-2'>{userProfile?.bio}</p>
-            <div className="flex gap-2 mt-6">
+            <div className="flex gap-2 mt-5">
               {isOwner && (
                 <Button asChild><Link href={"/settings/profile"}><Edit/>Edit profile</Link></Button>    
               )}

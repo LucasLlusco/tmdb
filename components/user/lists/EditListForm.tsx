@@ -1,75 +1,81 @@
 "use client"
 import React from 'react'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { CrossIcon } from 'lucide-react'
-import { createListFormSchema } from '@/lib/schemas'
-import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { createListDocument } from '@/lib/actions/user.actions'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { RadioGroupItem, RadioGroup } from '../ui/radio-group'
-import { Label } from '../ui/label'
+import { updateListDocument } from '@/lib/actions/user.actions';
+import { editListFormSchema } from '@/lib/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
+import { Button } from '../../ui/button';
+import { EditIcon } from 'lucide-react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
+import { Input } from '../../ui/input';
+import { RadioGroup, RadioGroupItem } from '../../ui/radio-group';
+import { Label } from '../../ui/label';
+import { useAuthContext } from '@/lib/providers/AuthContextProvider';
+import { Textarea } from '../../ui/textarea';
 
-interface CreateListFormProps {
-  userId: string
+interface EditListFormProps {
+  list: ListType
 }
 
-interface CreateListPayload {
-  userId: string,
-  title: string,
-  isPublic: boolean
+interface EditListPayload {
+  title?: string
+  isPublic?: boolean
+  description?: string
 }
 
-const CreateListForm = ({userId}: CreateListFormProps) => {
-  const formSchema = createListFormSchema();
+const EditListForm = ({list} : EditListFormProps) => {
+  const { user } = useAuthContext();
+
+  const formSchema = editListFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      title: "",
-      privacy: "public"
+      title: list.title,
+      privacy: list.isPublic ? "public" : "private",
+      description: list.description
     }
   })  
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({userId, title, isPublic} : CreateListPayload) => createListDocument(userId, title, isPublic),
+    mutationFn: ({title, isPublic, description} : EditListPayload) => updateListDocument(list.$id, {
+      title: title,
+      isPublic: isPublic,
+      description: description
+    }),
     onSuccess: () => {
-      toast.success("List created successfully");
-      form.reset({
-        title: "", 
-        privacy: "public"
-      });
-      queryClient.invalidateQueries({queryKey: ["lists", userId]});
+      toast.success("List updated successfully");
+      queryClient.invalidateQueries({queryKey: ["lists", user?.userId]});
+      queryClient.invalidateQueries({queryKey: ["list", list.$id]});
     },
     onError: () => {
-      toast.error("Could not create your list. Please try again");
+      toast.error("Could not update your list. Please try again");
     }
   });
 
   const onSubmit = async (data:z.infer<typeof formSchema>) => {
     mutate({
-      userId: userId,
       title: data.title,
-      isPublic: data.privacy === "public"? true : false
+      isPublic: data.privacy === "public"? true : false,
+      description: data.description
     });
-  }    
-
+  }  
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
-          <CrossIcon/> Create a new list
+        <Button size="sm">
+          <EditIcon/>Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a new List</DialogTitle>
+          <DialogTitle>Edit List</DialogTitle>
           <DialogDescription>
             List your movie, TV picks.
           </DialogDescription>
@@ -93,6 +99,22 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name={"description"}
+              render={({ field }) => (
+                <FormItem className='text-left'>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Describe your list"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />            
             <p className='text-sm'>Privacy setting</p>
             <Controller
               name='privacy'
@@ -106,7 +128,7 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="private" id="private" />
                     <Label htmlFor="private">Private</Label>
-                  </div>
+                  </div> 
                 </RadioGroup>
               )}
             >
@@ -120,7 +142,7 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
               <DialogClose asChild>
                 <Button variant="outline" disabled={isPending}>Cancel</Button>
               </DialogClose>
-              <Button type='submit' disabled={isPending}>Create</Button>
+              <Button type='submit' disabled={isPending}>Edit</Button>
             </div>
           </form>
         </Form>
@@ -129,4 +151,4 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
   )
 }
 
-export default CreateListForm
+export default EditListForm

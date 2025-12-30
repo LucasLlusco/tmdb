@@ -1,30 +1,29 @@
 "use client"
+import { Button } from '@/components/ui/button'
 import { updateListDocument } from '@/lib/actions/user.actions'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CrossIcon, ListCheck } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
-import { Button } from '../ui/button'
 
 interface ListCardPreviewProps {
-  userId: string,
-  list: ListType,
-  itemId: number,
-  itemTitle: string,
-  itemType: "movie" | "tv",
+  userId: string
+  list: ListType
+  itemId: number
+  itemTitle: string
+  itemType: "movie" | "tv"
 }
 
 interface AddListItemPayload {
   items: number[],
   itemsMediaType: ("movie" | "tv")[],
-  action: "add" | "delete"
+  action: "add" | "delete",
 }
 
 const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPreviewProps) => {
 
   const isItemInList = (items: number[], itemsMediaType: ("movie" | "tv")[]) => {
     const index = items.findIndex(item => item == itemId); 
-
     const item = items[index];
     const type = itemsMediaType[index];
 
@@ -51,8 +50,8 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
       } else {
         toast.success(`${itemTitle} was removed from ${list.title} successfully`);
       }
-      
       queryClient.invalidateQueries({queryKey: ["lists", userId]});
+      queryClient.invalidateQueries({queryKey: ["list", list.$id]});
     },
     onError: (data, variables) => {
       if(variables.action === "add") {
@@ -70,6 +69,7 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
 
     if(isItemInList(newItems, newItemsMediaType).isInIt) {
       const index = isItemInList(newItems, newItemsMediaType).index;
+
       newItems.splice(index, 1);
       newItemsMediaType.splice(index, 1);
       action = "delete";
@@ -87,7 +87,7 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
   }
   
   return (
-    <Button 
+    <Button
       variant="outline" 
       onClick={() => handleAddItem()}
       className="justify-start"

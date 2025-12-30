@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
-import AddListItemForm from '../user/AddListItemForm'
+import AddListItemForm from '../user/lists/AddListItemForm'
 
 interface MediaCardProps {
   item: MediaItem
-  direction?: "row" | "column" | "grid",
+  direction?: "row" | "column" | "grid" | "grid-xl",
   itemType?: "movie" | "tv",
   itemRef?: (node?: Element | null) => void,
   user: UserType | null
@@ -50,13 +50,13 @@ const MediaCard = ({item, direction, itemType, itemRef, user}: MediaCardProps) =
 
   return (
     <div ref={itemRef} className={cn('flex', {
-      "flex-col relative" : direction === "row" || "grid",
+      "flex-col relative" : direction === "row" || "grid" || "grid-xl",
       "flex-row gap-[10px] card-boxshadow rounded-[5px]" : direction === "column"
       })}>
       <Link href={itemPathname} className={cn({
         "h-[141px] w-[94px] min-w-max rounded-l-[5px]" : direction === "column",
         "h-[225px] w-[150px] min-w-max rounded-[8px]" : direction === "row",
-        "rounded-t-[8px]" : direction === "grid"
+        "rounded-t-[8px]" : direction === "grid" || "grid-xl"
       })}>
         <Image 
           src={imgSrc} 
@@ -64,7 +64,7 @@ const MediaCard = ({item, direction, itemType, itemRef, user}: MediaCardProps) =
           className={cn(' bg-[#dbdbdb]', {
             "rounded-l-[5px] h-full max-w-none" : direction === "column",
             "rounded-[8px] h-full w-full" : direction === "row",
-            "rounded-t-[8px] h-full w-full" : direction === "grid"
+            "rounded-t-[8px] h-full w-full" : direction === "grid" || "grid-xl"
           })}
           width={width}
           height={height}
@@ -109,7 +109,7 @@ const MediaCard = ({item, direction, itemType, itemRef, user}: MediaCardProps) =
       <div className={cn({
         "flex flex-col gap-[10px] py-[5px]": direction === "column",
         "relative px-[8px] py-[15px]" : direction === "row",
-        "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid"
+        "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid" || "grid-xl"
         })}>
         {direction != "column" && (
           <div className="absolute top-[-27px] w-[40px] h-[40px] rounded-full bg-black">
@@ -120,7 +120,7 @@ const MediaCard = ({item, direction, itemType, itemRef, user}: MediaCardProps) =
         )}
         <div className={cn("flex flex-col", {
           "gap-[2px]" : direction === "column",
-          "gap-[4px]" : direction === "row" || "grid"
+          "gap-[4px]" : direction === "row" || "grid" || "grid-xl"
           })}>
           <Link href={itemPathname} className='link-black font-bold w-fit leading-tight'>
             {itemName}

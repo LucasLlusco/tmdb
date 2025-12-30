@@ -238,7 +238,7 @@ declare type NewUserDataType = {
 }
 
 declare type ListType = {
-  $id: string, 
+  $id: string,
   $databaseId: string,
   $collectionId: string,
   $createdAt: string,
@@ -247,8 +247,9 @@ declare type ListType = {
   userId: string,
   title: string
   isPublic: boolean,
-  items?: number[], 
-  itemsMediaType?: ("movie" | "tv")[] 
+  items: number[], 
+  itemsMediaType: ("movie" | "tv")[],
+  description: string
 }
 
 declare type DocumentsListType = { 
@@ -261,4 +262,5 @@ declare type newListDataType = {
   isPublic?: boolean;
   items?: number[];
   itemsMediaType?: ("movie" | "tv")[];
+  description?: string
 }

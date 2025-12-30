@@ -63,7 +63,7 @@ export const deleteUserAvatar = async (avatarId: string) => {
   ); 
 }
 
-export const createListDocument = async (userId: string, title: string, isPublic: boolean) => {
+export const createListDocument = async (userId: string, title: string, isPublic: boolean, description?: string) => {
   const { database } = await createAdminClient();
   const newList:ListType = await database.createDocument(
     DATABASE_ID!,
@@ -72,7 +72,8 @@ export const createListDocument = async (userId: string, title: string, isPublic
     {
       userId,
       title,
-      isPublic
+      isPublic,
+      description
     }
   )
 
@@ -85,7 +86,7 @@ export const updateListDocument = async (listId:string, newListData: newListData
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     listId,
-   newListData
+    newListData
   )
   
   return list;

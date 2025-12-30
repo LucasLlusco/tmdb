@@ -6,7 +6,7 @@ import { Separator } from '../ui/separator';
 import { Heart } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import AddListItemForm from '../user/AddListItemForm';
+import AddListItemForm from '../user/lists/AddListItemForm';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 
 interface TvShowInfoProps {

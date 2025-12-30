@@ -2,7 +2,7 @@
 import React from 'react'
 import { getListItemsDetails } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
-import MediaList from '../shared/MediaList';
+import MediaList from '@/components/shared/MediaList';
 
 interface ListItemsProps {
   items: number[]
@@ -11,18 +11,18 @@ interface ListItemsProps {
 
 const ListItems = ({items, itemsType}: ListItemsProps) => {
 
-  if(items.length === 0) return <p>This list is empty</p>;
-
-  const { data, status } = useQuery({
+  const { data, isFetching, isError } = useQuery({
     queryKey: ["list-items", items],
     queryFn: () => getListItemsDetails(items, itemsType),
+    enabled: !!items.length
   });
 
-  if (status === "pending") return <p>Loading items...</p>;
-  if (status === "error") return <p>Error loading items</p>;
+  if(items.length === 0) return <p>This list is empty</p>;
+  if(isFetching) return <p>Loading items...</p>;
+  if(isError) return <p>Error loading items</p>;
 
   return (
-    <MediaList items={data} direction="column" itemsType={itemsType} />
+    <MediaList items={data} direction="grid-xl" itemsType={itemsType} />
   )
 }
 
