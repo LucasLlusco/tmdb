@@ -5,18 +5,18 @@ import VideoPlayer from '../shared/VideoPlayer';
 import Image from 'next/image';
 
 interface MovieMediaProps {
-  movieId: string
+  movieId: number
 }
 
 const MovieMedia = async ({movieId}:MovieMediaProps) => {
   const images = await getMovieImagesById(movieId);
   const movieVideos = await getMovieVideosById(movieId);
 
-  const trailers: Video[] = movieVideos.results.filter((video:Video)=> video.type === "Trailer");
-  const videos: Video[] = movieVideos.results.filter((video:Video) => video.type !== "Trailer");
+  const trailers = movieVideos.filter((video)=> video.type === "Trailer");
+  const videos = movieVideos.filter((video) => video.type !== "Trailer");
 
-  const backdrops: Image[] = images.backdrops;
-  const posters: Image[] = images.posters;
+  const backdrops = images.backdrops;
+  const posters = images.posters;
 
   return (
     <section className='container'>

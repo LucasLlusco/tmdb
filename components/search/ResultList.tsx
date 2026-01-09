@@ -23,7 +23,7 @@ const ResultList = async ({searchParams}:ResultListProps) => {
     <>
     {results.total_results > 0 ? (
       <>
-        <MediaList items={results.results} direction="column" itemType={searchParams.type} />
+        <MediaList items={results.results} direction="column" />
         <SearchPagination currentPage={currentPage} maxPage={maxPage} />
       </>
     ) : (

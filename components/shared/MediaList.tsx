@@ -5,14 +5,12 @@ import { cn } from '@/lib/utils'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 
 interface MediaListProps {
-  items: MediaItem[] | []
-  direction?: "row" | "column" | "grid" | "grid-xl"
-  itemType?: "movie" | "tv"
+  items: MediaItem[] | [] //can be array of movie, tv or both.
+  direction: "row" | "column" | "grid" | "grid-xl"
   itemRef?: (node?: Element | null) => void //for infinite scroll
-  itemsType?: ("movie" | "tv")[] //for list items.
 }
 
-const MediaList = ({items, direction, itemType, itemRef, itemsType}:MediaListProps) => {
+const MediaList = ({items, direction, itemRef}:MediaListProps) => {
   const { user } = useAuthContext();
 
   return (
@@ -28,7 +26,6 @@ const MediaList = ({items, direction, itemType, itemRef, itemsType}:MediaListPro
             key={item.id} 
             item={item} 
             direction={direction} 
-            itemType={itemsType ? itemsType[index] : itemType} 
             itemRef={itemRef} 
             user={user} 
           />
@@ -37,7 +34,6 @@ const MediaList = ({items, direction, itemType, itemRef, itemsType}:MediaListPro
           key={item.id} 
           item={item} 
           direction={direction} 
-          itemType={itemsType ? itemsType[index] : itemType} 
           user={user} 
         />
       })}

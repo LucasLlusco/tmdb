@@ -14,8 +14,8 @@ const Genres = ({type, filters, setFilters}:GenresProps) => {
   const [genres, setGenres] = useState<Genre[]>([]);
 
   const handleFetchGenres = async () => {
-    const res = await getGenres(type);
-    setGenres(res.genres);
+    const genres = await getGenres(type);
+    setGenres(genres);
   }
 
   useEffect(() => {

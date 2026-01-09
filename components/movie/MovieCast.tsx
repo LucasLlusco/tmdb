@@ -3,7 +3,7 @@ import React from 'react'
 import PersonList from '../shared/PersonList';
 
 interface MovieCastProps {
-  movieId: string
+  movieId: number
 }
 
 const MovieCast = async ({movieId}: MovieCastProps) => {
@@ -12,7 +12,7 @@ const MovieCast = async ({movieId}: MovieCastProps) => {
   return (
     <section className='container'>
       <h3 className='section-title'>Top billed cast</h3>
-      <PersonList cast={movieCredits.cast} />
+      <PersonList cast={movieCredits} />
     </section>
   )
 }

@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
 interface SearchFiltersProps {
-  moviesResults: string,
-  tvResults: string,
+  moviesResults: number
+  tvResults: number
   defaultType: string
 }
 

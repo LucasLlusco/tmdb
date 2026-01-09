@@ -1,46 +1,120 @@
-declare type MediaItem = {
+interface BaseMedia {
+  adult?: boolean
   backdrop_path: string
-  id: number
-  title?: string
-  original_title?: string
-  name?:string
-  original_name?: string
-  overview: string
-  poster_path: string
-  media_type: "movie" | "tv" | "person"
-  adult: boolean
-  original_language: string
   genre_ids: number[]
+  id: number
+  original_language: string
+  overview: string
   popularity: number
-  release_date?: string
-  first_air_date?: string
+  poster_path: string
+  vote_average: number
+  vote_count: number
+  media_type: "movie" | "tv" //always insert media_type in each item; its necessary and not all tmdb endpoints contain it.
+}
+
+declare interface MovieListItem extends BaseMedia { //for lists of movies, short version of movie object.
+  original_title: string
+  release_date: string
+  title: string
+  video: boolean
+  media_type: "movie" 
+}
+
+declare interface TvShowListItem extends BaseMedia { //for lists of tv shows, short version of tvShow object.
+  adult?: boolean
+  first_air_date: string
+  name: string
+  origin_country: string[]
+  original_name: string
+  media_type: "tv"
+}
+
+//This MediaItem type will be used in Medialist and MediaCard components for reusable and simplicity purposes.
+declare type MediaItem = MovieListItem | TvShowListItem;
+
+declare type Movie = { //complete version of movie object
+  adult: boolean
+  backdrop_path: string
+  belongs_to_collection: string
+  budget: number
+  genres: Genre[]
+  homepage: string
+  id: number
+  imdb_id: string
+  original_language: string
+  original_title: string
+  overview: string
+  popularity: number
+  poster_path: string
+  release_date: string
+  revenue: number
+  runtime: number
+  status: string
+  tagline: string
+  title: string
   video: boolean
   vote_average: number
   vote_count: number
 }
 
-declare type Movie = {
-  adult: boolean,
-  backdrop_path: string,
-  belongs_to_collection: string,
-  budget: number,
-  genres: Genre[],
-  homepage: string,
-  id: number,
-  imdb_id: string,
-  original_language: string,
-  original_title: string,
-  overview: string,
+declare type TvShow = { //complete version of tvShow object 
+  adult: boolean
+  backdrop_path: string
+  created_by: [{
+    id: number,
+    credit_id: string,
+    name: string,
+    gender: number,
+    profile_path: string
+  }]
+  episode_run_time: number[]
+  first_air_date: string
+  genres: Genre[]
+  homepage: string
+  id: number
+  in_production: boolean
+  languages: string[]
+  last_air_date: string
+  last_episode_to_air: [{ 
+    id: number
+    name: string
+    overview: string
+    vote_average: number
+    vote_count: number
+    air_date: string
+    episode_number: number
+    production_code: string
+    runtime: number
+    season_number: number
+    show_id: number
+    still_path: string
+  }]
+  name: string
+  next_episode_to_air: string
+  networks: [{
+    id: number,
+    logo_path: string,
+    name: string,
+    origin_country: string
+  }]
+  number_of_episodes: number
+  number_of_seasons: number
+  origin_country: string[]
+  original_language: string
+  original_name: string
+  overview: string
   popularity: number
   poster_path: string
-  release_date: string,
-  revenue: number,
-  runtime: number,
-  status: string,
-  tagline: string,
-  title: string,
-  video: boolean,
-  vote_average: number,
+  seasons: TvShowSeason[]
+  spoken_languages: [{
+    english_name: string
+    iso_639_1: string
+    name: string
+  }]
+  status: string
+  tagline: string
+  type: string
+  vote_average: number
   vote_count: number
 }
 
@@ -59,14 +133,6 @@ declare type Person = {
   order: number,
   department: string,
   job: string 
-}
-
-declare type PersonListProps = {
-  cast: Person[],
-}
-
-declare type PersonCardProps = {
-  person: Person
 }
 
 declare type Video = {
@@ -90,69 +156,6 @@ declare type Image = {
   vote_average: number,
   vote_count: number,
   width: number
-}
-
-declare type TvShow = {
-  adult: boolean,
-  backdrop_path: string,
-  created_by: [{
-    id: number,
-    credit_id: string,
-    name: string,
-    gender: number,
-    profile_path: string
-  }],
-  episode_run_time: number[],
-  first_air_date: string,
-  genres: Genre[],
-  homepage: string,
-  id: number,
-  in_production: boolean,
-  languages: string[]
-  last_air_date: string,
-  last_episode_to_air: [{
-    id: number,
-    name: string,
-    overview: string
-    vote_average: number,
-    vote_count: number,
-    air_date: string,
-    episode_number: number,
-    production_code: string,
-    runtime: number,
-    season_number: number,
-    show_id: number,
-    still_path: string
-  }],
-  name: string,
-  next_episode_to_air: string,
-  networks: [{
-    id: number,
-    logo_path: string,
-    name: string,
-    origin_country: string
-  }],
-  number_of_episodes: number,
-  number_of_seasons: number,
-  origin_country: string[],
-  original_language: string,
-  original_name: string,
-  overview: string,
-  popularity: number,
-  poster_path: string,
-  //production_companies
-  //production_countries
-  seasons: TvShowSeason[],
-  spoken_languages: [{
-    english_name: string,
-    iso_639_1: string,
-    name: string
-  }],
-  status: string,
-  tagline: string,
-  type: string,
-  vote_average: number
-  vote_count: number
 }
 
 declare type TvShowSeason = {

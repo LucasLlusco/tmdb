@@ -3,7 +3,7 @@ import React from 'react'
 import MediaList from '../shared/MediaList';
 
 interface TvShowRecommendationsProps {
-  tvShowId: string
+  tvShowId: number
 }
 
 const TvShowRecommendations = async ({tvShowId}: TvShowRecommendationsProps) => {
@@ -13,7 +13,7 @@ const TvShowRecommendations = async ({tvShowId}: TvShowRecommendationsProps) => 
     <section className='container'>
       <h3 className='section-title'>Recommendations</h3>
       <MediaList
-        items={recommendedTvShows.results}
+        items={recommendedTvShows}
         direction='row'
       />
     </section>

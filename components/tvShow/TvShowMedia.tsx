@@ -5,18 +5,18 @@ import VideoPlayer from '../shared/VideoPlayer';
 import Image from 'next/image';
 
 interface TvShowMediaProps {
-  tvShowId: string
+  tvShowId: number
 }
 
 const TvShowMedia = async ({tvShowId}: TvShowMediaProps) => {
   const images = await getTvShowImagesById(tvShowId);
   const tvShowVideos = await getTvShowVideosById(tvShowId);
 
-  const trailers: Video[] = tvShowVideos.results.filter((video:Video)=> video.type === "Trailer");
-  const videos: Video[] = tvShowVideos.results.filter((video:Video) => video.type !== "Trailer");
+  const trailers = tvShowVideos.filter((video:Video)=> video.type === "Trailer");
+  const videos = tvShowVideos.filter((video:Video) => video.type !== "Trailer");
 
-  const backdrops: Image[] = images.backdrops;
-  const posters: Image[] = images.posters;
+  const backdrops = images.backdrops;
+  const posters = images.posters;
 
   return (
     <section className='container'>

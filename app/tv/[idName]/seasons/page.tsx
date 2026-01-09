@@ -10,14 +10,14 @@ interface SeasonsPageProps {
 }
 
 const SeasonsPage = async({params} : SeasonsPageProps) => {
-  const id = params.idName.split("-")[0]; 
-  const tvShow: TvShow = await getTvShowById(id)
+  const id = Number(params.idName.split("-")[0]); 
+  const tvShow = await getTvShowById(id);
 
   const basePathname = `/tv/${params.idName}`;
 
   return (
     <main>
-      <SeasonHeader 
+      <SeasonHeader
         basePathname={basePathname}
         name={tvShow.name}
         date={tvShow.first_air_date}

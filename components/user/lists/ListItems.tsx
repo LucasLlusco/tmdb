@@ -11,18 +11,23 @@ interface ListItemsProps {
 
 const ListItems = ({items, itemsType}: ListItemsProps) => {
 
-  const { data, isFetching, isError } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["list-items", items],
     queryFn: () => getListItemsDetails(items, itemsType),
     enabled: !!items.length
   });
 
   if(items.length === 0) return <p>This list is empty</p>;
-  if(isFetching) return <p>Loading items...</p>;
-  if(isError) return <p>Error loading items</p>;
+  if(status === "pending") return <p>Loading items...</p>;
+  if(status === "error") return <p>Error loading items</p>;
+
+  const mediaItems = data.map((item: any, index:number) => ({
+    ...item,
+    media_type: itemsType[index]
+  }));
 
   return (
-    <MediaList items={data} direction="grid-xl" itemsType={itemsType} />
+    <MediaList items={mediaItems} direction="grid-xl" />
   )
 }
 

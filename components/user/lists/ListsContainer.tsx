@@ -12,14 +12,14 @@ interface ListsContainerProps {
 
 const ListsContainer = ({initialData, isOwner, userId}: ListsContainerProps) => {
 
-  const { data: lists, isFetching, isError } = useQuery({
+  const { data: lists, isPending, isError } = useQuery({
     queryKey: ["lists", userId],
     queryFn: () => getListDocuments(userId),
     initialData: initialData
   });
 
-  if (isFetching) return <p>Loading lists...</p>
-  if (isError) return <p>Error loading lists</p>;
+  if(isPending) return <p>Loading lists...</p>;
+  if(isError) return <p>Error loading lists</p>;
 
   return (
     <article className='flex flex-col gap-5'>

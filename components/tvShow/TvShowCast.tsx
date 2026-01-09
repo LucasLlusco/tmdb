@@ -3,7 +3,7 @@ import React from 'react'
 import PersonList from '../shared/PersonList';
 
 interface TvShowCastProps {
-  tvShowId: string
+  tvShowId: number
 }
 
 const TvShowCast = async ({tvShowId}: TvShowCastProps) => {
@@ -12,7 +12,7 @@ const TvShowCast = async ({tvShowId}: TvShowCastProps) => {
   return (
     <section className='container'>
       <h3 className='section-title'>Top billed cast</h3>
-      <PersonList cast={tvShowCredits.cast} />
+      <PersonList cast={tvShowCredits} />
     </section>
   )
 }

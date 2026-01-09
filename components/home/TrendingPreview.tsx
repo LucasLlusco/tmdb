@@ -1,31 +1,28 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import MediaList from '../shared/MediaList';
 import { getTrending } from '@/services/tmdb/shared';
 import Filters from './Filters';
 import { TRENDING_FILTERS } from '@/constants';
+import { useQuery } from '@tanstack/react-query';
 
 const TrendingPreview = () => {
-  const [trendingList, setTrendingList] = useState([]);
+  const [time, setTime] = useState(TRENDING_FILTERS[0].value);
 
-  const handleGetTrending = async (time:string) => {
-    const trending = await getTrending(time);
-    setTrendingList(trending.results);
-  }
+  const { data: trendingList, status } = useQuery({
+    queryKey: ["trending", time],
+    queryFn: () => getTrending(time)
+  });
 
-  useEffect(() => {
-    handleGetTrending(TRENDING_FILTERS[0].value);
-  }, [])
-  
   return (
     <section className='container'>
       <div className="flex gap-7 items-center">
         <h3 className='section-title'>Trending</h3>
-        <Filters filters={TRENDING_FILTERS} onClick={handleGetTrending} defaultValue={TRENDING_FILTERS[0].value} />
+        <Filters filters={TRENDING_FILTERS} defaultValue={time} setFilter={setTime} />
       </div>
-      {trendingList && (
-        <MediaList items={trendingList} direction='row'/>
-      )}
+      {status === "pending" && <p>loading...</p>}
+      {status === "error"  && <p>error</p>}
+      {status === "success"  && <MediaList items={trendingList} direction='row' />}
     </section>
   )
 }

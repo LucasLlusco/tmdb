@@ -5,7 +5,6 @@ import { Button } from '../ui/button'
 import { useInView } from "react-intersection-observer";
 
 interface ResultListProps {
-  type: "movie" | "tv",
   filters: DiscoverFiltersType,
   setFilters: React.Dispatch<React.SetStateAction<DiscoverFiltersType>>,
   handleGetDiscoveredItems: (nextPageNumber?:number) => Promise<void>,
@@ -13,7 +12,7 @@ interface ResultListProps {
   total_pages: number,
 }
 
-const ResultList = ({type, filters, setFilters, handleGetDiscoveredItems, results, total_pages}:ResultListProps) => {
+const ResultList = ({filters, setFilters, handleGetDiscoveredItems, results, total_pages}:ResultListProps) => {
 
   const loadMore = () => {
     handleGetDiscoveredItems(filters.page + 1);
@@ -37,7 +36,7 @@ const ResultList = ({type, filters, setFilters, handleGetDiscoveredItems, result
 
   return (
     <>
-    <MediaList items={results} direction="grid" itemType={type} itemRef={ref} />
+    <MediaList items={results} direction="grid" itemRef={ref} />
     {filters.showLoadMoreBtn && filters.page < total_pages && !filters.filtersHasChanged && (
       <Button onClick={loadMore} className='w-full mt-6'>LOAD MORE</Button>
     )}

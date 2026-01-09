@@ -13,8 +13,8 @@ interface moviePageProps {
 }
 
 const MoviePage = async ({params}: moviePageProps) => {
-  const id = params.idName.split("-")[0]; 
-  const movie: Movie = await getMovieById(id);
+  const id = Number(params.idName.split("-")[0]); 
+  const movie = await getMovieById(id);
 
   return (
     <main>

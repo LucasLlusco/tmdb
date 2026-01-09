@@ -19,15 +19,14 @@ interface AddListItemFormProps {
 }
 
 const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddListItemFormProps) => {
-
-  const { data, isFetching, isError } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["lists", userId],
     queryFn: () => getListDocuments(userId!),
     enabled: !!userId // Only run query when userId exists
   });
 
-  if (isFetching) return <p>Loading...</p>;
-  if (isError) return <p>Error loading lists</p>;
+  if (status === 'pending') return <p>Loading...</p>;
+  if (status === "error") return <p>Error loading lists</p>;
 
   if (!userId) return (
       <Popover>

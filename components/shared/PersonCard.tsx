@@ -2,6 +2,10 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 
+interface PersonCardProps {
+  person: Person
+}
+
 const PersonCard = ({person} : PersonCardProps) => {
   const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${person.profile_path}`);
   const imgSrcAlt = "/default-person-img.svg";

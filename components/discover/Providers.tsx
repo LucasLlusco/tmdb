@@ -26,18 +26,17 @@ const Providers = ({type, filters, setFilters}:ProvidersProps) => {
       }
     }
     const providers = await getProvidersByRegion(formattedParams);
-    setProviders(providers.results);
+    setProviders(providers);
     setFilters(prevFilters => ({
       ...prevFilters,
       selectedRegion: region,
       selectedProviders: []
     }))
-    
   }
 
   const handleFetchRegions = async () => {
     const regions = await getAvailableRegions();
-    setRegions(regions.results);
+    setRegions(regions);
   }
   
   useEffect(() => {

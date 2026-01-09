@@ -9,15 +9,11 @@ interface FilterOption {
 
 interface FiltersProps {
   filters: FilterOption[],
-  onClick: (value:string) => void,
-  defaultValue: string
+  defaultValue: string,
+  setFilter: React.Dispatch<React.SetStateAction<string>> 
 }
 
-const Filters = ({filters, onClick, defaultValue}: FiltersProps) => {
-
-  const handleFetchData = (value:string) => {
-    onClick(value);
-  }
+const Filters = ({filters, defaultValue, setFilter}: FiltersProps) => {
 
   return (
     <Tabs defaultValue={defaultValue} className='mb-6'>
@@ -26,7 +22,7 @@ const Filters = ({filters, onClick, defaultValue}: FiltersProps) => {
           <TabsTrigger 
             key={filter.value} 
             value={filter.value} 
-            onClick={() => handleFetchData(filter.value)}
+            onClick={() => setFilter(filter.value)}
           >
             <span>{filter.name}</span>          
           </TabsTrigger>

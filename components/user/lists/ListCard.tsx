@@ -24,9 +24,9 @@ const ListCard = ({list, isOwner}: ListCardProps) => {
   //get first element from list.
   const mediaType = list.itemsMediaType![0];
   const mediaId = list.items![0];
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess } = useQuery<Movie | TvShow>({
     queryKey: ["list-image", list.$id],
-    queryFn: () => mediaType === "movie" ? getMovieById(String(mediaId)) : getTvShowById(String(mediaId)),
+    queryFn: () => mediaType === "movie" ? getMovieById(mediaId) : getTvShowById(mediaId),
     enabled: !!list.items.length //only run when there is items.
   });
 

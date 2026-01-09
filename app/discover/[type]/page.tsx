@@ -15,9 +15,9 @@ interface DiscoverPageProps {
 }
 
 interface ResultsType {
-  page: number,
-  results: MediaItem[] | [],
-  total_pages: number,
+  page: number
+  results: MediaItem[] | []
+  total_pages: number
   total_results: number
 }
 
@@ -85,7 +85,7 @@ const DiscoverPage = ({params}: DiscoverPageProps) => {
     <main>
       <div className='container flex items-end justify-between !pb-6'>
         <h2 className='section-title !mb-0 !text-[22px]'>{sortName} {typeName}</h2>
-        <span className='text-[14px] opacity-70'>showing 1 - {results.results.length} of {results.total_results.toLocaleString()}</span>        
+        <span className='text-[14px] opacity-70'>showing 1 - {results.results.length} results of {results.total_results.toLocaleString()}</span>        
       </div>
       <div className='container flex flex-row gap-5 !pt-0'>
         <aside className="aside-section">
@@ -98,7 +98,6 @@ const DiscoverPage = ({params}: DiscoverPageProps) => {
         </aside>
         <section className='main-section'>
           <ResultList 
-            type={params.type!}
             filters={filters}
             setFilters={setFilters}
             handleGetDiscoveredItems={handleGetDiscoveredItems} 

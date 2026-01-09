@@ -2,14 +2,17 @@
 import { tmdbClient } from "@/lib/axiosInstances";
 import { tmdbUrls } from "./urls";
 
+interface MediaItemsResultType {
+  page: number
+  results: MediaItem[] | []
+  total_pages: number
+  total_results: number
+}
+
 export const getTrending = async (time:string) => {
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.trending(time));
-    const data = response.data; 
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.trending(time));
+  const data: MediaItem[] = response.data.results;
+  return data;
 }
 
 export const getPopular = async (type:string) => {
@@ -26,23 +29,25 @@ export const getPopular = async (type:string) => {
       "with_watch_monetization_types": "flatrate|free|ads|rent|buy" 
     }
   } 
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.popular(type), {params});
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  
+  const response = await tmdbClient.get(tmdbUrls.shared.popular(type), {params});
+  const data: MediaItem[] = response.data.results.map((item: any) => ({
+    ...item,
+    media_type: type
+  }));
+
+  return data;
 }
 
 export const getSearchedItems = async ({type, params}:any) => {
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.search(type), {params});
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.search(type), {params});
+  const data: MediaItemsResultType = response.data;
+  data.results = data.results.map((item: any) => ({
+    ...item,
+    media_type: type
+  }));
+
+  return data;
 }
 
 export const getDiscoveredItems = async ({type, params}:any) => {
@@ -86,41 +91,29 @@ export const getDiscoveredItems = async ({type, params}:any) => {
     ...additionalParams
   }
 
-  try {  
-    const response = await tmdbClient.get(tmdbUrls.shared.discover(type), {params: finalParams});
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.discover(type), {params: finalParams});
+  const data: MediaItemsResultType = response.data;
+  data.results = data.results.map((item: any) => ({
+    ...item,
+    media_type: type
+  }));
+  return data;
 }
 
 export const getAvailableRegions = async () => {
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.availableRegions);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.availableRegions);
+  const data: Region[] = response.data.results;
+  return data;
 }
 
 export const getProvidersByRegion = async ({type, params}: any) => {
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.providersByRegion(type), {params});
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.providersByRegion(type), {params});
+  const data: Provider[] = response.data.results;
+  return data;
 }
 
 export const getGenres = async (type:string) => {
-  try {
-    const response = await tmdbClient.get(tmdbUrls.shared.genres(type));
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await tmdbClient.get(tmdbUrls.shared.genres(type));
+  const data: Genre[] = response.data.genres;
+  return data;
 }

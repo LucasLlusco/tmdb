@@ -9,16 +9,16 @@ import React from 'react'
 interface SeasonPageProps {
   params: {
     idName: string,
-    seasonNumber: string
+    seasonNumber: number
   } 
 }
 
 const SeasonPage = async({params}: SeasonPageProps) => {
-  const id = params.idName.split("-")[0]; 
+  const id = Number(params.idName.split("-")[0]); 
   const seasonNumber = params.seasonNumber;
 
-  const season: TvShowSeason = await getTvShowSeasonById(id, seasonNumber);
-  const tvShow: TvShow = await getTvShowById(id);
+  const season = await getTvShowSeasonById(id, seasonNumber);
+  const tvShow = await getTvShowById(id);
  
   const backLinkPathname = `/tv/${params.idName}/seasons`;
   const basePathname = `/tv/${params.idName}`;

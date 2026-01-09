@@ -14,13 +14,13 @@ interface ListContainerProps {
 
 const ListContainer = ({initialData, isOwner, listId} : ListContainerProps) => {
 
-  const { data: list, isFetching, isError } = useQuery({
+  const { data: list, isPending, isError } = useQuery({
     queryKey: ["list", listId],
     queryFn: () => getListDocument(listId),
     initialData: initialData
   });
 
-  if (isFetching) return <p>Loading list...</p>
+  if (isPending) return <p>Loading list...</p>;
   if (isError) return <p>Error loading list</p>;
 
   return (
