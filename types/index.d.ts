@@ -255,15 +255,29 @@ declare type ListType = {
   description: string
 }
 
-declare type DocumentsListType = { 
-  total: number,
-  documents: ListType[]
+declare type UpdatedListDataType = {
+  title?: string
+  isPublic?: boolean
+  items?: number[]
+  itemsMediaType?: ("movie" | "tv")[]
+  description?: string
 }
 
-declare type newListDataType = {
-  title?: string;
-  isPublic?: boolean;
-  items?: number[];
-  itemsMediaType?: ("movie" | "tv")[];
-  description?: string
+declare type WatchlistType = {
+  $id: string,
+  $databaseId: string,
+  $collectionId: string,
+  $createdAt: string,
+  $updatedAt: string
+  $permissions: [],
+  userId: string,
+  isPublic: boolean,
+  items: number[], 
+  itemsMediaType: ("movie" | "tv")[]
+}
+
+declare type UpdatedWatchlistDataType = {
+  isPublic?: boolean
+  items?: number[]
+  itemsMediaType?: ("movie" | "tv")[]
 }

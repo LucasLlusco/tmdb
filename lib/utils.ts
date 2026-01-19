@@ -65,3 +65,22 @@ export const isDatePassed = (date: string) => {
     return false;
   }
 }
+
+export const isItemInList = (itemId:number, itemMediaType: "movie" | "tv", items: number[], itemsMediaType: ("movie" | "tv")[]) => {
+  const index = items.findIndex(item => item == itemId); 
+
+  const item = items[index];
+  const type = itemsMediaType[index];
+
+  if(item == itemId && type == itemMediaType) {
+    return {
+      isInIt: true,
+      index: index
+    }
+  } else {
+    return {
+      isInIt: false,
+      index: -1
+    }
+  }
+}

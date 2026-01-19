@@ -14,9 +14,10 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bookmark, Ellipsis, Heart, List } from 'lucide-react'
+import { Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
 import AddListItemForm from '../user/lists/AddListItemForm'
+import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm'
 
 interface MediaCardProps {
   item: MediaItem
@@ -77,7 +78,7 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
               <div className='flex flex-col'>
                 <DropdownMenuItem><Heart className='w-4 h-4 mr-2' />Add to favorites</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><Bookmark className='w-4 h-4 mr-2' />Add to watchlist</DropdownMenuItem>
+                <AddWatchlistItemForm userId={user?.$id} itemId={item.id} itemTitle={title} itemType={type} isInDropDown={true} />
                 <DropdownMenuSeparator />
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger><List className='w-4 h-4 mr-2' />Add to list</DropdownMenuSubTrigger>

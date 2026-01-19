@@ -8,6 +8,7 @@ import { Heart } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import AddListItemForm from '../user/lists/AddListItemForm';
+import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
 
 interface MovieInfoProps {
   movie: Movie
@@ -46,7 +47,7 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
               width={300}
               height={450}
               onError={() => setImgSrc(imgSrcAlt)}
-              />
+            />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
             <div className="flex flex-row gap-2 items-end">
@@ -80,7 +81,8 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} itemId={movie.id} itemTitle={movie.title} itemType="movie" />
+              <AddListItemForm userId={user?.$id!} itemId={movie.id} itemTitle={movie.title} itemType="movie" isInDropDown={false} />
+              <AddWatchlistItemForm userId={user?.$id!} itemId={movie.id} itemTitle={movie.title} itemType="movie" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

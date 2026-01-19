@@ -70,3 +70,7 @@ export const editListFormSchema = () => z.object({
     .max(1000, {message: "Description must contain at most 1000 characters"
   }).optional()
 })
+
+export const editWatchlistFormSchema = () => z.object({
+  privacy: z.boolean()
+})

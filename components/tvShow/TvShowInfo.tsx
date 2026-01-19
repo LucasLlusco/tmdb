@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import AddListItemForm from '../user/lists/AddListItemForm';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
+import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
 
 interface TvShowInfoProps {
   tvShow: TvShow
@@ -80,7 +81,8 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" />
+              <AddListItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" isInDropDown={false} />
+              <AddWatchlistItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

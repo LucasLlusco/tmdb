@@ -1,8 +1,21 @@
+import WatchlistContainer from '@/components/user/watchlist/WatchlistContainer';
+import { getUserDocument, getWatchlistDocument } from '@/lib/actions/user.actions';
 import React from 'react'
 
-const WatchListPage = () => {
+interface WatchlistPageProps {
+  params: {
+    id: string
+  }
+}
+
+const WatchListPage = async ({params}: WatchlistPageProps) => {
+  const userId = params.id;
+
+  const userProfile = await getUserDocument(userId);
+  const watchlist = await getWatchlistDocument(userId);
+
   return (
-    <div>WatchListPage</div>
+    <WatchlistContainer initialWatchlist={watchlist} userId={userProfile.userId} />
   )
 }
 

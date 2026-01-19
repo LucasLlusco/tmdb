@@ -2,7 +2,7 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, deleteUserAvatar, deleteUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
+import { createUserDocument, createWatchlistDocument, deleteUserAvatar, deleteUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
 
 export const login = async (email:string, password:string) => {
   const { account } = await createAdminClient();
@@ -36,6 +36,8 @@ export const signup = async (email:string, password:string, username:string) => 
     username,
     userId: session.userId, 
   });
+
+  await createWatchlistDocument(newUser.userId);
 
   return newUser;
 }

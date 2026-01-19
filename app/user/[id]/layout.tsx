@@ -64,7 +64,7 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
           <Link href={`/user/${userProfile?.userId}`}>Overview</Link>
           <Link href={`/user/${userProfile?.userId}/lists`}>Lists</Link>
           <Link href={`/user/${userProfile?.userId}/ratings`}>Ratings</Link>
-          <Link href={`/user/${userProfile?.userId}/watchlist`}>Wachlist</Link>
+          <Link href={`/user/${userProfile?.userId}/watchlist`}>Watchlist</Link>
           <Link href={`/user/${userProfile?.userId}/reviews`}>Reviews</Link>
         </ul>
       </nav>
