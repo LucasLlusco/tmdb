@@ -1,7 +1,6 @@
 "use client"
 import React from 'react'
 import { deleteListDocument } from '@/lib/actions/user.actions'
-import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Trash } from 'lucide-react'
@@ -13,14 +12,13 @@ interface DeleteLisFormProps {
 }
 
 const DeleteListForm = ({list}: DeleteLisFormProps) => {
-  const { user } = useAuthContext();
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => deleteListDocument(list.$id),
     onSuccess: () => {
       toast.success("List deleted successfully");
-      queryClient.invalidateQueries({queryKey: ["lists", user?.userId]});
+      queryClient.invalidateQueries({queryKey: ["lists", list.userId]});
     },
     onError: () => {
       toast.error("Could not delete your list. Please try again");

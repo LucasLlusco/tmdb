@@ -2,7 +2,7 @@ import { getTvShowImagesById, getTvShowVideosById } from '@/services/tmdb/tvShow
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import VideoPlayer from '../shared/VideoPlayer';
-import Image from 'next/image';
+import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface TvShowMediaProps {
   tvShowId: number
@@ -45,13 +45,13 @@ const TvShowMedia = async ({tvShowId}: TvShowMediaProps) => {
         <TabsContent value="backdrops" className='media-list'>
           <div className="flex flex-row">
             {backdrops.slice(0,6).map((image) => (
-              <Image 
+              <ImageWithFallback
                 key={image.file_path}         
-                src={`https://image.tmdb.org/t/p/w533_and_h300_bestv2/${image.file_path}`} 
+                src={image.file_path} 
                 alt={image.file_path} 
                 width={529}
                 height={300}     
-                className='h-[300px]'             
+                className='h-[300px]'
               />
             ))}
           </div>
@@ -59,13 +59,13 @@ const TvShowMedia = async ({tvShowId}: TvShowMediaProps) => {
         <TabsContent value="posters" className='media-list'>
           <div className="flex flex-row">
             {posters.slice(0,7).map((image) => (
-              <Image 
+              <ImageWithFallback 
                 key={image.file_path}         
-                src={`https://image.tmdb.org/t/p/w500/${image.file_path}`} 
+                src={image.file_path}
                 alt={image.file_path} 
                 width={200}
                 height={300}   
-                className='h-[300px]'               
+                className='h-[300px]'
               />
             ))}
           </div>

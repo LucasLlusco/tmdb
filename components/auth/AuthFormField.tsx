@@ -4,7 +4,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/
 import { Input } from '../ui/input'
 import { Control, FieldPath } from 'react-hook-form';
 import { z } from 'zod';
-import { authFormSchema } from '@/lib/schemas';
+import { authFormSchema } from '@/lib/schemas/auth.schema';
 
 const formSchema = authFormSchema("sign-up");
 

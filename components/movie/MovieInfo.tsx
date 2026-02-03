@@ -1,7 +1,6 @@
 "use client"
-import { getFormattedDate, getRuntime, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
-import Image from 'next/image';
-import React, { useState } from 'react'
+import { getFormattedDate, getRuntime, getYear } from '@/lib/utils';
+import React from 'react'
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
@@ -9,6 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import AddListItemForm from '../user/lists/AddListItemForm';
 import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
+import UserScoreProgress from '../shared/UserScoreProgress';
+import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface MovieInfoProps {
   movie: Movie
@@ -16,15 +17,7 @@ interface MovieInfoProps {
 
 const MovieInfo = ({movie}: MovieInfoProps) => {
   const { user } = useAuthContext();
-  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${movie.poster_path}`);
-  const imgSrcAlt = "/default-media-img.svg";
     
-  const progressValue = getUserScore(movie?.vote_average);
-  const progresscolor = getUserScoreColor(getUserScore(movie?.vote_average));
-  const circularProgressStyles = {
-    background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
-  }
-
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${movie.backdrop_path})`,
     backgroundSize: 'cover',
@@ -40,13 +33,12 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
       <div style={backgroundOverlayStyles}>
         <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
-            <Image
-              src={imgSrc} 
+            <ImageWithFallback
+              src={movie.poster_path}
               alt={movie.title} 
-              className='rounded-[8px] max-w-none bg-[#dbdbdb]'
+              className="rounded-[8px] max-w-none bg-[#dbdbdb]"
               width={300}
               height={450}
-              onError={() => setImgSrc(imgSrcAlt)}
             />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
@@ -67,11 +59,7 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
                 User
                 <br />
                 Score: 
-                  <div className="top-[-27px] w-[40px] h-[40px] rounded-full bg-black">
-                    <div className="circularProgress" style={circularProgressStyles}>
-                      <span className="circularProgress-value">{progressValue ? `${progressValue}%` : "NR"}</span>
-                    </div>
-                  </div>                   
+                <UserScoreProgress vote_average={movie.vote_average} />                 
               </div>
             </div>
             <div className="flex flex-col">

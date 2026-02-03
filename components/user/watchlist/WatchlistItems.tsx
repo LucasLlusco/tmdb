@@ -3,6 +3,7 @@ import React from 'react'
 import MediaList from '@/components/shared/MediaList';
 import { getMediaItemsDetails } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
+import { TMDB_IMG_URLS } from '@/constants';
 
 interface WatchlistItemsProps {
   items: number[]
@@ -11,7 +12,7 @@ interface WatchlistItemsProps {
 
 const WatchlistItems = ({items, itemsType}: WatchlistItemsProps) => {
 
-  const { data, status,  } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["watchlist-items", items],
     queryFn: () => getMediaItemsDetails(items, itemsType),
     enabled: !!items.length,
@@ -24,7 +25,8 @@ const WatchlistItems = ({items, itemsType}: WatchlistItemsProps) => {
 
   const mediaItems = data.map((item: any, index:number) => ({
     ...item,
-    media_type: itemsType[index]
+    media_type: itemsType[index],
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
   }));  
 
   return (

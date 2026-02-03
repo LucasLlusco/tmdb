@@ -1,5 +1,5 @@
 "use client"
-import { confirmPasswordResetSchema } from '@/lib/schemas';
+import { confirmPasswordResetSchema } from '@/lib/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import React from 'react'
@@ -38,7 +38,7 @@ const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
     mutationFn: ({userId, secret, password}: ConfirmPasswordResetPayload) => confirmPasswordReset(userId, secret, password),
     onSuccess: () => {
       toast.success("Password reset successful. You can now log in");
-      route.push("/login");
+      route.replace("/login");
     },
     onError: (error) => {
       toast.error("Failed to reset password", {

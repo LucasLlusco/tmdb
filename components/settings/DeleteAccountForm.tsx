@@ -1,6 +1,6 @@
 "use client"
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import { deleteAccountFormSchema } from '@/lib/schemas';
+import { deleteAccountFormSchema } from '@/lib/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import React from 'react'

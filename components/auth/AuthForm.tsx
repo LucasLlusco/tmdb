@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { login, signup } from '@/lib/actions/auth.actions';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { useRouter } from 'next/navigation';
-import { authFormSchema } from '@/lib/schemas';
+import { authFormSchema } from '@/lib/schemas/auth.schema';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -42,7 +42,7 @@ const AuthForm = ({type}: AuthFormProps) => {
     onSuccess: (data) => {
       setUser(data);
       toast.success(type === "sign-in" ? `Welcome back ${data.username}!` : `Welcome ${data.username}!`);
-      route.push(`/user/${data?.userId}`);
+      route.back();
     },
     onError: (error) => {
       toast.error(type === "sign-in" ? "Login failed" : "Sign up failed", {

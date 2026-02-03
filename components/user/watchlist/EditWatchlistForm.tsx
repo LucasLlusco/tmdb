@@ -2,7 +2,7 @@
 import { Form, FormControl } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { updateWatchlistDocument } from '@/lib/actions/user.actions';
-import { editWatchlistFormSchema } from '@/lib/schemas';
+import { editWatchlistFormSchema } from '@/lib/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
@@ -16,7 +16,6 @@ interface EditWatchlistFormProps {
 }
 
 const EditWatchlistForm = ({watchlist, userId} : EditWatchlistFormProps) => {
-
   const formSchema = editWatchlistFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

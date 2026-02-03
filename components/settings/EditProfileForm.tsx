@@ -10,7 +10,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { deleteUserAvatar, updateUserDocument } from '@/lib/actions/user.actions';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import { editProfileFormSchema } from '@/lib/schemas';
+import { editProfileFormSchema } from '@/lib/schemas/auth.schema';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 

@@ -1,9 +1,8 @@
-"use client"
 import { getFormattedDate, getRuntime, getUserScore, getYear, isDatePassed } from '@/lib/utils'
 import { StarIcon } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React from 'react'
+import ImageWithFallback from '../shared/ImageWithFallback'
 
 interface SeasonMediaCardProps {
   season?: TvShowSeason,
@@ -13,24 +12,24 @@ interface SeasonMediaCardProps {
 }
 
 const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMediaCardProps) => {
-  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${season?.poster_path || episode?.still_path}`);
-  const imgSrcAlt = "/default-media-img.svg";
-  
   const seasonPathname = season ? `${basePathname}/season/${season.season_number}` : "";
 
-  const height = season ? "141" : "127";
-  const width = season ? "94" : "227";
+  const image = season?.poster_path || episode?.still_path;
+  const overview = season?.overview || episode?.overview;
+  const name = season?.name || episode?.name;
+
+  const height = season ? 141 : 127;
+  const width = season ? 94 : 227;
 
   return (
     <div className='flex flex-row gap-[10px] card-boxshadow rounded-[5px]'>
       <Link href={seasonPathname} className={`h-[${height}px] w-[${width}px] min-w-max`}>
-        <Image 
-          src={imgSrc}
-          alt={season?.name! || episode?.name!} 
+        <ImageWithFallback 
+          src={image!}
+          alt={name!} 
           className={`rounded-l-[5px] h-full max-w-none bg-[#dbdbdb]`}
           width={width}
           height={height}
-          onError={() => setImgSrc(imgSrcAlt)}
         />
       </Link>   
       <div className={"flex flex-col py-[5px]"}>
@@ -39,8 +38,7 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
             <span className='font-normal'>{episode.episode_number}</span>
           )}
           <Link href={seasonPathname} className='link-black'>
-            {season?.name}
-            {episode?.name}
+            {name}
           </Link>
         </p>
         <div className="flex gap-2 items-center">
@@ -82,8 +80,7 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
           </p>
         )}
         <p className='overflow-txt mt-[10px] text-[14px]'>
-          {season?.overview}
-          {episode?.overview}
+          {overview}
         </p>
       </div>
     </div>

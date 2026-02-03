@@ -1,7 +1,6 @@
 "use client"
-import { getFormattedDate, getUserScore, getUserScoreColor, getYear } from '@/lib/utils';
-import Image from 'next/image';
-import React, { useState } from 'react'
+import { getFormattedDate, getYear } from '@/lib/utils';
+import React from 'react'
 import { Separator } from '../ui/separator';
 import { Heart } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -9,6 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import AddListItemForm from '../user/lists/AddListItemForm';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
+import UserScore from '../shared/UserScoreProgress';
+import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface TvShowInfoProps {
   tvShow: TvShow
@@ -16,15 +17,7 @@ interface TvShowInfoProps {
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
   const { user } = useAuthContext(); 
-  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${tvShow.poster_path}`);
-  const imgSrcAlt = "/default-media-img.svg";
-    
-  const progressValue = getUserScore(tvShow?.vote_average);
-  const progresscolor = getUserScoreColor(getUserScore(tvShow?.vote_average));
-  const circularProgressStyles = {
-    background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
-  }
-
+  
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${tvShow.backdrop_path})`,
     backgroundSize: 'cover',
@@ -40,13 +33,12 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
       <div style={backgroundOverlayStyles}>
         <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
-            <Image
-              src={imgSrc} 
+            <ImageWithFallback
+              src={tvShow.poster_path}
               alt={tvShow.name} 
-              className='rounded-[8px] max-w-none bg-[#dbdbdb]'
+              className="rounded-[8px] max-w-none bg-[#dbdbdb]"
               width={300}
               height={450}
-              onError={() => setImgSrc(imgSrcAlt)}
             />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
@@ -67,11 +59,7 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
                 User
                 <br />
                 Score: 
-                  <div className="top-[-27px] w-[40px] h-[40px] rounded-full bg-black">
-                    <div className="circularProgress" style={circularProgressStyles}>
-                      <span className="circularProgress-value">{progressValue ? `${progressValue}%` : "NR"}</span>
-                    </div>
-                  </div>                   
+                <UserScore vote_average={tvShow.vote_average} />                  
               </div>
             </div>
             <div className="flex flex-col">

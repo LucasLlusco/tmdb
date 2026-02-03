@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { CrossIcon } from 'lucide-react'
-import { createListFormSchema } from '@/lib/schemas'
+import { createListFormSchema } from '@/lib/schemas/user.schema'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'

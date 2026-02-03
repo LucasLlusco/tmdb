@@ -1,6 +1,7 @@
 "use server"
 import { tmdbClient } from "@/lib/axiosInstances";
 import { tmdbUrls } from "./urls";
+import { TMDB_IMG_URLS } from "@/constants";
 
 interface MediaItemsResultType {
   page: number
@@ -11,7 +12,10 @@ interface MediaItemsResultType {
 
 export const getTrending = async (time:string) => {
   const response = await tmdbClient.get(tmdbUrls.shared.trending(time));
-  const data: MediaItem[] = response.data.results;
+  const data: MediaItem[] = response.data.results.map((item:any) => ({
+    ...item,
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
+  }));
   return data;
 }
 
@@ -33,7 +37,8 @@ export const getPopular = async (type:string) => {
   const response = await tmdbClient.get(tmdbUrls.shared.popular(type), {params});
   const data: MediaItem[] = response.data.results.map((item: any) => ({
     ...item,
-    media_type: type
+    media_type: type,
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
   }));
 
   return data;
@@ -44,7 +49,8 @@ export const getSearchedItems = async ({type, params}:any) => {
   const data: MediaItemsResultType = response.data;
   data.results = data.results.map((item: any) => ({
     ...item,
-    media_type: type
+    media_type: type,
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
   }));
 
   return data;
@@ -95,7 +101,8 @@ export const getDiscoveredItems = async ({type, params}:any) => {
   const data: MediaItemsResultType = response.data;
   data.results = data.results.map((item: any) => ({
     ...item,
-    media_type: type
+    media_type: type,
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
   }));
   return data;
 }

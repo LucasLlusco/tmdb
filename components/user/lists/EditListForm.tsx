@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { updateListDocument } from '@/lib/actions/user.actions';
-import { editListFormSchema } from '@/lib/schemas';
+import { editListFormSchema } from '@/lib/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,7 +14,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../../ui/input';
 import { RadioGroup, RadioGroupItem } from '../../ui/radio-group';
 import { Label } from '../../ui/label';
-import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { Textarea } from '../../ui/textarea';
 
 interface EditListFormProps {
@@ -28,7 +27,6 @@ interface EditListPayload {
 }
 
 const EditListForm = ({list} : EditListFormProps) => {
-  const { user } = useAuthContext();
 
   const formSchema = editListFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,7 +48,7 @@ const EditListForm = ({list} : EditListFormProps) => {
     }),
     onSuccess: () => {
       toast.success("List updated successfully");
-      queryClient.invalidateQueries({queryKey: ["lists", user?.userId]});
+      queryClient.invalidateQueries({queryKey: ["lists", list.userId]});
       queryClient.invalidateQueries({queryKey: ["list", list.$id]});
     },
     onError: () => {

@@ -1,8 +1,9 @@
 "use client"
 import React from 'react'
-import { getListItemsDetails } from '@/lib/actions/user.actions';
+import { getMediaItemsDetails } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
 import MediaList from '@/components/shared/MediaList';
+import { TMDB_IMG_URLS } from '@/constants';
 
 interface ListItemsProps {
   items: number[]
@@ -13,8 +14,9 @@ const ListItems = ({items, itemsType}: ListItemsProps) => {
 
   const { data, status } = useQuery({
     queryKey: ["list-items", items],
-    queryFn: () => getListItemsDetails(items, itemsType),
-    enabled: !!items.length
+    queryFn: () => getMediaItemsDetails(items, itemsType),
+    enabled: !!items.length,
+    placeholderData: (prevData) => prevData
   });
 
   if(items.length === 0) return <p>This list is empty</p>;
@@ -23,7 +25,8 @@ const ListItems = ({items, itemsType}: ListItemsProps) => {
 
   const mediaItems = data.map((item: any, index:number) => ({
     ...item,
-    media_type: itemsType[index]
+    media_type: itemsType[index], 
+    poster_path: `${TMDB_IMG_URLS.media}/${item.poster_path}`
   }));
 
   return (

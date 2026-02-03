@@ -1,6 +1,6 @@
 "use client"
 import { updatePassword } from '@/lib/actions/auth.actions';
-import { changePasswordFormSchema } from '@/lib/schemas';
+import { changePasswordFormSchema } from '@/lib/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react'
 import { useForm } from 'react-hook-form';

@@ -8,7 +8,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { updateEmail } from '@/lib/actions/auth.actions'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
-import { changeEmailFormSchema } from '@/lib/schemas'
+import { changeEmailFormSchema } from '@/lib/schemas/auth.schema'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 

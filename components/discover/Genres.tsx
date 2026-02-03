@@ -43,6 +43,7 @@ const Genres = ({type, filters, setFilters}:GenresProps) => {
             >
             {genres?.map((genre) => (
               <ToggleGroupItem 
+                key={genre.id}
                 value={genre.id.toString()} 
                 className='p-[10px]'
                 >

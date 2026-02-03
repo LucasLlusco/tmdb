@@ -1,7 +1,6 @@
 "use client"
-import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis, Heart, List } from 'lucide-react'
-import { cn, getFormattedDate, getUserScore, getUserScoreColor } from '@/lib/utils'
+import { cn, getFormattedDate } from '@/lib/utils'
 import AddListItemForm from '../user/lists/AddListItemForm'
 import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm'
+import UserScoreProgress from './UserScoreProgress'
+import ImageWithFallback from './ImageWithFallback'
 
 interface MediaCardProps {
   item: MediaItem
@@ -27,23 +28,13 @@ interface MediaCardProps {
 }
 
 const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
-  const [imgSrc, setImgSrc] = useState(`https://image.tmdb.org/t/p/w500/${item.poster_path}`);
-  const imgSrcAlt = "/default-media-img.svg";
-
-  const progressValue = getUserScore(item?.vote_average);
-  const progresscolor = getUserScoreColor(getUserScore(item?.vote_average));
-  const circularProgressStyles = {
-    background: `conic-gradient(${progresscolor.bar} ${progressValue * 3.6}deg, ${progresscolor.track} 0deg)`,
-  }
-
   const type = item.media_type;
   const title = item.media_type === "movie" ? item.title : item.name;
   const date = item.media_type === "movie" ? item.release_date : item.first_air_date;
   const itemPathname = `/${type}/${item.id}-${title}`;
 
-
-  const height = direction === "column" ? "141" : "225";
-  const width = direction === "column" ? "94" : "150";
+  const height = direction === "column" ? 141 : 225;
+  const width = direction === "column" ? 94 : 150;
 
   return (
     <div ref={itemRef} className={cn('flex relative', {
@@ -55,8 +46,8 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
         "h-[225px] w-[150px] min-w-max rounded-[8px]" : direction === "row",
         "rounded-t-[8px]" : direction === "grid" || direction === "grid-xl"
       })}>
-        <Image 
-          src={imgSrc} 
+        <ImageWithFallback
+          src={item.poster_path} 
           alt={title} 
           className={cn(' bg-[#dbdbdb]', {
             "rounded-l-[5px] h-full max-w-none" : direction === "column",
@@ -65,7 +56,6 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
           })}
           width={width}
           height={height}
-          onError={() => setImgSrc(imgSrcAlt)}
         />
       </Link>
       <div className="absolute top-[10px] right-[10px] z-[5]">
@@ -107,11 +97,7 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
         "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid" || direction === "grid-xl"
         })}>
         {direction != "column" && (
-          <div className="absolute top-[-27px] w-[40px] h-[40px] rounded-full bg-black">
-            <div className="circularProgress" style={circularProgressStyles}>
-              <span className="circularProgress-value">{progressValue ? `${progressValue}%` : "NR"}</span>
-            </div>
-          </div>          
+          <UserScoreProgress vote_average={item.vote_average} absolute={true} />
         )}
         <div className={cn("flex flex-col", {
           "gap-[2px]" : direction === "column",
