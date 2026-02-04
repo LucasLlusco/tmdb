@@ -15,6 +15,7 @@ interface AddWatchlistButtonProps {
   itemTitle: string
   itemType: "movie" | "tv"
   isInDropDown: boolean
+  isWatchlistPending: boolean
 }
 
 interface AddWatchlistItemPayload {
@@ -23,8 +24,7 @@ interface AddWatchlistItemPayload {
   action: "add" | "delete"
 }
 
-const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType, isInDropDown} : AddWatchlistButtonProps) => {
-
+const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType, isInDropDown, isWatchlistPending} : AddWatchlistButtonProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
@@ -74,19 +74,22 @@ const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType,
     {isInDropDown ? (
       <DropdownMenuItem 
         className="cursor-pointer"
-        disabled={isPending}
+        disabled={isPending || isWatchlistPending}
         onSelect={(event) => {
           event.preventDefault(); //prevent menu close
           handleAddItem();
         }}
       >
-        {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? 
-        <BookmarkCheck className='w-4 h-4 mr-2' /> : <Bookmark className='w-4 h-4 mr-2' />}
+        {!isWatchlistPending ? <>
+          {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? <BookmarkCheck className='w-4 h-4 mr-2' /> : <Bookmark className='w-4 h-4 mr-2' />}
+        </> : <Bookmark className='w-4 h-4 mr-2' />}
         Watchlist
       </DropdownMenuItem>
     ) : (
-      <Button size="icon" className='rounded-full' onClick={handleAddItem} disabled={isPending}>
-        {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? <BookmarkCheck /> : <Bookmark />}
+      <Button size={'icon'} className="rounded-full bg-slate-800" onClick={handleAddItem} disabled={isPending || isWatchlistPending}>
+        {!isWatchlistPending ? <>
+          {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? <BookmarkCheck /> : <Bookmark />}        
+        </> : <Bookmark />}
       </Button>
     )}
     </>

@@ -16,7 +16,6 @@ interface AddWatchlistItemFormProps {
 }
 
 const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddWatchlistItemFormProps) => {
-
   const { data: watchlist, status } = useQuery({
     queryKey: ["watchlist", userId],
     queryFn: () => getWatchlistDocument(userId),
@@ -24,11 +23,11 @@ const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown
   });
 
   if (status === "error") return <p>Error loading watchlist</p>;
-  if(!userId && !isInDropDown || status === "pending") return (
+  if(!userId && !isInDropDown) return ( //mediaCard.tsx handle this for isInDropdown case.
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button size="icon" className="rounded-full">
+          <Button size={'icon'} className="rounded-full bg-slate-800">
             <Bookmark />
           </Button>                 
         </TooltipTrigger>
@@ -46,7 +45,8 @@ const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown
       itemId={itemId} 
       itemTitle={itemTitle} 
       itemType={itemType} 
-      isInDropDown={isInDropDown} 
+      isInDropDown={isInDropDown}
+      isWatchlistPending={status === "pending"}
     />
   )
 }

@@ -1,12 +1,13 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import { updateListDocument } from '@/lib/actions/user.actions'
+import { isItemInList } from '@/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CrossIcon, ListCheck } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
 
-interface ListCardPreviewProps {
+interface AddListItemButtonProps {
   userId: string
   list: ListType
   itemId: number
@@ -20,26 +21,7 @@ interface AddListItemPayload {
   action: "add" | "delete",
 }
 
-const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPreviewProps) => {
-
-  const isItemInList = (items: number[], itemsMediaType: ("movie" | "tv")[]) => {
-    const index = items.findIndex(item => item == itemId); 
-    const item = items[index];
-    const type = itemsMediaType[index];
-
-    if(item == itemId && type == itemType) {
-      return {
-        isInIt: true,
-        index: index
-      }
-    } else {
-      return {
-        isInIt: false,
-        index: -1
-      }
-    }
-  }
-
+const AddListItemButton = ({userId, list, itemId, itemTitle, itemType}: AddListItemButtonProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
@@ -50,8 +32,8 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
       } else {
         toast.success(`${itemTitle} was removed from ${list.title} successfully`);
       }
-      queryClient.invalidateQueries({queryKey: ["lists", userId]});
-      queryClient.invalidateQueries({queryKey: ["list", list.$id]});
+      queryClient.invalidateQueries({queryKey: ["lists", userId]}); 
+      queryClient.invalidateQueries({queryKey: ["list", list.$id]}); 
     },
     onError: (data, variables) => {
       if(variables.action === "add") {
@@ -62,14 +44,14 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
     }
   });
 
+  //toggle add/remove
   const handleAddItem = () => {
     const newItems = list.items!;
     const newItemsMediaType = list.itemsMediaType!;
+    const { index, isInIt } = isItemInList(itemId, itemType, newItems, newItemsMediaType);
     let action: "add" | "delete";
 
-    if(isItemInList(newItems, newItemsMediaType).isInIt) {
-      const index = isItemInList(newItems, newItemsMediaType).index;
-
+    if(isInIt) {
       newItems.splice(index, 1);
       newItemsMediaType.splice(index, 1);
       action = "delete";
@@ -93,10 +75,10 @@ const ListCardPreview = ({userId, list, itemId, itemTitle, itemType}: ListCardPr
       className="justify-start"
       disabled={isPending}
     >
-      {isItemInList(list.items!, list.itemsMediaType!).isInIt ? <ListCheck  /> : <CrossIcon />}
+      {isItemInList(itemId, itemType, list.items, list.itemsMediaType).isInIt ? <ListCheck  /> : <CrossIcon />}
       {list.title}
     </Button>
   )
 }
 
-export default ListCardPreview
+export default AddListItemButton
