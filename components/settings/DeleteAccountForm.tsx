@@ -33,11 +33,11 @@ const DeleteAccountForm = () => {
   })
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({email, password, avatarId}:DeleteAccountPayload) => deleteAccount(email, password, avatarId),
+    mutationFn: ({email, password, avatarId} : DeleteAccountPayload) => deleteAccount(email, password, avatarId),
     onSuccess: () => {
       toast.success("Your account has been deleted");
       setUser(null);
-      route.push("/");
+      route.replace("/");
     },
     onError: (error) => {
       toast.error("Failed to delete account. Please try again", {

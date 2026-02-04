@@ -2,13 +2,16 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, createWatchlistDocument, deleteUserAvatar, deleteUserDocument, getUserDocument, updateUserDocument } from "./user.actions";
+import { createUserDocument, createWatchlistDocument, deleteAllListDocuments, deleteUserAvatar, deleteUserDocument, deleteWatchlistDocument, getUserDocument, updateUserDocument } from "./user.actions";
+
+const sevenDaysInSeconds = 7 * 24 * 60 * 60;
 
 export const login = async (email:string, password:string) => {
   const { account } = await createAdminClient();
   const session = await account.createEmailPasswordSession(email, password);
 
   cookies().set("appwrite-session", session.secret, {
+    maxAge: sevenDaysInSeconds, //session expires in 7 days
     path: "/",
     httpOnly: true,
     sameSite: "strict",
@@ -25,6 +28,7 @@ export const signup = async (email:string, password:string, username:string) => 
 
   const session = await account.createEmailPasswordSession(email, password);
   cookies().set("appwrite-session", session.secret, {
+    maxAge: sevenDaysInSeconds,
     path: "/",
     httpOnly: true,
     sameSite: "strict",
@@ -93,6 +97,9 @@ export const deleteAccount = async (email:string, password:string, avatarId?:str
   if(avatarId) {
     await deleteUserAvatar(avatarId);
   }
+
+  await deleteAllListDocuments(session.userId);
+  await deleteWatchlistDocument(session.userId);
 
   await deleteUserDocument(session.userId);
   await users.delete(session.userId); 

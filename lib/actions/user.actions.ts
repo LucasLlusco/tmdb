@@ -105,6 +105,29 @@ export const deleteListDocument = async (listId: string) => {
   )
 }
 
+export const deleteAllListDocuments = async (userId: string) => {
+  const { database } = await createAdminClient();
+  const { documents } = await database.listDocuments<ListType>(
+    DATABASE_ID!,
+    LISTS_COLLECTION_ID!,
+    [
+      Query.equal("userId" , userId)
+    ]
+  )
+
+  if(documents) { 
+    await Promise.all(
+      documents.map((list) =>
+        database.deleteDocument(
+          DATABASE_ID!,
+          LISTS_COLLECTION_ID!,
+          list.$id,
+        )
+      )
+    );
+  }
+}
+
 export const getListDocuments = async (userId:string) => {
   const { database } = await createAdminClient();
   const { documents } = await database.listDocuments<ListType>(
@@ -120,15 +143,13 @@ export const getListDocuments = async (userId:string) => {
 
 export const getListDocument = async (listId: string) => {
   const { database } = await createAdminClient();
-  const { documents } = await database.listDocuments<ListType>(
+  const document = await database.getDocument<ListType>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
-    [
-      Query.equal("$id" , listId)
-    ]
+    listId
   )
   
-  return documents[0];
+  return document;
 }
 
 /********************* for lists and watchlist items **********************/
@@ -189,4 +210,22 @@ export const getWatchlistDocument = async (userId: string) => {
   )
 
   return documents[0];
+}
+
+export const deleteWatchlistDocument = async (userId: string) => {
+  const { database } = await createAdminClient();
+  const { documents } = await database.listDocuments<WatchlistType>(
+    DATABASE_ID!,
+    WATCHLISTS_COLLECTION_ID!,
+    [
+      Query.equal("userId" , userId)
+    ]
+  )
+
+  const watchlist = documents[0];
+  await database.deleteDocument(
+    DATABASE_ID!,
+    WATCHLISTS_COLLECTION_ID!,
+    watchlist.$id
+  )
 }
