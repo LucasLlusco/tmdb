@@ -15,7 +15,6 @@ interface AddWatchlistButtonProps {
   itemTitle: string
   itemType: "movie" | "tv"
   isInDropDown: boolean
-  isWatchlistPending: boolean
 }
 
 interface AddWatchlistItemPayload {
@@ -24,9 +23,10 @@ interface AddWatchlistItemPayload {
   action: "add" | "delete"
 }
 
-const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType, isInDropDown, isWatchlistPending} : AddWatchlistButtonProps) => {
+const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType, isInDropDown} : AddWatchlistButtonProps) => {
   const queryClient = useQueryClient();
-
+  const { index, isInIt } = isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType);
+  
   const { mutate, isPending } = useMutation({
     mutationFn: ({items, itemsMediaType, action} : AddWatchlistItemPayload) => updateWatchlistDocument(watchlist.$id, {items, itemsMediaType}),
     onSuccess: (data, variables) => {
@@ -49,7 +49,6 @@ const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType,
   const handleAddItem = () => {
     const newItems = watchlist.items;
     const newItemsMediaType = watchlist.itemsMediaType;    
-    const { index, isInIt } = isItemInList(itemId, itemType, newItems, newItemsMediaType);
     let action: "add" | "delete";
 
     if(isInIt) {
@@ -74,22 +73,18 @@ const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType,
     {isInDropDown ? (
       <DropdownMenuItem 
         className="cursor-pointer"
-        disabled={isPending || isWatchlistPending}
+        disabled={isPending}
         onSelect={(event) => {
           event.preventDefault(); //prevent menu close
           handleAddItem();
         }}
       >
-        {!isWatchlistPending ? <>
-          {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? <BookmarkCheck className='w-4 h-4 mr-2' /> : <Bookmark className='w-4 h-4 mr-2' />}
-        </> : <Bookmark className='w-4 h-4 mr-2' />}
+        {isInIt ? <BookmarkCheck className='w-4 h-4 mr-2' /> : <Bookmark className='w-4 h-4 mr-2' />}
         Watchlist
       </DropdownMenuItem>
     ) : (
-      <Button size={'icon'} className="rounded-full bg-slate-800" onClick={handleAddItem} disabled={isPending || isWatchlistPending}>
-        {!isWatchlistPending ? <>
-          {isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType).isInIt ? <BookmarkCheck /> : <Bookmark />}        
-        </> : <Bookmark />}
+      <Button size={'icon'} className="rounded-full bg-slate-800" onClick={handleAddItem} disabled={isPending}>
+        {isInIt ? <BookmarkCheck /> : <Bookmark />}        
       </Button>
     )}
     </>

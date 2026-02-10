@@ -23,6 +23,7 @@ interface AddListItemPayload {
 
 const AddListItemButton = ({userId, list, itemId, itemTitle, itemType}: AddListItemButtonProps) => {
   const queryClient = useQueryClient();
+  const { index, isInIt } = isItemInList(itemId, itemType, list.items, list.itemsMediaType);
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({items, itemsMediaType, action} : AddListItemPayload) => updateListDocument(list.$id, {items, itemsMediaType}),
@@ -48,7 +49,6 @@ const AddListItemButton = ({userId, list, itemId, itemTitle, itemType}: AddListI
   const handleAddItem = () => {
     const newItems = list.items!;
     const newItemsMediaType = list.itemsMediaType!;
-    const { index, isInIt } = isItemInList(itemId, itemType, newItems, newItemsMediaType);
     let action: "add" | "delete";
 
     if(isInIt) {
@@ -75,7 +75,7 @@ const AddListItemButton = ({userId, list, itemId, itemTitle, itemType}: AddListI
       className="justify-start"
       disabled={isPending}
     >
-      {isItemInList(itemId, itemType, list.items, list.itemsMediaType).isInIt ? <ListCheck  /> : <CrossIcon />}
+      {isInIt ? <ListCheck  /> : <CrossIcon />}
       {list.title}
     </Button>
   )

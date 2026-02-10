@@ -6,6 +6,7 @@ import AddWatchlistItemButton from './AddWatchlistItemButton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 interface AddWatchlistItemFormProps {
   userId: string
@@ -39,15 +40,30 @@ const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown
   )
 
   return (
-    <AddWatchlistItemButton 
-      userId={userId} 
-      watchlist={watchlist!} 
-      itemId={itemId} 
-      itemTitle={itemTitle} 
-      itemType={itemType} 
-      isInDropDown={isInDropDown}
-      isWatchlistPending={status === "pending"}
-    />
+    <>
+    {status === "pending" && isInDropDown && (
+      <DropdownMenuItem className="cursor-pointer" disabled={true}>
+        <Bookmark className='w-4 h-4 mr-2' />
+          Watchlist
+      </DropdownMenuItem>       
+    )}
+    {status === "pending" && !isInDropDown && (
+      <Button size={'icon'} className="rounded-full bg-slate-800" disabled={true}>
+        <Bookmark />
+      </Button>
+    )}
+
+    {status === "success" && (
+      <AddWatchlistItemButton 
+        userId={userId} 
+        watchlist={watchlist} 
+        itemId={itemId} 
+        itemTitle={itemTitle} 
+        itemType={itemType} 
+        isInDropDown={isInDropDown}
+      /> 
+    )}
+    </>
   )
 }
 

@@ -7,7 +7,15 @@ export const getTvShowById = async (id:number) => {
   const response = await tmdbClient.get(tmdbUrls.tvShows.byId(id));
   const data: TvShow = {
     ...response.data, 
-    poster_path: `${TMDB_IMG_URLS.media}/${response.data.poster_path}`
+    poster_path: `${TMDB_IMG_URLS.media}/${response.data.poster_path}`,
+    seasons: response.data.seasons.map((season:any) => ({
+      ...season,
+      poster_path: `${TMDB_IMG_URLS.media}/${season.poster_path}`
+    })),
+    last_episode_to_air: {
+      ...response.data.last_episode_to_air,
+      still_path: `${TMDB_IMG_URLS.media}/${response.data.last_episode_to_air}`
+    }
   };
 
   return data;
