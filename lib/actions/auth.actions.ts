@@ -2,9 +2,26 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, createWatchlistDocument, deleteAllListDocuments, deleteUserAvatar, deleteUserDocument, deleteWatchlistDocument, getUserDocument, updateUserDocument } from "./user.actions";
+import { createUserDocument, createWatchlistDocument, deleteAllListDocuments, deleteUserAvatar, 
+  deleteUserDocument, deleteWatchlistDocument, getUserDocument, updateUserDocument } from "./user.actions";
 
 const sevenDaysInSeconds = 7 * 24 * 60 * 60;
+
+export const requireAuth = async () => {
+  const sessionCookie = cookies().get("appwrite-session");
+  if(!sessionCookie) {
+    return {isAuth: false, userId: ""}
+  }
+
+  try {
+    const { account } = await createSessionClient(sessionCookie.value);
+    const result = await account.get();
+
+    return {isAuth: true, userId: result.$id};
+  } catch (error) {
+    return {isAuth: false, userId: ""};
+  }
+}
 
 export const login = async (email:string, password:string) => {
   const { account } = await createAdminClient();
@@ -68,6 +85,11 @@ export const logout = async () => {
 }
 
 export const updateEmail = async (newEmail:string, password:string) => {
+  const { isAuth } = await requireAuth();
+  if(!isAuth) {
+    throw new Error("UNAUTHENTICATED");
+  }
+
   const sessionCookie = cookies().get("appwrite-session");
   const { account } = await createSessionClient(sessionCookie!.value);
 
@@ -81,6 +103,11 @@ export const updateEmail = async (newEmail:string, password:string) => {
 }
 
 export const updatePassword = async (newPassword:string, currentPassword:string) => {
+  const { isAuth } = await requireAuth();
+  if(!isAuth) {
+    throw new Error("UNAUTHENTICATED");
+  }
+
   const sessionCookie = cookies().get("appwrite-session");
   const { account } = await createSessionClient(sessionCookie!.value);
 
@@ -91,6 +118,11 @@ export const updatePassword = async (newPassword:string, currentPassword:string)
 }
 
 export const deleteAccount = async (email:string, password:string, avatarId?:string) => {
+  const { isAuth } = await requireAuth();
+  if(!isAuth) {
+    throw new Error("UNAUTHENTICATED");
+  }
+
   const { account, users } = await createAdminClient();
   const session = await account.createEmailPasswordSession(email, password);
 
@@ -108,7 +140,7 @@ export const deleteAccount = async (email:string, password:string, avatarId?:str
 
 export const requestPasswordReset = async (email:string) => {
   const { account } = await createAdminClient();
-  await account.createRecovery(
+  await account.createRecovery( 
     email,
     "http://localhost:3000/reset-password" 
   );
@@ -116,7 +148,7 @@ export const requestPasswordReset = async (email:string) => {
 
 export const confirmPasswordReset = async (userId: string, secret:string, newPassword:string) => {  
   const { account } = await createAdminClient();
-  await account.updateRecovery(
+  await account.updateRecovery( 
     userId,
     secret,
     newPassword

@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getLoggedInUser } from "./lib/actions/auth.actions";
+import { requireAuth } from "./lib/actions/auth.actions";
 
 export async function middleware(req: NextRequest) {
-  const user = await getLoggedInUser();
-
+  const { isAuth, userId } = await requireAuth();
+  
   if(req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/signup" || req.nextUrl.pathname === "/forgot-password" || req.nextUrl.pathname === "/reset-password") {
-    if(user) {
-      return NextResponse.redirect(new URL(`/user/${user.userId}`, req.url));
+    if(isAuth) {
+      return NextResponse.redirect(new URL(`/user/${userId}`, req.url)); 
     }
   } else {
-    if(!user) {
-      return NextResponse.redirect(new URL("/login", req.url)); 
+    if(!isAuth) {
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 

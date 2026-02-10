@@ -10,6 +10,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface UpdatePasswordPayload {
   newPassword: string
@@ -17,6 +18,7 @@ interface UpdatePasswordPayload {
 }
 
 const ChangePasswordForm = () => {
+  const route = useRouter();
   const formSchema = changePasswordFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,6 +39,9 @@ const ChangePasswordForm = () => {
       toast.error("Failed to change password", {
         description: error.message
       })
+      if(error.message === "UNAUTHENTICATED") {
+        route.replace("/login");
+      }
     }
   });
 

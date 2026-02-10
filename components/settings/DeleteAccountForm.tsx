@@ -43,6 +43,9 @@ const DeleteAccountForm = () => {
       toast.error("Failed to delete account. Please try again", {
         description: error.message
       });
+      if(error.message === "UNAUTHENTICATED") {
+        route.replace("/login");
+      }
     }
   });
 

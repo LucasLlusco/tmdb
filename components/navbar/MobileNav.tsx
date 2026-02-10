@@ -13,20 +13,23 @@ import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { logout } from '@/lib/actions/auth.actions'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 const MobileNav = () => {
   const {user, setUser} = useAuthContext();
   const route = useRouter();
+  const pathname = usePathname();
 
   const { mutate } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       setUser(null);
       toast.success("You have been logged out");
-      route.push("/login");
+      if(pathname.startsWith("/settings")) {
+        route.replace("/login");
+      }
     },
     onError: () => {
       toast.error("Error logging out. Please try again");

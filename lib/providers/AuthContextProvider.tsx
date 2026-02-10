@@ -1,16 +1,18 @@
 "use client"
 import { getLoggedInUser } from "@/lib/actions/auth.actions";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
   user: UserType | null
-  setUser: (user: UserType | null) => void
+  setUser: Dispatch<SetStateAction<UserType | null>>
+  isLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   
   useEffect(() => {
     const handleGetLoggedInUser = async () => {
@@ -18,15 +20,16 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
         const user = await getLoggedInUser();
         setUser(user);
       } catch (error) {
-        console.log(error);
         setUser(null);
+      } finally {
+        setIsLoading(false);
       }
     }
     handleGetLoggedInUser();
   }, [])
     
   return (
-    <AuthContext.Provider value={{user, setUser}}>
+    <AuthContext.Provider value={{user, setUser, isLoading}}>
       {children}
     </AuthContext.Provider>
   )

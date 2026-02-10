@@ -1,26 +1,33 @@
 "use client"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
-import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 const SettingsLayout = ({children}: Readonly<{children:React.ReactNode}>) => {
-  const { user } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
   const avatarUrl = `https://fra.cloud.appwrite.io/v1${user?.avatarPath}`;
+  const route = useRouter();
 
+  useEffect(() => { 
+    if(!user && !isLoading) {
+      route.replace("/login");
+    }    
+  }, [isLoading])
+  
+  if(isLoading) return null;
+  
   return (
     <>
       <section className="bg-[#1f1f1f] text-white">
         <div className='container flex gap-5 items-center'>
           <Link href={`/user/${user?.userId}`}>
             {user?.avatarPath ? (
-              <Image
-                src={avatarUrl}
-                alt={user.username}
-                width={55}
-                height={55}
-                className='rounded-full !h-[55px]'
-              />  
+              <Avatar className={"w-[55px] h-[55px]"} >
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback>{user.username}</AvatarFallback>
+              </Avatar> 
             ) : (
               <span className='bg-cyan-600 text-white flex items-center justify-center rounded-full text-[26px] min-w-[55px] h-[55px] uppercase font-bold'>
                 {user?.username[0]}

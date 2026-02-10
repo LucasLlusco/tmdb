@@ -12,7 +12,7 @@ interface WatchlistContainerProps {
 }
 
 const WatchlistContainer = ({initialWatchlist, userId} : WatchlistContainerProps) => {
-  const { user } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
   const isOwner = user?.userId === userId;
 
   const { data: watchlist, isPending, isError } = useQuery({
@@ -21,7 +21,7 @@ const WatchlistContainer = ({initialWatchlist, userId} : WatchlistContainerProps
     initialData: initialWatchlist
   });
 
-  if (isPending) return <p>Loading watchlist...</p>;
+  if (isPending || isLoading) return <p>Loading watchlist...</p>;
   if (isError) return <p>Error loading watchlist</p>;
 
   return (

@@ -11,6 +11,7 @@ import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 import { changeEmailFormSchema } from '@/lib/schemas/auth.schema'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 interface UpdateEmailPayload {
   newEmail: string
@@ -18,7 +19,9 @@ interface UpdateEmailPayload {
 }
 
 const ChangeEmailForm = () => {
+  const route = useRouter();
   const { setUser } = useAuthContext();
+
   const formSchema = changeEmailFormSchema();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +43,9 @@ const ChangeEmailForm = () => {
       toast.error("Failed to update email", {
         description: error.message
       })
+      if(error.message === "UNAUTHENTICATED") {
+        route.replace("/login");
+      }
     }
   });  
 
