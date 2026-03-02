@@ -17,8 +17,10 @@ const SeasonPage = async({params}: SeasonPageProps) => {
   const id = Number(params.idName.split("-")[0]); 
   const seasonNumber = params.seasonNumber;
 
-  const season = await getTvShowSeasonById(id, seasonNumber);
-  const tvShow = await getTvShowById(id);
+  const data = await Promise.all([getTvShowById(id), getTvShowSeasonById(id, seasonNumber)]); 
+
+  const tvShow = data[0];
+  const season = data[1];
  
   const backLinkPathname = `/tv/${params.idName}/seasons`;
   const basePathname = `/tv/${params.idName}`;
@@ -38,14 +40,14 @@ const SeasonPage = async({params}: SeasonPageProps) => {
         <Separator />
       </div>
       <section className='container text-[14px] !py-4'>
-        {!isDatePassed(season.air_date) ? (
-          <p>Season {season.season_number} of {tvShow.name} is set to premiere on {getFormattedDate(season.air_date!)}</p>
-        ) : (
+        {!isDatePassed(season.air_date) && (
           <>
-            <h3 className='section-title !mb-1'>Overview</h3>
-            <p>{season.overview}</p>
+          <p>Season {season.season_number} of {tvShow.name} is set to premiere on {getFormattedDate(season.air_date!)}</p>
+          <br />
           </>
         )}
+        <h3 className='section-title !mb-1'>Overview</h3>
+        <p>{season.overview}</p>
       </section>
       <section className='container'>
         <h3 className='section-title'>Episodes <span className='font-normal'>{season.episodes.length}</span></h3>

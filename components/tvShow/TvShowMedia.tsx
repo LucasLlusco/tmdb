@@ -5,18 +5,20 @@ import VideoPlayer from '../shared/VideoPlayer';
 import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface TvShowMediaProps {
-  tvShowId: number
+  tvShowId: number;
 }
 
 const TvShowMedia = async ({tvShowId}: TvShowMediaProps) => {
-  const images = await getTvShowImagesById(tvShowId);
-  const tvShowVideos = await getTvShowVideosById(tvShowId);
+  const media =  await Promise.all([getTvShowImagesById(tvShowId), getTvShowVideosById(tvShowId)]);
+
+  const tvShowImages = media[0];
+  const tvShowVideos = media[1];
 
   const trailers = tvShowVideos.filter((video:Video)=> video.type === "Trailer");
   const videos = tvShowVideos.filter((video:Video) => video.type !== "Trailer");
 
-  const backdrops = images.backdrops;
-  const posters = images.posters;
+  const backdrops = tvShowImages.backdrops;
+  const posters = tvShowImages.posters;
 
   return (
     <section className='container'>
