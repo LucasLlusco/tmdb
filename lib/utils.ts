@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from "clsx"
+import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -82,5 +82,29 @@ export const isItemInList = (itemId:number, itemMediaType: "movie" | "tv", items
       isInIt: false,
       index: -1
     }
+  }
+}
+export const fromToInShowedMediaItems = (page: number, totalPages: number, results:number, totalResults: number) => {
+  let from: number;
+  let to:number;
+
+  if(page < totalPages) {
+    to = 20 * page;
+    from = to - 20;
+
+    if(page == 1 ) {
+      from = 1;
+      to = results;
+    }
+  } else {
+    from = totalResults - results;
+    to = totalResults;
+    if(totalPages == 1) {
+      from = 1;
+    }
+  }
+  return {
+    from,
+    to
   }
 }

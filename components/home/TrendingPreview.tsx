@@ -9,11 +9,11 @@ import { useQuery } from '@tanstack/react-query';
 const TrendingPreview = () => {
   const [time, setTime] = useState(TRENDING_FILTERS[0].value);
 
-  const { data: trendingList, status } = useQuery({
+  const { data: trendingItems, status } = useQuery({
     queryKey: ["trending", time],
     queryFn: () => getTrending(time)
   });
-
+    
   return (
     <section className='container'>
       <div className="flex gap-7 items-center">
@@ -22,7 +22,7 @@ const TrendingPreview = () => {
       </div>
       {status === "pending" && <p>loading...</p>}
       {status === "error"  && <p>error</p>}
-      {status === "success"  && <MediaList items={trendingList} direction='row' />}
+      {status === "success" && <MediaList items={trendingItems} direction='row' />}
     </section>
   )
 }

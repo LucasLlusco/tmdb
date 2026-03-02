@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 const PopularPreview = () => {
   const [type, setType] = useState(POPULAR_FILTERS[0].value);
 
-  const { data: popularList, status } = useQuery({
+  const { data: popularItems, status } = useQuery({
     queryKey: ["popular", type], 
     queryFn: () => getPopular(type)
   });
@@ -22,7 +22,7 @@ const PopularPreview = () => {
       </div>
       {status === "pending" && <p>loading...</p>}
       {status === "error"  && <p>error</p>}
-      {status === "success"  && <MediaList items={popularList} direction='row' />}
+      {status === "success" && <MediaList items={popularItems} direction='row' />}
     </section>
   )
 }

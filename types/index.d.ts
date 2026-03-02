@@ -75,7 +75,7 @@ declare type TvShow = { //complete version of tvShow object
   in_production: boolean
   languages: string[]
   last_air_date: string
-  last_episode_to_air: [{ 
+  last_episode_to_air: {
     id: number
     name: string
     overview: string
@@ -88,7 +88,7 @@ declare type TvShow = { //complete version of tvShow object
     season_number: number
     show_id: number
     still_path: string
-  }]
+  }
   name: string
   next_episode_to_air: string
   networks: [{
@@ -205,16 +205,6 @@ declare type Provider = {
 declare type Genre = {
   id: number,
   name: string
-}
-
-declare type DiscoverFiltersType = {
-  selectedSort: string,
-  selectedRegion: string,
-  selectedProviders: string[],
-  selectedGenres: string[],
-  page: number,
-  filtersHasChanged: boolean
-  showLoadMoreBtn: boolean
 }
 
 declare type UserType = {

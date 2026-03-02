@@ -59,7 +59,7 @@ export const ACCEPTED_IMAGE_TYPES = [
 ]
 
 export const TMDB_IMG_URLS = {
-  media: "https://image.tmdb.org/t/p/w500/",
-  backdrops: "https://image.tmdb.org/t/p/w533_and_h300_bestv2/",
-  posters: "https://image.tmdb.org/t/p/w500/"
+  media: "https://image.tmdb.org/t/p/w500",
+  backdrops: "https://image.tmdb.org/t/p/w533_and_h300_bestv2",
+  posters: "https://image.tmdb.org/t/p/w500"
 }

@@ -4,26 +4,26 @@ import { SEARCH_FILTERS } from "@/constants"
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
-interface SearchFiltersProps {
-  moviesResults: number
-  tvResults: number
-  defaultType: string
+interface MediaTypesTabsProps {
+  moviesResults: number;
+  tvResults: number;
+  currentType: "movie" | "tv";
 }
 
-const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) => {
+const MediaTypesTabs = ({moviesResults, tvResults, currentType}: MediaTypesTabsProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const updateSearchParams = (type:string) => {
     const params = new URLSearchParams(searchParams); 
-    params.set("page", "1");
+    params.set("page", "1"); 
 
     const newPathname = `/search/${type}?${params.toString()}`;
     router.replace(newPathname);
   }
 
   return (
-    <Tabs defaultValue={defaultType} className="mt-1">
+    <Tabs defaultValue={currentType}>
       <TabsList className='tabsList-col'>
         {SEARCH_FILTERS.map((filter) => (
           <TabsTrigger 
@@ -32,12 +32,7 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
             onClick={() => updateSearchParams(filter.value)}
           >
             <span>{filter.name}</span>
-            {filter.value === "movie" && (
-              <span>{moviesResults}</span>
-            )}
-            {filter.value === "tv" && (
-              <span>{tvResults}</span>
-            )}              
+            <span>{filter.value === "movie" ? `${moviesResults}` : `${tvResults}`}</span>
           </TabsTrigger>          
         ))}
       </TabsList>
@@ -45,4 +40,4 @@ const Filters = ({moviesResults, tvResults, defaultType}: SearchFiltersProps) =>
   )
 }
 
-export default Filters
+export default MediaTypesTabs

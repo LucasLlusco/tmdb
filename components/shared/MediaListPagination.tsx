@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/pagination"
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-interface PaginationProps {
-  currentPage: number, 
-  maxPage: number
+interface MediaListPaginationProps {
+  currentPage: number;
+  maxPage: number;
 }
 
-const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
+const MediaListPagination = ({currentPage, maxPage}: MediaListPaginationProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -42,7 +42,7 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
 
   useEffect(() => {
     setCurrentPageItem(currentPage);
-  }, [searchParams.get("query")])
+  }, [searchParams.get("query"), searchParams.get("sort"), searchParams.get("region"), searchParams.get("providers"), searchParams.get("genres")])
 
   useEffect(() => {
     let startIndex = currentPageItem -5; 
@@ -160,4 +160,4 @@ const SearchPagination = ({currentPage, maxPage}: PaginationProps) => {
   )
 }
 
-export default SearchPagination
+export default MediaListPagination

@@ -1,42 +1,41 @@
 "use client"
 import React from 'react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { SORT_OPTIONS } from '@/constants'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface SortProps {
-  filters: DiscoverFiltersType,
-  setFilters: React.Dispatch<React.SetStateAction<DiscoverFiltersType>>
+  currentSort: string;
 }
 
-const Sort = ({filters, setFilters}: SortProps) => {
+const Sort = ({currentSort} : SortProps) => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const handleSelectedSort = (value:string) => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      selectedSort: value,
-      filtersHasChanged: true
-    }))
+  const updateSortParams = (value:string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("sort", value);
+    params.set("page", "1");
+
+    const newPathname = `${pathname}?${params.toString()}`;
+    router.replace(newPathname);
   }
 
   return (
-    <Accordion type="single" collapsible className="aside-box card-boxshadow">
-      <AccordionItem value="item-1" className='border-b-0'>
-        <AccordionTrigger className='border-b mb-4'>Sort results by</AccordionTrigger>
-        <AccordionContent>
-          <Select defaultValue={filters.selectedSort} value={filters.selectedSort} onValueChange={(value) => handleSelectedSort(value)}>
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SORT_OPTIONS.map((option) => (
-                <SelectItem value={option.value} key={option.value}>{option.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <div>
+      <p className='mb-4'>Sort results by</p>
+      <Select defaultValue={currentSort} value={currentSort} onValueChange={(value) => updateSortParams(value)}>
+        <SelectTrigger className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {SORT_OPTIONS.map((option) => (
+            <SelectItem value={option.value} key={option.value}>{option.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   )
 }
 
