@@ -12,7 +12,7 @@ import UserScore from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface TvShowInfoProps {
-  tvShow: TvShow
+  tvShow: TvShow;
 }
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
@@ -59,7 +59,7 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
                 User
                 <br />
                 Score: 
-                <UserScore vote_average={tvShow.vote_average} />                  
+                <UserScore vote_average={tvShow.vote_average} style="rounded" />                  
               </div>
             </div>
             <div className="flex flex-col">

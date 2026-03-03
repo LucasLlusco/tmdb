@@ -8,11 +8,13 @@ import Link from 'next/link';
 import React from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { usePathname } from 'next/navigation';
 
 interface UserLayoutProps {
-  children: Readonly<{children:React.ReactNode}>
+  children: Readonly<{children:React.ReactNode}>;
   params: {
-    id: string
+    id: string;
   }
 }
 
@@ -20,6 +22,7 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
   const userId = params.id;
   const { user } = useAuthContext();
   const isOwner = user?.userId === userId;
+  const pathname = usePathname();
 
   const { data: userProfile } = useQuery({
     queryKey: ["user", userId],
@@ -34,6 +37,18 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
   const initial = username ? username[0] : "";
   const createdAt = isOwner ? user?.$createdAt : userProfile?.$createdAt;
 
+  const getDefaultValue = () => {
+    const tabValues = ["lists", "ratings", "watchlist", "reviews"];
+    const currrentRoute = pathname.split(`/user/${userId}/`)[1]; 
+
+    const currentValue = tabValues.find((value => value == currrentRoute));
+    if(currentValue) {
+      return currentValue
+    } else {
+      return "overview"
+    }
+  }
+
   return (
     <>
       <section className="bg-[#1f1f1f] text-white">
@@ -42,7 +57,7 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
             <Avatar className={"w-[125px] h-[125px]"} >
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>{username}</AvatarFallback>
-            </Avatar>
+            </Avatar> 
           ) : (
             <span className='bg-cyan-600 text-white flex items-center justify-center rounded-full text-[50px] min-w-[125px] h-[125px] uppercase font-bold'>
               {initial}
@@ -62,14 +77,26 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
           </div>
         </div>  
       </section>
-      <nav className="card-boxshadow">
-        <ul className='container !py-4 flex gap-12 justify-center'>
-          <Link href={`/user/${userId}`}>Overview</Link>
-          <Link href={`/user/${userId}/lists`}>Lists</Link>
-          <Link href={`/user/${userId}/ratings`}>Ratings</Link>
-          <Link href={`/user/${userId}/watchlist`}>Watchlist</Link>
-          <Link href={`/user/${userId}/reviews`}>Reviews</Link>
-        </ul>
+      <nav>
+        <Tabs defaultValue={getDefaultValue()} className='flex justify-center'>
+          <TabsList className='tabList-nav'> 
+            <TabsTrigger value={"overview"}>
+              <Link href={`/user/${userId}`}>Overview</Link>
+            </TabsTrigger>
+            <TabsTrigger value={"lists"} >
+              <Link href={`/user/${userId}/lists`}>Lists</Link>
+            </TabsTrigger>
+            <TabsTrigger value={"ratings"} >
+              <Link href={`/user/${userId}/ratings`}>Ratings</Link>
+            </TabsTrigger>
+            <TabsTrigger value={"watchlist"} >
+              <Link href={`/user/${userId}/watchlist`}>Watchlist</Link>
+            </TabsTrigger> 
+            <TabsTrigger value={"reviews"} >
+              <Link href={`/user/${userId}/reviews`}>Reviews</Link>
+            </TabsTrigger>                      
+          </TabsList>
+        </Tabs>
       </nav>
       {children}
     </>

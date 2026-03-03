@@ -12,7 +12,7 @@ import UserScoreProgress from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
 
 interface MovieInfoProps {
-  movie: Movie
+  movie: Movie;
 }
 
 const MovieInfo = ({movie}: MovieInfoProps) => {
@@ -59,7 +59,7 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
                 User
                 <br />
                 Score: 
-                <UserScoreProgress vote_average={movie.vote_average} />                 
+                <UserScoreProgress vote_average={movie.vote_average} style="rounded" />                 
               </div>
             </div>
             <div className="flex flex-col">

@@ -13,14 +13,14 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 interface PasswordResetFormProps {
-  userId: string
-  secret: string
+  userId: string;
+  secret: string;
 }
 
 interface ConfirmPasswordResetPayload {
-  userId: string
-  secret: string
-  password: string
+  userId: string;
+  secret: string;
+  password: string;
 }
 
 const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
@@ -94,13 +94,7 @@ const ConfirmPasswordResetForm = ({userId, secret}:PasswordResetFormProps) => {
             </FormItem>
           )}
         />
-        <Button 
-          type='submit' 
-          disabled={isPending}
-          className='font-bold disabled:cursor-not-allowed' 
-        >
-          Reset password
-        </Button>
+        <Button type='submit' disabled={isPending}>Reset password</Button>
       </form> 
     </Form>
   )

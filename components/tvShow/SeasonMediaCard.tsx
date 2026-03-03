@@ -1,14 +1,14 @@
-import { getFormattedDate, getRuntime, getUserScore, getYear, isDatePassed } from '@/lib/utils'
-import { StarIcon } from 'lucide-react'
+import { getFormattedDate, getRuntime, isDatePassed } from '@/lib/utils'
 import Link from 'next/link'
 import React from 'react'
 import ImageWithFallback from '../shared/ImageWithFallback'
+import UserScoreProgress from '../shared/UserScoreProgress'
 
 interface SeasonMediaCardProps {
-  season?: TvShowSeason,
-  episode?: TvShowSeasonEpisode,
-  basePathname?: string,
-  tvShowName?: string
+  season?: TvShowSeason;
+  episode?: TvShowSeasonEpisode;
+  basePathname?: string;
+  tvShowName?: string;
 }
 
 const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMediaCardProps) => {
@@ -17,6 +17,8 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
   const image = season?.poster_path || episode?.still_path;
   const overview = season?.overview || episode?.overview;
   const name = season?.name || episode?.name;
+  const airDate = season?.air_date || episode?.air_date;
+  const voteAverage = season?.vote_average || episode?.vote_average;
 
   const height = season ? 141 : 127;
   const width = season ? 94 : 227;
@@ -41,25 +43,10 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
             {name}
           </Link>
         </p>
-        <div className="flex gap-2 items-center">
-          {season ? (
-            <>
-            {isDatePassed(season.air_date) && (
-              <span className='bg-slate-800 text-white text-xs px-[5px] py-[5px] rounded-[5px] font-bold flex items-center gap-[5px]'>
-                <StarIcon className={"w-[17px] h-[17px]"} />
-                <span>{getUserScore(season.vote_average)}%</span>
-              </span>            
-            )}
-            </>       
-          ) : (
-            <span className='bg-slate-800 text-white text-xs px-[5px] py-[5px] rounded-[5px] font-bold flex items-center gap-[5px]'>
-              <StarIcon className={"w-[17px] h-[17px]"} />
-              <span>{getUserScore(episode?.vote_average!)}%</span>
-            </span>   
-          )}
+        <div className="flex gap-2 items-center mt-[2px]">
+          <UserScoreProgress vote_average={voteAverage!} style='badge' />
           <span className='text-xs text-gray-500'>
-            {season?.air_date && getYear(season?.air_date)}
-            {episode?.air_date && getFormattedDate(episode?.air_date)}
+            {airDate && getFormattedDate(airDate)}
           </span>           
           <span className='text-xs text-gray-500'>
             {season && (
@@ -70,13 +57,9 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
             )} 
           </span>
         </div>
-        {season && (
+        {season && !isDatePassed(season.air_date) && (
           <p className='mt-[10px] text-[14px]'>
-            {isDatePassed(season.air_date!) ? (
-              `Season ${season.season_number} of ${tvShowName} premiered on ${getFormattedDate(season.air_date!)}`
-            ) : (
-              `Season ${season.season_number} of ${tvShowName} is set to premiere on ${getFormattedDate(season.air_date!)}`
-            )}
+            {`Season ${season.season_number} of ${tvShowName} is set to premiere on ${getFormattedDate(season.air_date!)}`}
           </p>
         )}
         <p className='overflow-txt mt-[10px] text-[14px]'>

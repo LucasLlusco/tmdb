@@ -53,23 +53,17 @@ const RequestPasswordResetForm = () => {
             <FormItem className='text-left'>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                  <Input
-                    placeholder={"Enter your email"}
-                    {...field} 
-                    type={"email"} 
-                  />
+                <Input
+                  placeholder={"Enter your email"}
+                  {...field} 
+                  type={"email"} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button 
-          type='submit' 
-          disabled={isPending}
-          className='font-bold disabled:cursor-not-allowed' 
-        >
-          Send
-        </Button>
+        <Button type='submit' disabled={isPending}>Send</Button>
       </form> 
     </Form>
   )

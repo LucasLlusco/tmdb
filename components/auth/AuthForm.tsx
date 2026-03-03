@@ -15,13 +15,13 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 interface AuthFormProps {
-  type: 'sign-in' | 'sign-up'
+  type: 'sign-in' | 'sign-up';
 }
 
 interface AuthPayload {
-  email: string
-  password: string
-  username?: string
+  email: string;
+  password: string;
+  username?: string;
 }
 
 const AuthForm = ({type}: AuthFormProps) => {
@@ -100,13 +100,9 @@ const AuthForm = ({type}: AuthFormProps) => {
           <Link href={"/forgot-password"} className='text-[#01b4e4e6] text-sm block text-start w-fit'>Forgot password?</Link>
         )}
         <div className="text-center my-5">
-          <Button 
-            type="submit" 
-            className='font-bold disabled:cursor-not-allowed' 
-            disabled={isPending}
-          >
+          <Button type="submit" disabled={isPending}>
             {type === "sign-in" ? "Login" : "Sign up"}
-          </Button>          
+          </Button>
         </div>
         <p className='text-sm'>
           {type === "sign-in" ? (

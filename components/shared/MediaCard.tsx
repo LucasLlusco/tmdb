@@ -21,10 +21,10 @@ import UserScoreProgress from './UserScoreProgress'
 import ImageWithFallback from './ImageWithFallback'
 
 interface MediaCardProps {
-  item: MediaItem
-  direction: "row" | "column" | "grid" | "grid-xl"
-  itemRef?: (node?: Element | null) => void
-  user: UserType | null
+  item: MediaItem;
+  direction: "row" | "column" | "grid" | "grid-xl";
+  itemRef?: (node?: Element | null) => void;
+  user: UserType | null;
 }
 
 const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
@@ -92,27 +92,31 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
         </DropdownMenu>
       </div>
       <div className={cn({
-        "flex flex-col gap-[10px] py-[5px]" : direction === "column",
+        "py-[5px]" : direction === "column",
         "relative px-[8px] py-[15px]" : direction === "row",
         "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid" || direction === "grid-xl"
         })}>
         {direction != "column" && (
-          <UserScoreProgress vote_average={item.vote_average} absolute={true} />
+          <UserScoreProgress vote_average={item.vote_average} style={'rounded'} absolute={true} />
         )}
         <div className={cn("flex flex-col", {
-          "gap-[2px]" : direction === "column",
           "gap-[4px]" : direction === "row" || direction === "grid" || direction === "grid-xl"
           })}>
-          <Link href={itemPathname} className='link-black font-bold w-fit leading-tight'>
+          <Link href={itemPathname} className='link-black font-bold w-fit'>
             {title}
           </Link>
-          <span className='text-xs text-gray-500'>
-            {date && getFormattedDate(date, false)}
-          </span>          
+          {direction === "column" ? (
+            <div className="flex gap-2 items-center mt-[2px]">
+              <UserScoreProgress vote_average={item.vote_average} style={'badge'} />
+              <span className='text-xs text-gray-500'>{date && getFormattedDate(date, false)}</span> 
+            </div>
+          ) : (
+            <span className='text-xs text-gray-500'>{date && getFormattedDate(date, false)} </span> 
+          )}
+          {direction === "column" && (
+            <p className='overflow-txt mt-[10px] text-[14px]'>{item.overview}</p>
+          )}
         </div>
-        {direction === "column" && (
-          <p className='overflow-txt'>{item?.overview}</p>
-        )}
       </div>
     </div>
   )

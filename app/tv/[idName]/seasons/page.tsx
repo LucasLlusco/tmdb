@@ -5,7 +5,7 @@ import React from 'react'
 
 interface SeasonsPageProps {
   params: {
-    idName: string
+    idName: string;
   } 
 }
 
@@ -33,9 +33,9 @@ const SeasonsPage = async({params} : SeasonsPageProps) => {
       <section className='container'>
         <h3 className='section-title'>Seasons <span className='font-normal'>{tvShow.number_of_seasons}</span></h3>
         <article className='flex flex-col gap-5'>
-          {tvShow.seasons.map((season) => (
-            <SeasonMediaCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />
-          ))}          
+          {tvShow.seasons.map((season) => {
+            if(season.name != "Specials")  return <SeasonMediaCard key={season.id} season={season} basePathname={basePathname} tvShowName={tvShow.name} />
+          })}          
         </article>
       </section>
     </main>
