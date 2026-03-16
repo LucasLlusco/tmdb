@@ -8,17 +8,25 @@ const {
   APPWRITE_USERS_AVATAR_BUCKET_ID: AVATAR_BUCKET_ID,
   APPWRITE_LISTS_COLLECTION_ID: LISTS_COLLECTION_ID,
   APPWRITE_WATCHLISTS_COLLECTION_ID: WATCHLISTS_COLLECTION_ID,
+  APPWRITE_REVIEWS_COLLECTION_ID: REVIEWS_COLLECTION_ID,
+  APPWRITE_REACTIONS_COLLECTION_ID: REACTIONS_COLLECTION_ID,
   APPWRITE_RATINGS_COLLECTION_ID: RATINGS_COLLECTION_ID,
-  APPWRITE_REVIEWS_COLLECTION_ID: REVIEWS_COLLECTION_ID
 } = process.env
 
-export const createUserDocument = async (userId: string, user:{email:string, username: string, userId:string}) => {
+
+interface CreateUserInput {
+  email: string;
+  username: string;
+  userId: string;
+}
+
+export const createUserDocument = async (userId: string, data: CreateUserInput) => {
   const { database } = await createAdminClient();
   const newUser = await database.createDocument<UserType>(
     DATABASE_ID!,
     USERS_COLLECTION_ID!,
     userId,
-    user
+    data
   )
 
   return newUser;
@@ -35,13 +43,21 @@ export const getUserDocument = async (userId: string) => {
   return user;
 }
 
-export const updateUserDocument = async (userId: string, newUserData:NewUserDataType) => {
+interface UpdateUserInput {
+  username?: string;
+  email?: string;
+  avatarId?: string;
+  avatarPath?: string;
+  bio?:string;
+}
+
+export const updateUserDocument = async (userId: string, data: UpdateUserInput) => {
   const { database } = await createAdminClient();
   const user = await database.updateDocument<UserType>(
     DATABASE_ID!,
     USERS_COLLECTION_ID!,
     userId,
-    newUserData
+    data,
   )
   
   return user;
@@ -66,31 +82,46 @@ export const deleteUserAvatar = async (avatarId: string) => {
 
 /********************* LISTS **********************/
 
-export const createListDocument = async (userId: string, title: string, isPublic: boolean, description?: string) => {
+interface CreateListInput {
+  userId: string; 
+  title: string;
+  isPublic: boolean;
+  description?: string;
+}
+
+export const createListDocument = async (data: CreateListInput) => {
   const { database } = await createAdminClient();
   const newList = await database.createDocument<ListType>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     ID.unique(),
     {
-      userId,
-      title,
-      isPublic,
-      description
+      userId: data.userId,
+      title: data.title,
+      isPublic: data.isPublic,
+      description: data.description
     }
   )
 
   return newList;
 }
 
+interface UpdateListInput {
+  title?: string;
+  isPublic?: boolean;
+  items?: number[];
+  itemsMediaType?: ("movie" | "tv")[];
+  description?: string;
+}
+
 //for add/remove items from list and editing its privacy, title, description
-export const updateListDocument = async (listId:string, updatedList: UpdatedListDataType) => {
+export const updateListDocument = async (listId: string, data: UpdateListInput) => {
   const { database } = await createAdminClient();
   const list = await database.updateDocument<ListType>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     listId,
-    updatedList
+    data
   )
   
   return list;
@@ -105,7 +136,7 @@ export const deleteListDocument = async (listId: string) => {
   )
 }
 
-export const deleteAllListDocuments = async (userId: string) => {
+export const deleteAllListDocumentsByUser = async (userId: string) => {
   const { database } = await createAdminClient();
   const { documents } = await database.listDocuments<ListType>(
     DATABASE_ID!,
@@ -128,7 +159,7 @@ export const deleteAllListDocuments = async (userId: string) => {
   }
 }
 
-export const getListDocuments = async (userId:string) => {
+export const getAllListDocumentsByUser = async (userId:string) => {
   const { database } = await createAdminClient();
   const { documents } = await database.listDocuments<ListType>(
     DATABASE_ID!,
@@ -157,7 +188,7 @@ export const getListDocument = async (listId: string) => {
 export const getMediaItemsDetails = async (ids: number[], types: ("movie" | "tv")[]) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const res = await fetch(`${baseUrl}/api/tmdb`, {
+  const res = await fetch(`${baseUrl}/api/tmdb/batch`, {
     method: "POST",
     body: JSON.stringify({ ids, types }),
   });
@@ -186,14 +217,20 @@ export const createWatchlistDocument = async (userId: string) => {
   return newWatchlist;
 }
 
+interface UpdateWatchlistInput {
+  isPublic?: boolean;
+  items?: number[];
+  itemsMediaType?: ("movie" | "tv")[];
+}
+
 //for add/remove items from watchlist and editing its privacy.
-export const updateWatchlistDocument = async (watchlistId: string, updatedWatchlist: UpdatedWatchlistDataType) => {
+export const updateWatchlistDocument = async (watchlistId: string, data: UpdateWatchlistInput) => {
   const { database } = await createAdminClient();
   const watchlist = await database.updateDocument<WatchlistType>(
     DATABASE_ID!,
     WATCHLISTS_COLLECTION_ID!,
     watchlistId,
-    updatedWatchlist
+    data
   )
 
   return watchlist;
@@ -229,3 +266,215 @@ export const deleteWatchlistDocument = async (userId: string) => {
     watchlist.$id
   )
 }
+
+/********************* REVIEWS **********************/
+
+interface CreateReviewInput {
+  userId: string;
+  mediaId: number;
+  mediaType: "movie" | "tv";
+  mediaTitle: string;
+  mediaPosterPath: string;
+  title?: string;
+  content: string;
+}
+
+export const createReview = async (data: CreateReviewInput) => {
+  const { database } = await createAdminClient();
+  const newReview = await database.createDocument<ReviewDocument>(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    ID.unique(),
+    data
+  )
+
+  return newReview;
+}
+
+interface UpdateReviewInput {
+  title?: string;
+  content?: string;
+  likesCount?: number;
+  dislikesCount?: number;  
+}
+
+export const updateReview = async (reviewId: string, data: UpdateReviewInput) => {
+  const { database } = await createAdminClient();
+  const review = await database.updateDocument<ReviewDocument>(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    reviewId,
+    data
+  )
+
+  return review;
+}
+
+export const deleteReview = async (reviewId: string) => {
+  const { database } = await createAdminClient();
+  await database.deleteDocument(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    reviewId,
+  )
+}
+
+export const getReview = async (reviewId: string) => {
+  const { database } = await createAdminClient();
+  const document = await database.getDocument<ReviewDocument>(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    reviewId
+  )
+
+  return document;
+}
+
+export const getReviewsByUser = async (userId: string, currentUserId: string | null) => {
+  const { database } = await createAdminClient();
+  const { documents: reviews } = await database.listDocuments<ReviewDocument>(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    [Query.equal("userId", userId)]
+  )
+
+  let reactions : ReactionDocument[];
+  if(currentUserId) {
+    const reviewIds = reviews.map((doc) => doc.$id);
+    
+    reactions = await getReactionsByUserInReviewsGiven(currentUserId, reviewIds);
+  }
+
+  const finalReviews: ReviewDocument[] = reviews.map((review) => ({
+    ...review,
+    currentUserReaction: reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null,
+  }));
+  
+  return finalReviews;
+}
+
+export const getReviewsByMedia = async (mediaId: number, currentUserId: string | null) => {
+  const { database } = await createAdminClient();
+  const { documents: reviews } = await database.listDocuments<ReviewDocument>(
+    DATABASE_ID!,
+    REVIEWS_COLLECTION_ID!,
+    [Query.equal("mediaId" , mediaId)]
+  )
+
+  const userIds = reviews.map((doc) => doc.userId);
+  const uniqueUserIds = Array.from(new Set(userIds));
+
+  const users = await Promise.all(
+    uniqueUserIds.map((userId) => getUserDocument(userId))
+  );
+
+  let reactions : ReactionDocument[];
+  if(currentUserId) {
+    const reviewIds = reviews.map((doc) => doc.$id);
+    
+    reactions = await getReactionsByUserInReviewsGiven(currentUserId, reviewIds);
+  }
+
+  const reviewsWithUser: ReviewWithUser[] = reviews.map((review) => ({
+    ...review,
+    currentUserReaction: reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null,
+    user: {
+      username: users.find((user) => user.userId === review.userId)?.username ?? "Uknown",
+      avatarPath: users.find((user) => user.userId === review.userId)?.avatarPath ?? "",
+    }
+  }));
+
+  return reviewsWithUser;
+}
+
+/********************* REACTIONS (linked with reviews feature) **********************/
+
+export const getReactionByUserInReviewGiven = async (userId: string, reviewId: string) => {
+  const { database } = await createAdminClient();
+  const { documents } = await database.listDocuments<ReactionDocument>(
+    DATABASE_ID!,
+    REACTIONS_COLLECTION_ID!,
+    [Query.equal("userId", userId), Query.equal("reviewId", reviewId)]
+  )
+  
+  return documents;
+}
+
+export const getReactionsByUserInReviewsGiven = async (userId: string, reviewIds: string[]) => {
+  const { database } = await createAdminClient();
+  const { documents } = await database.listDocuments<ReactionDocument>(
+    DATABASE_ID!,
+    REACTIONS_COLLECTION_ID!,
+    [Query.equal("userId", userId), Query.equal("reviewId", reviewIds)]
+  )
+  
+  return documents;
+}
+
+export const createReaction = async (userId: string, reviewId: string, type: "like" | "dislike") => {
+  const { database } = await createAdminClient();
+  const newReaction = await database.createDocument<ReactionDocument>(
+    DATABASE_ID!,
+    REACTIONS_COLLECTION_ID!,
+    ID.unique(),
+    {
+      userId: userId,
+      reviewId: reviewId,
+      type: type
+    }
+  )
+
+  return newReaction;
+}
+
+export const deleteReaction = async (reactionId: string) => {
+  const { database } = await createAdminClient();
+  await database.deleteDocument(
+    DATABASE_ID!,
+    REACTIONS_COLLECTION_ID!,
+    reactionId,
+  )
+}
+
+export const updateReaction = async (reactionId: string, type: "like" | "dislike") => {
+  const { database } = await createAdminClient();
+  const reaction = await database.updateDocument<ReactionDocument>(
+    DATABASE_ID!,
+    REACTIONS_COLLECTION_ID!,
+    reactionId,
+    {
+      type: type
+    }
+  )
+
+  return reaction;
+}
+
+export const toggleReaction = async (currentUserId: string, reviewId: string, type: "like" | "dislike") => {
+  const documents = await getReactionByUserInReviewGiven(currentUserId, reviewId);
+  const existingReview = documents[0];
+
+  if(!existingReview) {
+    await createReaction(currentUserId, reviewId, type);
+
+    await incrementCounter(reviewId, type, +1);
+  } else if (existingReview.type === type) {
+    await deleteReaction(existingReview.$id);
+
+    await incrementCounter(reviewId, type, -1);
+  } else {
+    await updateReaction(existingReview.$id, type);
+
+    await incrementCounter(reviewId, existingReview.type, -1);
+    await incrementCounter(reviewId, type, +1);
+  }
+}
+
+export const incrementCounter = async (reviewId: string, type: "like" | "dislike", delta: 1 | -1) => {
+  const review = await getReview(reviewId);
+
+  await updateReview(reviewId, {
+    ...(type === "like") && {likesCount: review.likesCount + delta},
+    ...(type === "dislike") && {dislikesCount: review.dislikesCount + delta}, 
+  });
+};

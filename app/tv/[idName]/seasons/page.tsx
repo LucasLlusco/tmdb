@@ -1,5 +1,5 @@
 import SeasonMediaCard from '@/components/tvShow/SeasonMediaCard';
-import SeasonHeader from '@/components/tvShow/SeasonHeader';
+import MediaHeader from '@/components/shared/MediaHeader';
 import { getTvShowById } from '@/services/tmdb/tvShows';
 import React from 'react'
 
@@ -17,7 +17,7 @@ const SeasonsPage = async({params} : SeasonsPageProps) => {
 
   return (
     <main>
-      <SeasonHeader
+      <MediaHeader
         basePathname={basePathname}
         name={tvShow.name}
         date={tvShow.first_air_date}

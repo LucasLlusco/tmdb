@@ -1,8 +1,17 @@
+import UserReviewsContainer from '@/components/user/reviews/UserReviewsContainer';
 import React from 'react'
 
-const ReviewsPage = () => {
+interface ReviewsPageProps {
+  params: {
+    id: string;
+  }
+}
+
+const ReviewsPage = async ({params} : ReviewsPageProps) => {
+  const userId = params.id;
+  
   return (
-    <div>ReviewsPage</div>
+    <UserReviewsContainer userId={userId} />
   )
 }
 

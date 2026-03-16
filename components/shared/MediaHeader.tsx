@@ -2,9 +2,9 @@ import { getYear } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import ImageWithFallback from '../shared/ImageWithFallback'
+import ImageWithFallback from './ImageWithFallback'
 
-interface SeasonHeaderProps {
+interface MediaHeaderProps {
   basePathname?: string,
   name: string,
   date: string,
@@ -14,7 +14,7 @@ interface SeasonHeaderProps {
   backLinkText: string,
 }
 
-const SeasonHeader = ({basePathname, name, date, image, bgImg, backLinkPathname, backLinkText}: SeasonHeaderProps) => {
+const MediaHeader = ({basePathname, name, date, image, bgImg, backLinkPathname, backLinkText}: MediaHeaderProps) => {
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${bgImg})`,
     backgroundSize: 'cover',
@@ -58,4 +58,4 @@ const SeasonHeader = ({basePathname, name, date, image, bgImg, backLinkPathname,
   )
 }
 
-export default SeasonHeader
+export default MediaHeader

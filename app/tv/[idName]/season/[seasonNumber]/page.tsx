@@ -1,4 +1,4 @@
-import SeasonHeader from '@/components/tvShow/SeasonHeader';
+import MediaHeader from '@/components/shared/MediaHeader';
 import SeasonMediaCard from '@/components/tvShow/SeasonMediaCard';
 import SeasonPagination from '@/components/tvShow/SeasonPagination';
 import { Separator } from '@/components/ui/separator';
@@ -8,8 +8,8 @@ import React from 'react'
 
 interface SeasonPageProps {
   params: {
-    idName: string,
-    seasonNumber: number
+    idName: string;
+    seasonNumber: number;
   } 
 }
 
@@ -27,7 +27,7 @@ const SeasonPage = async({params}: SeasonPageProps) => {
 
   return (
     <main>
-      <SeasonHeader 
+      <MediaHeader 
         name={season.name} 
         date={season.air_date} 
         image={season.poster_path} 

@@ -6,14 +6,15 @@ import TvShowCurrentSeason from '@/components/tvShow/TvShowCurrentSeason';
 import { Separator } from '@/components/ui/separator';
 import { getTvShowById } from '@/services/tmdb/tvShows';
 import React from 'react'
+import TvShowReviews from '@/components/tvShow/TvShowReviews';
 
-interface tvShowPageProps {
+interface TvShowPageProps {
   params: {
-    idName: string
-  } 
+    idName: string;
+  }
 }
 
-const tvShowPage = async ({params}: tvShowPageProps) => {
+const tvShowPage = async ({params}: TvShowPageProps) => {
   const id = Number(params.idName.split("-")[0]); 
   const tvShow = await getTvShowById(id);
 
@@ -25,6 +26,7 @@ const tvShowPage = async ({params}: tvShowPageProps) => {
       <TvShowCast tvShowId={id} />
       <TvShowMedia tvShowId={id} />
       <TvShowCurrentSeason tvShow={tvShow} basePathname={basePathname} />
+      <TvShowReviews tvShowId={id} />
       <div className="container !py-4">
         <Separator />
       </div>

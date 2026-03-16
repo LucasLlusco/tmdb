@@ -222,14 +222,6 @@ declare type UserType = {
   bio?:string 
 }
 
-declare type NewUserDataType = {
-  username?: string,
-  email?: string,
-  avatarId?: string,
-  avatarPath?: string,
-  bio?:string 
-}
-
 declare type ListType = {
   $id: string,
   $databaseId: string,
@@ -245,14 +237,6 @@ declare type ListType = {
   description: string
 }
 
-declare type UpdatedListDataType = {
-  title?: string
-  isPublic?: boolean
-  items?: number[]
-  itemsMediaType?: ("movie" | "tv")[]
-  description?: string
-}
-
 declare type WatchlistType = {
   $id: string,
   $databaseId: string,
@@ -266,8 +250,40 @@ declare type WatchlistType = {
   itemsMediaType: ("movie" | "tv")[]
 }
 
-declare type UpdatedWatchlistDataType = {
-  isPublic?: boolean
-  items?: number[]
-  itemsMediaType?: ("movie" | "tv")[]
+interface ReviewDocument {
+  $id: string;
+  $databaseId: string;
+  $collectionId: string;
+  $createdAt: string;
+  $updatedAt: string
+  $permissions: [];
+  userId: string;
+  mediaId: number;
+  mediaType: "movie" | "tv";
+  mediaTitle: string;
+  mediaPosterPath: string;
+  title?: string;
+  content: string;
+  likesCount: number;
+  dislikesCount: number;
+  currentUserReaction: "like" | "dislike" | null;
+}
+
+declare interface ReviewWithUser extends ReviewDocument {
+  user: {
+    username: string;
+    avatarPath: string;
+  };
+}
+
+declare type ReactionDocument = {
+  $id: string;
+  $databaseId: string;
+  $collectionId: string;
+  $createdAt: string;
+  $updatedAt: string
+  $permissions: [];
+  userId: string;
+  reviewId: string;
+  type: "like" | "dislike";
 }
