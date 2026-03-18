@@ -1,7 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import { getUserDocument } from '@/lib/actions/user.actions';
+import { getUser } from '@/lib/actions/user.actions';
 import { getFormattedDate } from '@/lib/utils';
 import { Edit } from 'lucide-react';
 import Link from 'next/link';
@@ -24,11 +24,14 @@ const UserLayout = ({children, params}: UserLayoutProps) => {
   const isOwner = user?.userId === userId;
   const pathname = usePathname();
 
-  const { data: userProfile } = useQuery({
+  const { data: userProfile, status } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => getUserDocument(userId),
+    queryFn: () => getUser(userId),
     enabled: !isOwner //only run when the current user and this profile are different.
   });
+
+  //check here if userId is real, if not it doesnt render children pages. 
+  if(status === "error") return <p>Error: user doesnt exists</p>;
 
   const username = isOwner ? user?.username : userProfile?.username;
   const avatarPath = isOwner ? user?.avatarPath : userProfile?.avatarPath;

@@ -1,5 +1,5 @@
 "use client"
-import { getWatchlistDocument } from '@/lib/actions/user.actions'
+import { getWatchlist } from '@/lib/actions/user.actions'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import AddWatchlistItemButton from './AddWatchlistItemButton'
@@ -9,17 +9,17 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 interface AddWatchlistItemFormProps {
-  userId: string
-  itemId: number
-  itemTitle: string
-  itemType: "movie" | "tv"
-  isInDropDown: boolean
+  userId: string;
+  mediaId: number;
+  mediaTitle: string;
+  mediaType: "movie" | "tv";
+  isInDropDown: boolean;
 }
 
-const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddWatchlistItemFormProps) => {
+const AddWatchlistItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: AddWatchlistItemFormProps) => {
   const { data: watchlist, status } = useQuery({
     queryKey: ["watchlist", userId],
-    queryFn: () => getWatchlistDocument(userId),
+    queryFn: () => getWatchlist(userId),
     enabled: !!userId
   });
 
@@ -33,7 +33,7 @@ const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown
           </Button>                 
         </TooltipTrigger>
         <TooltipContent>
-          <p>Login to add this {itemType === "movie" ? "movie" : "tv show"} to your watchlist</p>
+          <p>Login to add this {mediaType === "movie" ? "movie" : "tv show"} to your watchlist</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -57,9 +57,9 @@ const AddWatchlistItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown
       <AddWatchlistItemButton 
         userId={userId} 
         watchlist={watchlist} 
-        itemId={itemId} 
-        itemTitle={itemTitle} 
-        itemType={itemType} 
+        mediaId={mediaId} 
+        mediaTitle={mediaTitle} 
+        mediaType={mediaType} 
         isInDropDown={isInDropDown}
       /> 
     )}

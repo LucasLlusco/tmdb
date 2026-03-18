@@ -1,5 +1,5 @@
 "use client"
-import { getListDocument } from '@/lib/actions/user.actions';
+import { getList } from '@/lib/actions/user.actions';
 import React from 'react'
 import { useQuery } from '@tanstack/react-query';
 import ListOwnerAvatar from './ListOwnerAvatar';
@@ -8,8 +8,8 @@ import ListItems from './ListItems';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 
 interface ListContainerProps {
-  initialList: ListType
-  listId: string
+  initialList: ListDocument;
+  listId: string;
 }
 
 const ListContainer = ({initialList, listId} : ListContainerProps) => {
@@ -17,7 +17,7 @@ const ListContainer = ({initialList, listId} : ListContainerProps) => {
 
   const { data: list, isPending, isError } = useQuery({
     queryKey: ["list", listId],
-    queryFn: () => getListDocument(listId),
+    queryFn: () => getList(listId),
     initialData: initialList,
   });
 
@@ -49,8 +49,8 @@ const ListContainer = ({initialList, listId} : ListContainerProps) => {
           </div>
         </section>
         <section className="container">
-          <h3 className='section-title'>{list.items.length} Items</h3>
-          <ListItems items={list.items!} itemsType={list.itemsMediaType!} />
+          <h3 className='section-title'>{list.mediaIds.length} Items</h3>
+          <ListItems mediaIds={list.mediaIds!} mediaTypes={list.mediaTypes!} />
         </section>
         </>
       )}

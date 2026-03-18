@@ -1,5 +1,5 @@
 import ListContainer from '@/components/user/lists/ListContainer';
-import { getListDocument } from '@/lib/actions/user.actions';
+import { getList } from '@/lib/actions/user.actions';
 import React from 'react'
 
 interface ListPageProps {
@@ -10,7 +10,7 @@ interface ListPageProps {
 
 const ListPage = async ({params}: ListPageProps) => {
   const listId = params.id;
-  const list = await getListDocument(listId);
+  const list = await getList(listId);
   
   return (
     <ListContainer initialList={list} listId={list.$id} />

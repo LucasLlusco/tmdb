@@ -5,20 +5,20 @@ import { getMediaItemsDetails } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
 
 interface WatchlistItemsProps {
-  items: number[];
-  itemsType: ("movie" | "tv")[];
+  mediaIds: number[];
+  mediaTypes: ("movie" | "tv")[];
 }
 
-const WatchlistItems = ({items, itemsType}: WatchlistItemsProps) => {
+const WatchlistItems = ({mediaIds, mediaTypes}: WatchlistItemsProps) => {
 
   const { data, status } = useQuery({
-    queryKey: ["watchlist-items", items],
-    queryFn: () => getMediaItemsDetails(items, itemsType),
-    enabled: !!items.length,
+    queryKey: ["watchlist-items", mediaIds],
+    queryFn: () => getMediaItemsDetails(mediaIds, mediaTypes),
+    enabled: !!mediaIds.length,
     placeholderData: (prevData) => prevData
   });
 
-  if(items.length === 0) return <p>This watchlist is empty</p>;
+  if(mediaIds.length === 0) return <p>This watchlist is empty</p>;
   if(status === "pending") return <p>Loading items...</p>;
   if(status === "error") return <p>Error loading items</p>;
 

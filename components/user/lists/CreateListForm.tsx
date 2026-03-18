@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { createListDocument } from '@/lib/actions/user.actions'
+import { createList } from '@/lib/actions/user.actions'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -17,14 +17,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 
 interface CreateListFormProps {
-  userId: string
+  userId: string;
 }
 
 interface CreateListPayload {
-  userId: string
-  title: string
-  isPublic: boolean
-  description?: string
+  userId: string;
+  title: string;
+  isPublic: boolean;
+  description?: string;
 }
 
 const CreateListForm = ({userId}: CreateListFormProps) => {
@@ -41,7 +41,12 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({userId, title, isPublic, description} : CreateListPayload) => createListDocument(userId, title, isPublic, description),
+    mutationFn: ({userId, title, isPublic, description} : CreateListPayload) => createList({
+      userId, 
+      title,
+      isPublic, 
+      description
+    }),
     onSuccess: () => {
       toast.success("List created successfully");
       form.reset({
@@ -60,7 +65,7 @@ const CreateListForm = ({userId}: CreateListFormProps) => {
     mutate({
       userId: userId,
       title: data.title,
-      isPublic: data.privacy === "public" ? true : false, //createListDocument receives boolean. 
+      isPublic: data.privacy === "public" ? true : false,
       description: data.description,
     });
   }    

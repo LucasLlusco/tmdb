@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { getListDocuments } from '@/lib/actions/user.actions'
+import { getListsByUser } from '@/lib/actions/user.actions'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '../../ui/button'
 import { List } from 'lucide-react'
@@ -10,17 +10,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface AddListItemFormProps {
-  userId: string 
-  itemId: number
-  itemTitle: string
-  itemType: "movie" | "tv"
-  isInDropDown: boolean 
+  userId: string; 
+  mediaId: number;
+  mediaTitle: string;
+  mediaType: "movie" | "tv";
+  isInDropDown: boolean;
 }
 
-const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: AddListItemFormProps) => {
+const AddListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: AddListItemFormProps) => {
   const { data, status } = useQuery({
     queryKey: ["lists", userId],
-    queryFn: () => getListDocuments(userId!),
+    queryFn: () => getListsByUser(userId!),
     enabled: !!userId // Only run query when userId exists
   });
 
@@ -48,7 +48,7 @@ const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: Ad
         <div className="flex flex-col gap-[10px] w-80 p-3">
           <div className="flex flex-col space-y-1.5 text-center sm:text-left mb-[6px]">
             <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
-            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
+            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{mediaTitle}</span> from one of your lists.</p>
           </div>
           <CreateListForm userId={userId} />
           {data?.map((list) => (
@@ -56,9 +56,9 @@ const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: Ad
               key={list.$id} 
               userId={userId} 
               list={list} 
-              itemId={itemId}
-              itemTitle={itemTitle}
-              itemType={itemType}
+              mediaId={mediaId}
+              mediaTitle={mediaTitle}
+              mediaType={mediaType}
             />         
           ))}
         </div>
@@ -74,7 +74,7 @@ const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: Ad
         <PopoverContent className="flex flex-col gap-[10px] w-80 p-3">
           <div className="flex flex-col space-y-1.5 text-center sm:text-left mb-[6px]">
             <h4 className='text-lg font-semibold leading-none tracking-tight'>Add to List</h4>
-            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{itemTitle}</span> from one of your lists.</p>
+            <p className='text-sm text-muted-foreground'>Add or remove <span className='font-bold'>{mediaTitle}</span> from one of your lists.</p>
           </div>
           <CreateListForm userId={userId} />
           {data?.map((list) => (
@@ -82,9 +82,9 @@ const AddListItemForm = ({userId, itemId, itemTitle, itemType, isInDropDown}: Ad
               key={list.$id} 
               userId={userId} 
               list={list} 
-              itemId={itemId}
-              itemTitle={itemTitle}
-              itemType={itemType}
+              mediaId={mediaId}
+              mediaTitle={mediaTitle}
+              mediaType={mediaType}
             />         
           ))}          
         </PopoverContent>

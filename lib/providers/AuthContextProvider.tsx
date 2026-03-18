@@ -3,15 +3,15 @@ import { getLoggedInUser } from "@/lib/actions/auth.actions";
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: UserType | null
-  setUser: Dispatch<SetStateAction<UserType | null>>
-  isLoading: boolean
+  user: UserDocument | null;
+  setUser: Dispatch<SetStateAction<UserDocument | null>>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<UserDocument | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   
   useEffect(() => {
@@ -27,7 +27,7 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
     }
     handleGetLoggedInUser();
   }, [])
-    
+
   return (
     <AuthContext.Provider value={{user, setUser, isLoading}}>
       {children}

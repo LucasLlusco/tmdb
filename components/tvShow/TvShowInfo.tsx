@@ -69,8 +69,8 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" isInDropDown={false} />
-              <AddWatchlistItemForm userId={user?.$id!} itemId={tvShow.id} itemTitle={tvShow.name} itemType="tv" isInDropDown={false} />
+              <AddListItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
+              <AddWatchlistItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

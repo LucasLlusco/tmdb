@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { updateListDocument } from '@/lib/actions/user.actions';
+import { updateList } from '@/lib/actions/user.actions';
 import { editListFormSchema } from '@/lib/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,13 +17,13 @@ import { Label } from '../../ui/label';
 import { Textarea } from '../../ui/textarea';
 
 interface EditListFormProps {
-  list: ListType
+  list: ListDocument;
 }
 
 interface EditListPayload {
-  title?: string
-  isPublic?: boolean
-  description?: string
+  title?: string;
+  isPublic?: boolean;
+  description?: string;
 }
 
 const EditListForm = ({list} : EditListFormProps) => {
@@ -41,10 +41,10 @@ const EditListForm = ({list} : EditListFormProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({title, isPublic, description} : EditListPayload) => updateListDocument(list.$id, {
-      title: title,
-      isPublic: isPublic,
-      description: description
+    mutationFn: ({title, isPublic, description} : EditListPayload) => updateList(list.$id, {
+      title,
+      isPublic,
+      description
     }),
     onSuccess: () => {
       toast.success("List updated successfully");

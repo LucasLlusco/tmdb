@@ -1,5 +1,5 @@
 "use client"
-import { getUserDocument } from '@/lib/actions/user.actions';
+import { getUser } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import React from 'react'
@@ -7,9 +7,9 @@ import { getFormattedDate } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface ListOwnerAvatar {
-  list: ListType
-  user: UserType | null
-  isOwner: boolean
+  list: ListDocument;
+  user: UserDocument | null;
+  isOwner: boolean;
 }
 
 const ListOwnerAvatar = ({list, user, isOwner}: ListOwnerAvatar) => {
@@ -17,7 +17,7 @@ const ListOwnerAvatar = ({list, user, isOwner}: ListOwnerAvatar) => {
 
   const { data: userProfile } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => getUserDocument(userId),
+    queryFn: () => getUser(userId),
     enabled: !isOwner
   });
 

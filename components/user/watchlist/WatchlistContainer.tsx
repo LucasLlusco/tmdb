@@ -1,14 +1,14 @@
 "use client"
 import React from 'react'
 import WatchlistItems from './WatchlistItems'
-import { getWatchlistDocument } from '@/lib/actions/user.actions'
+import { getWatchlist } from '@/lib/actions/user.actions'
 import { useQuery } from '@tanstack/react-query'
 import EditWatchlistForm from './EditWatchlistForm'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
 
 interface WatchlistContainerProps {
-  initialWatchlist: WatchlistType | null
-  userId: string
+  initialWatchlist: WatchlistDocument | null;
+  userId: string;
 }
 
 const WatchlistContainer = ({initialWatchlist, userId} : WatchlistContainerProps) => {
@@ -17,7 +17,7 @@ const WatchlistContainer = ({initialWatchlist, userId} : WatchlistContainerProps
 
   const { data: watchlist, isPending, isError } = useQuery({
     queryKey: ["watchlist", userId],
-    queryFn: () => getWatchlistDocument(userId),
+    queryFn: () => getWatchlist(userId),
     initialData: initialWatchlist
   });
 
@@ -37,7 +37,7 @@ const WatchlistContainer = ({initialWatchlist, userId} : WatchlistContainerProps
             <h3 className='section-title !mb-0'>{isOwner ? "Your watchlist" : "Watchlist"}</h3>
             {isOwner && <EditWatchlistForm watchlist={watchlist!} userId={userId} />}
           </div>
-          <WatchlistItems items={watchlist?.items!} itemsType={watchlist?.itemsMediaType!} />
+          <WatchlistItems mediaIds={watchlist?.mediaIds!} mediaTypes={watchlist?.mediaTypes!} />
         </section>
       )}
     </main>

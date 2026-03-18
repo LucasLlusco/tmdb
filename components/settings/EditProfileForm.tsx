@@ -8,13 +8,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { deleteUserAvatar, updateUserDocument } from '@/lib/actions/user.actions';
+import { deleteUserAvatar, updateUser } from '@/lib/actions/user.actions';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { editProfileFormSchema } from '@/lib/schemas/auth.schema';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
+import { requireAuth } from '@/lib/actions/auth.actions';
+import { useRouter } from 'next/navigation';
 
 const EditProfileForm = () => {
+  const route = useRouter();
   const { user, setUser } = useAuthContext();
 
   const formSchema = editProfileFormSchema();
@@ -30,6 +33,11 @@ const EditProfileForm = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (values:z.infer<typeof formSchema>) => {
+      const { isAuth } = await requireAuth();
+      if(!isAuth) {
+        throw new Error("UNAUTHENTICATED");
+      }
+
       let newAvatarId, newAvatarPath;
 
       if(values.newAvatar) {
@@ -50,7 +58,7 @@ const EditProfileForm = () => {
         }
       }
 
-      const updatedUser = await updateUserDocument(user?.userId!, {
+      const updatedUser = await updateUser(user?.userId!, {
         ...(!!values.newAvatar) && {avatarId: newAvatarId},
         ...(!!values.newAvatar) && {avatarPath: newAvatarPath},
         ...(!!values.newUsername) && {username: values.newUsername},
@@ -63,8 +71,11 @@ const EditProfileForm = () => {
       setUser(data);
       toast.success("Profile updated successfully");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Could not update profile. Please try again");
+      if(error.message === "UNAUTHENTICATED") {
+        route.replace("/login");
+      }
     }
   });  
 

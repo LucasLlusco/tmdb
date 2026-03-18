@@ -1,5 +1,5 @@
 "use client"
-import { getListDocuments } from '@/lib/actions/user.actions';
+import { getListsByUser } from '@/lib/actions/user.actions';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react'
 import ListCard from './ListCard';
@@ -7,8 +7,8 @@ import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import CreateListForm from './CreateListForm';
 
 interface ListsContainerProps {
-  initialLists: ListType[] | []
-  userId: string
+  initialLists: ListDocument[] | [];
+  userId: string;
 }
 
 const ListsContainer = ({initialLists, userId}: ListsContainerProps) => {
@@ -16,7 +16,7 @@ const ListsContainer = ({initialLists, userId}: ListsContainerProps) => {
 
   const { data: lists, isPending, isError } = useQuery({
     queryKey: ["lists", userId],
-    queryFn: () => getListDocuments(userId),
+    queryFn: () => getListsByUser(userId),
     initialData: initialLists,
   });
 

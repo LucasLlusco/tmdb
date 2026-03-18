@@ -1,7 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { updateWatchlistDocument } from '@/lib/actions/user.actions'
+import { updateWatchlist } from '@/lib/actions/user.actions'
 import { isItemInList } from '@/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
@@ -9,61 +9,61 @@ import React from 'react'
 import { toast } from 'sonner'
 
 interface AddWatchlistButtonProps {
-  userId: string
-  watchlist: WatchlistType
-  itemId: number
-  itemTitle: string
-  itemType: "movie" | "tv"
-  isInDropDown: boolean
+  userId: string;
+  watchlist: WatchlistDocument;
+  mediaId: number;
+  mediaTitle: string;
+  mediaType: "movie" | "tv";
+  isInDropDown: boolean;
 }
 
 interface AddWatchlistItemPayload {
-  items: number[]
-  itemsMediaType: ("movie" | "tv")[]
-  action: "add" | "delete"
+  mediaIds: number[];
+  mediaTypes: ("movie" | "tv")[];
+  action: "add" | "delete";
 }
 
-const AddWatchlistItemButton = ({userId, watchlist, itemId, itemTitle, itemType, isInDropDown} : AddWatchlistButtonProps) => {
+const AddWatchlistItemButton = ({userId, watchlist, mediaId, mediaTitle, mediaType, isInDropDown} : AddWatchlistButtonProps) => {
   const queryClient = useQueryClient();
-  const { index, isInIt } = isItemInList(itemId, itemType, watchlist.items, watchlist.itemsMediaType);
+  const { index, isInIt } = isItemInList(mediaId, mediaType, watchlist.mediaIds, watchlist.mediaTypes);
   
   const { mutate, isPending } = useMutation({
-    mutationFn: ({items, itemsMediaType, action} : AddWatchlistItemPayload) => updateWatchlistDocument(watchlist.$id, {items, itemsMediaType}),
+    mutationFn: ({mediaIds, mediaTypes, action} : AddWatchlistItemPayload) => updateWatchlist(watchlist.$id, {mediaIds, mediaTypes}),
     onSuccess: (data, variables) => {
       if(variables.action === "add") {
-        toast.success(`${itemTitle} was added to watchlist successfully`);
+        toast.success(`${mediaTitle} was added to watchlist successfully`);
       } else {
-        toast.success(`${itemTitle} was removed from watchlist successfully`);
+        toast.success(`${mediaTitle} was removed from watchlist successfully`);
       }
       queryClient.invalidateQueries({queryKey: ["watchlist", userId]});
     },
     onError: (data, variables) => {
       if(variables.action === "add") {
-        toast.error(`Could not add ${itemTitle} to watchlist. Please try again`);
+        toast.error(`Could not add ${mediaTitle} to watchlist. Please try again`);
       } else {
-        toast.error(`Could not remove ${itemTitle} from watchlist. Please try again`);
+        toast.error(`Could not remove ${mediaTitle} from watchlist. Please try again`);
       }
     }
   });
 
   const handleAddItem = () => {
-    const newItems = watchlist.items;
-    const newItemsMediaType = watchlist.itemsMediaType;    
+    const newMediaIds = watchlist.mediaIds;
+    const newMediaTypes = watchlist.mediaTypes;    
     let action: "add" | "delete";
 
     if(isInIt) {
-      newItems.splice(index, 1);
-      newItemsMediaType.splice(index, 1);
+      newMediaIds.splice(index, 1);
+      newMediaTypes.splice(index, 1);
       action = "delete";
     } else {
-      newItems.push(itemId);
-      newItemsMediaType.push(itemType);
+      newMediaIds.push(mediaId);
+      newMediaTypes.push(mediaType);
       action = "add";
     }
 
     mutate({
-      items: newItems,
-      itemsMediaType: newItemsMediaType,
+      mediaIds: newMediaIds,
+      mediaTypes: newMediaTypes,
       action: action
     });
   }

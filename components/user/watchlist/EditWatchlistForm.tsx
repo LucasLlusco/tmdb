@@ -1,7 +1,7 @@
 "use client"
 import { Form, FormControl } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
-import { updateWatchlistDocument } from '@/lib/actions/user.actions';
+import { updateWatchlist } from '@/lib/actions/user.actions';
 import { editWatchlistFormSchema } from '@/lib/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,8 +11,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 interface EditWatchlistFormProps {
-  watchlist: WatchlistType
-  userId: string
+  watchlist: WatchlistDocument;
+  userId: string;
 }
 
 const EditWatchlistForm = ({watchlist, userId} : EditWatchlistFormProps) => {
@@ -27,9 +27,7 @@ const EditWatchlistForm = ({watchlist, userId} : EditWatchlistFormProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (isPublic:boolean) => updateWatchlistDocument(watchlist.$id, {
-      isPublic: isPublic
-    }),
+    mutationFn: (isPublic: boolean) => updateWatchlist(watchlist.$id, { isPublic }),
     onSuccess: () => {
       toast.success("Watchlist updated successfully");
       queryClient.invalidateQueries({queryKey: ["watchlist", userId]});

@@ -2,8 +2,8 @@
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite/config.";
 import { cookies } from "next/headers";
-import { createUserDocument, createWatchlistDocument, deleteAllListDocuments, deleteUserAvatar, 
-  deleteUserDocument, deleteWatchlistDocument, getUserDocument, updateUserDocument } from "./user.actions";
+import { createUser, createWatchlist, deleteListsByUser, deleteUserAvatar, 
+  deleteUser, deleteWatchlist, getUser, updateUser } from "./user.actions";
 
 const sevenDaysInSeconds = 7 * 24 * 60 * 60;
 
@@ -35,7 +35,7 @@ export const login = async (email:string, password:string) => {
     secure: true,
   });
 
-  const user = await getUserDocument(session.userId);
+  const user = await getUser(session.userId);
   return user;
 }
 
@@ -52,13 +52,13 @@ export const signup = async (email:string, password:string, username:string) => 
     secure: true,
   });
 
-  const newUser = await createUserDocument(session.userId, {
+  const newUser = await createUser(session.userId, {
     email, 
     username,
     userId: session.userId, 
   });
 
-  await createWatchlistDocument(newUser.userId);
+  await createWatchlist(newUser.userId);
 
   return newUser;
 }
@@ -72,7 +72,7 @@ export const getLoggedInUser = async () => {
   const { account } = await createSessionClient(sessionCookie.value);
   const result = await account.get();
 
-  const user = await getUserDocument(result.$id); 
+  const user = await getUser(result.$id);
   return user; 
 }
 
@@ -98,7 +98,7 @@ export const updateEmail = async (newEmail:string, password:string) => {
     password
   );
 
-  const updatedUser = await updateUserDocument(result.$id, {email: newEmail});
+  const updatedUser = await updateUser(result.$id, {email: newEmail});
   return updatedUser; 
 }
 
@@ -130,10 +130,10 @@ export const deleteAccount = async (email:string, password:string, avatarId?:str
     await deleteUserAvatar(avatarId);
   }
 
-  await deleteAllListDocuments(session.userId);
-  await deleteWatchlistDocument(session.userId);
+  await deleteListsByUser(session.userId);
+  await deleteWatchlist(session.userId);
 
-  await deleteUserDocument(session.userId);
+  await deleteUser(session.userId);
   await users.delete(session.userId); 
   cookies().delete("appwrite-session");   
 }

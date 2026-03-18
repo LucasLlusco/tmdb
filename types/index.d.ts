@@ -207,47 +207,47 @@ declare type Genre = {
   name: string
 }
 
-declare type UserType = {
-  $id: string,
-  $databaseId: string,
-  $collectionId: string,
-  $createdAt: string,
-  $updatedAt: string,
-  $permissions: [],
-  username: string,
-  email: string,
-  userId: string,
-  avatarId?: string, 
-  avatarPath?: string, 
-  bio?:string 
+declare type UserDocument = {
+  $id: string;
+  $databaseId: string;
+  $collectionId: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: [];
+  username: string;
+  email: string;
+  userId: string;
+  avatarId?: string; 
+  avatarPath?: string; 
+  bio?:string;
 }
 
-declare type ListType = {
-  $id: string,
-  $databaseId: string,
-  $collectionId: string,
-  $createdAt: string,
+declare type ListDocument = {
+  $id: string;
+  $databaseId: string;
+  $collectionId: string;
+  $createdAt: string;
   $updatedAt: string
-  $permissions: [],
-  userId: string,
+  $permissions: [];
+  userId: string;
   title: string
-  isPublic: boolean,
-  items: number[], 
-  itemsMediaType: ("movie" | "tv")[],
+  isPublic: boolean;
   description: string
+  mediaIds: number[]; 
+  mediaTypes: ("movie" | "tv")[];
 }
 
-declare type WatchlistType = {
-  $id: string,
-  $databaseId: string,
-  $collectionId: string,
-  $createdAt: string,
+declare type WatchlistDocument = {
+  $id: string;
+  $databaseId: string;
+  $collectionId: string;
+  $createdAt: string;
   $updatedAt: string
-  $permissions: [],
-  userId: string,
-  isPublic: boolean,
-  items: number[], 
-  itemsMediaType: ("movie" | "tv")[]
+  $permissions: [];
+  userId: string;
+  isPublic: boolean;
+  mediaIds: number[]; 
+  mediaTypes: ("movie" | "tv")[];
 }
 
 interface ReviewDocument {

@@ -69,8 +69,8 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} itemId={movie.id} itemTitle={movie.title} itemType="movie" isInDropDown={false} />
-              <AddWatchlistItemForm userId={user?.$id!} itemId={movie.id} itemTitle={movie.title} itemType="movie" isInDropDown={false} />
+              <AddListItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
+              <AddWatchlistItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

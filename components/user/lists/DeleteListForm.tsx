@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { deleteListDocument } from '@/lib/actions/user.actions'
+import { deleteList } from '@/lib/actions/user.actions'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Trash } from 'lucide-react'
@@ -8,14 +8,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { Button } from '@/components/ui/button'
 
 interface DeleteLisFormProps {
-  list: ListType
+  list: ListDocument;
 }
 
 const DeleteListForm = ({list}: DeleteLisFormProps) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => deleteListDocument(list.$id),
+    mutationFn: () => deleteList(list.$id),
     onSuccess: () => {
       toast.success("List deleted successfully");
       queryClient.invalidateQueries({queryKey: ["lists", list.userId]});

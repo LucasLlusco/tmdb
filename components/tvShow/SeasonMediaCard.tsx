@@ -24,7 +24,7 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
   const width = season ? 94 : 227;
 
   return (
-    <div className='flex flex-row gap-[10px] card-boxshadow rounded-[5px]'>
+    <div className='flex flex-row card-boxshadow rounded-[5px]'>
       <Link href={seasonPathname} className={`h-[${height}px] w-[${width}px] min-w-max`}>
         <ImageWithFallback 
           src={image!}
@@ -34,7 +34,7 @@ const SeasonMediaCard = ({season, episode, basePathname, tvShowName}: SeasonMedi
           height={height}
         />
       </Link>   
-      <div className={"flex flex-col py-[5px]"}>
+      <div className={"flex flex-col py-[5px] px-[10px]"}>
         <p className='text-base font-bold flex gap-2'>
           {episode && (
             <span className='font-normal'>{episode.episode_number}</span>

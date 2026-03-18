@@ -66,13 +66,13 @@ export const isDatePassed = (date: string) => {
   }
 }
 
-export const isItemInList = (itemId:number, itemMediaType: "movie" | "tv", items: number[], itemsMediaType: ("movie" | "tv")[]) => {
-  const index = items.findIndex(item => item == itemId); 
+export const isItemInList = (mediaId :number, mediaType: "movie" | "tv", mediaIds: number[], mediaTypes: ("movie" | "tv")[]) => {
+  const index = mediaIds.findIndex(item => item == mediaId); 
 
-  const item = items[index];
-  const type = itemsMediaType[index];
+  const item = mediaIds[index];
+  const type = mediaTypes[index];
 
-  if(item == itemId && type == itemMediaType) {
+  if(item == mediaId && type == mediaType) {
     return {
       isInIt: true,
       index: index
@@ -84,6 +84,7 @@ export const isItemInList = (itemId:number, itemMediaType: "movie" | "tv", items
     }
   }
 }
+
 export const fromToInShowedMediaItems = (page: number, totalPages: number, results:number, totalResults: number) => {
   let from: number;
   let to:number;

@@ -24,7 +24,7 @@ interface MediaCardProps {
   item: MediaItem;
   direction: "row" | "column" | "grid" | "grid-xl";
   itemRef?: (node?: Element | null) => void;
-  user: UserType | null;
+  user: UserDocument | null;
 }
 
 const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
@@ -39,7 +39,7 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
   return (
     <div ref={itemRef} className={cn('flex relative', {
       "flex-col" : direction === "row" || direction === "grid" || direction ===  "grid-xl",
-      "flex-row gap-[10px] card-boxshadow rounded-[5px]" : direction === "column"
+      "flex-row card-boxshadow rounded-[5px]" : direction === "column"
       })}>
       <Link href={itemPathname} className={cn({
         "h-[141px] w-[94px] min-w-max rounded-l-[5px]" : direction === "column",
@@ -68,13 +68,13 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
               <div className='flex flex-col'>
                 <DropdownMenuItem><Heart className='w-4 h-4 mr-2' />Add to favorites</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <AddWatchlistItemForm userId={user?.$id} itemId={item.id} itemTitle={title} itemType={type} isInDropDown={true} />
+                <AddWatchlistItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
                 <DropdownMenuSeparator />
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger><List className='w-4 h-4 mr-2' />Add to list</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      <AddListItemForm userId={user?.$id!} itemId={item.id} itemTitle={title} itemType={type} isInDropDown={true} />
+                      <AddListItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
@@ -92,7 +92,7 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
         </DropdownMenu>
       </div>
       <div className={cn({
-        "py-[5px]" : direction === "column",
+        "py-[5px] px-[10px]" : direction === "column",
         "relative px-[8px] py-[15px]" : direction === "row",
         "relative px-[8px] py-[15px] h-full rounded-b-[8px] card-boxshadow" : direction === "grid" || direction === "grid-xl"
         })}>

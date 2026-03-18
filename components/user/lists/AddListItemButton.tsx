@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import { updateListDocument } from '@/lib/actions/user.actions'
+import { updateList } from '@/lib/actions/user.actions'
 import { isItemInList } from '@/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CrossIcon, ListCheck } from 'lucide-react'
@@ -8,62 +8,62 @@ import React from 'react'
 import { toast } from 'sonner'
 
 interface AddListItemButtonProps {
-  userId: string
-  list: ListType
-  itemId: number
-  itemTitle: string
-  itemType: "movie" | "tv"
+  userId: string;
+  list: ListDocument;
+  mediaId: number;
+  mediaTitle: string;
+  mediaType: "movie" | "tv";
 }
 
 interface AddListItemPayload {
-  items: number[],
-  itemsMediaType: ("movie" | "tv")[],
-  action: "add" | "delete",
+  mediaIds: number[];
+  mediaTypes: ("movie" | "tv")[];
+  action: "add" | "delete";
 }
 
-const AddListItemButton = ({userId, list, itemId, itemTitle, itemType}: AddListItemButtonProps) => {
+const AddListItemButton = ({userId, list, mediaId, mediaTitle, mediaType}: AddListItemButtonProps) => {
   const queryClient = useQueryClient();
-  const { index, isInIt } = isItemInList(itemId, itemType, list.items, list.itemsMediaType);
+  const { index, isInIt } = isItemInList(mediaId, mediaType, list.mediaIds, list.mediaTypes);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({items, itemsMediaType, action} : AddListItemPayload) => updateListDocument(list.$id, {items, itemsMediaType}),
+    mutationFn: ({mediaIds, mediaTypes, action} : AddListItemPayload) => updateList(list.$id, {mediaIds, mediaTypes}),
     onSuccess: (data, variables) => {
       if(variables.action === "add") {
-        toast.success(`${itemTitle} was added to ${list.title} successfully`);
+        toast.success(`${mediaTitle} was added to ${list.title} successfully`);
       } else {
-        toast.success(`${itemTitle} was removed from ${list.title} successfully`);
+        toast.success(`${mediaTitle} was removed from ${list.title} successfully`);
       }
       queryClient.invalidateQueries({queryKey: ["lists", userId]}); 
       queryClient.invalidateQueries({queryKey: ["list", list.$id]}); 
     },
     onError: (data, variables) => {
       if(variables.action === "add") {
-        toast.error(`Could not add ${itemTitle} to ${list.title}. Please try again`);
+        toast.error(`Could not add ${mediaTitle} to ${list.title}. Please try again`);
       } else {
-        toast.error(`Could not remove ${itemTitle} from ${list.title}. Please try again`);
+        toast.error(`Could not remove ${mediaTitle} from ${list.title}. Please try again`);
       }
     }
   });
 
   //toggle add/remove
   const handleAddItem = () => {
-    const newItems = list.items!;
-    const newItemsMediaType = list.itemsMediaType!;
+    const newMediaIds = list.mediaIds!;
+    const newMediaTypes = list.mediaTypes!;
     let action: "add" | "delete";
 
     if(isInIt) {
-      newItems.splice(index, 1);
-      newItemsMediaType.splice(index, 1);
+      newMediaIds.splice(index, 1);
+      newMediaTypes.splice(index, 1);
       action = "delete";
     } else { 
-      newItems.push(itemId);
-      newItemsMediaType.push(itemType);
+      newMediaIds.push(mediaId);
+      newMediaTypes.push(mediaType);
       action = "add";
     }
 
     mutate({
-      items: newItems,
-      itemsMediaType: newItemsMediaType,
+      mediaIds: newMediaIds,
+      mediaTypes: newMediaTypes,
       action: action
     });
   }

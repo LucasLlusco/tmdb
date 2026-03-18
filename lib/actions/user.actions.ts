@@ -10,9 +10,8 @@ const {
   APPWRITE_WATCHLISTS_COLLECTION_ID: WATCHLISTS_COLLECTION_ID,
   APPWRITE_REVIEWS_COLLECTION_ID: REVIEWS_COLLECTION_ID,
   APPWRITE_REACTIONS_COLLECTION_ID: REACTIONS_COLLECTION_ID,
-  APPWRITE_RATINGS_COLLECTION_ID: RATINGS_COLLECTION_ID,
+  APPWRITE_RATINGS_COLLECTION_ID: RATINGS_COLLECTION_ID
 } = process.env
-
 
 interface CreateUserInput {
   email: string;
@@ -20,9 +19,9 @@ interface CreateUserInput {
   userId: string;
 }
 
-export const createUserDocument = async (userId: string, data: CreateUserInput) => {
+export const createUser = async (userId: string, data: CreateUserInput) => {
   const { database } = await createAdminClient();
-  const newUser = await database.createDocument<UserType>(
+  const newUser = await database.createDocument<UserDocument>(
     DATABASE_ID!,
     USERS_COLLECTION_ID!,
     userId,
@@ -32,9 +31,9 @@ export const createUserDocument = async (userId: string, data: CreateUserInput) 
   return newUser;
 }
 
-export const getUserDocument = async (userId: string) => {
+export const getUser = async (userId: string) => {
   const { database } = await createAdminClient();
-  const user = await database.getDocument<UserType>(
+  const user = await database.getDocument<UserDocument>(
     DATABASE_ID!,
     USERS_COLLECTION_ID!,
     userId,
@@ -51,9 +50,9 @@ interface UpdateUserInput {
   bio?:string;
 }
 
-export const updateUserDocument = async (userId: string, data: UpdateUserInput) => {
+export const updateUser = async (userId: string, data: UpdateUserInput) => {
   const { database } = await createAdminClient();
-  const user = await database.updateDocument<UserType>(
+  const user = await database.updateDocument<UserDocument>(
     DATABASE_ID!,
     USERS_COLLECTION_ID!,
     userId,
@@ -63,7 +62,7 @@ export const updateUserDocument = async (userId: string, data: UpdateUserInput) 
   return user;
 }
 
-export const deleteUserDocument = async (userId: string) => {
+export const deleteUser = async (userId: string) => {
   const { database } = await createAdminClient();
   await database.deleteDocument(
     DATABASE_ID!,
@@ -89,9 +88,9 @@ interface CreateListInput {
   description?: string;
 }
 
-export const createListDocument = async (data: CreateListInput) => {
+export const createList = async (data: CreateListInput) => {
   const { database } = await createAdminClient();
-  const newList = await database.createDocument<ListType>(
+  const newList = await database.createDocument<ListDocument>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     ID.unique(),
@@ -109,15 +108,15 @@ export const createListDocument = async (data: CreateListInput) => {
 interface UpdateListInput {
   title?: string;
   isPublic?: boolean;
-  items?: number[];
-  itemsMediaType?: ("movie" | "tv")[];
   description?: string;
+  mediaIds?: number[];
+  mediaTypes?: ("movie" | "tv")[];
 }
 
 //for add/remove items from list and editing its privacy, title, description
-export const updateListDocument = async (listId: string, data: UpdateListInput) => {
+export const updateList = async (listId: string, data: UpdateListInput) => {
   const { database } = await createAdminClient();
-  const list = await database.updateDocument<ListType>(
+  const list = await database.updateDocument<ListDocument>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     listId,
@@ -127,7 +126,7 @@ export const updateListDocument = async (listId: string, data: UpdateListInput) 
   return list;
 }
 
-export const deleteListDocument = async (listId: string) => {
+export const deleteList = async (listId: string) => {
   const { database } = await createAdminClient();
   await database.deleteDocument(
     DATABASE_ID!,
@@ -136,14 +135,12 @@ export const deleteListDocument = async (listId: string) => {
   )
 }
 
-export const deleteAllListDocumentsByUser = async (userId: string) => {
+export const deleteListsByUser = async (userId: string) => {
   const { database } = await createAdminClient();
-  const { documents } = await database.listDocuments<ListType>(
+  const { documents } = await database.listDocuments<ListDocument>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
-    [
-      Query.equal("userId" , userId)
-    ]
+    [Query.equal("userId" , userId)]
   )
 
   if(documents) { 
@@ -159,22 +156,20 @@ export const deleteAllListDocumentsByUser = async (userId: string) => {
   }
 }
 
-export const getAllListDocumentsByUser = async (userId:string) => {
+export const getListsByUser = async (userId:string) => {
   const { database } = await createAdminClient();
-  const { documents } = await database.listDocuments<ListType>(
+  const { documents } = await database.listDocuments<ListDocument>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
-    [
-      Query.equal("userId" , userId)
-    ]
+    [Query.equal("userId" , userId)]
   )
   
   return documents;
 }
 
-export const getListDocument = async (listId: string) => {
+export const getList = async (listId: string) => {
   const { database } = await createAdminClient();
-  const document = await database.getDocument<ListType>(
+  const document = await database.getDocument<ListDocument>(
     DATABASE_ID!,
     LISTS_COLLECTION_ID!,
     listId
@@ -202,9 +197,9 @@ export const getMediaItemsDetails = async (ids: number[], types: ("movie" | "tv"
 
 /********************* WATCHLISTS **********************/
 
-export const createWatchlistDocument = async (userId: string) => {
+export const createWatchlist = async (userId: string) => {
   const { database } = await createAdminClient();
-  const newWatchlist = await database.createDocument<WatchlistType>(
+  const newWatchlist = await database.createDocument<WatchlistDocument>(
     DATABASE_ID!,
     WATCHLISTS_COLLECTION_ID!,
     ID.unique(),
@@ -219,14 +214,14 @@ export const createWatchlistDocument = async (userId: string) => {
 
 interface UpdateWatchlistInput {
   isPublic?: boolean;
-  items?: number[];
-  itemsMediaType?: ("movie" | "tv")[];
+  mediaIds?: number[];
+  mediaTypes?: ("movie" | "tv")[];
 }
 
 //for add/remove items from watchlist and editing its privacy.
-export const updateWatchlistDocument = async (watchlistId: string, data: UpdateWatchlistInput) => {
+export const updateWatchlist = async (watchlistId: string, data: UpdateWatchlistInput) => {
   const { database } = await createAdminClient();
-  const watchlist = await database.updateDocument<WatchlistType>(
+  const watchlist = await database.updateDocument<WatchlistDocument>(
     DATABASE_ID!,
     WATCHLISTS_COLLECTION_ID!,
     watchlistId,
@@ -236,27 +231,23 @@ export const updateWatchlistDocument = async (watchlistId: string, data: UpdateW
   return watchlist;
 }
 
-export const getWatchlistDocument = async (userId: string) => {
+export const getWatchlist = async (userId: string) => {
   const { database } = await createAdminClient();
-  const { documents } = await database.listDocuments<WatchlistType>(
+  const { documents } = await database.listDocuments<WatchlistDocument>(
     DATABASE_ID!,
     WATCHLISTS_COLLECTION_ID!,
-    [
-      Query.equal("userId" , userId)
-    ]
+    [Query.equal("userId" , userId)]
   )
 
   return documents[0];
 }
 
-export const deleteWatchlistDocument = async (userId: string) => {
+export const deleteWatchlist = async (userId: string) => {
   const { database } = await createAdminClient();
-  const { documents } = await database.listDocuments<WatchlistType>(
+  const { documents } = await database.listDocuments<WatchlistDocument>(
     DATABASE_ID!,
     WATCHLISTS_COLLECTION_ID!,
-    [
-      Query.equal("userId" , userId)
-    ]
+    [Query.equal("userId" , userId)]
   )
 
   const watchlist = documents[0];
@@ -365,7 +356,7 @@ export const getReviewsByMedia = async (mediaId: number, currentUserId: string |
   const uniqueUserIds = Array.from(new Set(userIds));
 
   const users = await Promise.all(
-    uniqueUserIds.map((userId) => getUserDocument(userId))
+    uniqueUserIds.map((userId) => getUser(userId))
   );
 
   let reactions : ReactionDocument[];
