@@ -10,6 +10,8 @@ import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
 import UserScore from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
+import Link from 'next/link';
+import { Badge } from '../ui/badge';
 
 interface TvShowInfoProps {
   tvShow: TvShow;
@@ -51,10 +53,13 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
               <p>Episodes {tvShow.number_of_episodes}</p>
               <p>First air date: {getFormattedDate(tvShow.first_air_date)}</p>
               <p>Last air date: {getFormattedDate(tvShow.last_air_date)}</p>  
-              <p>Genres: {tvShow.genres?.map((genre) => 
-                <span key={genre.id}>{genre.name}</span>
-              ).reduce((prev, curr):any => [prev, ", ", curr])}
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {tvShow.genres.map((genre) => (              
+                  <Link key={genre.id} href={`/discover/tv?genres=${genre.id}`}>
+                    <Badge>{genre.name}</Badge>
+                  </Link>
+                ))}
+              </div>              
               <div className='flex gap-2 items-center'>
                 User
                 <br />

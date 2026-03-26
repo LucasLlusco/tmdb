@@ -10,6 +10,8 @@ import AddListItemForm from '../user/lists/AddListItemForm';
 import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
 import UserScoreProgress from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
+import { Badge } from '../ui/badge';
+import Link from 'next/link';
 
 interface MovieInfoProps {
   movie: Movie;
@@ -51,10 +53,13 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
               <p>Runtime: {getRuntime(movie.runtime).hours}h {getRuntime(movie.runtime).minutes}min</p>
               <p>Budget: ${movie.budget.toLocaleString()}</p>
               <p>Revenue: ${movie.revenue.toLocaleString()}</p>
-              <p>Genres: {movie.genres?.map((genre) => 
-                <span key={genre.id}>{genre.name}</span>
-              ).reduce((prev, curr):any => [prev, ", ", curr])}
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {movie.genres.map((genre) => (              
+                  <Link key={genre.id} href={`/discover/movie?genres=${genre.id}`}>
+                    <Badge>{genre.name}</Badge>
+                  </Link>
+                ))}
+              </div>
               <div className='flex gap-2 items-center'>
                 User
                 <br />
