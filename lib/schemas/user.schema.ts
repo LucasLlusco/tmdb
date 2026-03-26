@@ -35,3 +35,15 @@ export const editReviewFormSchema = () => z.object({
     .max(1000, {message: "Review must contain at most 1000 characters"
   })
 })
+
+export const deleteReviewFormSchema = () => z.object({
+  confirm: z.boolean().refine((val) => val === true, {
+    message: "You must confirm to continue",
+  }),
+})
+
+export const deleteListFormSchema = () => z.object({
+  confirm: z.boolean().refine((val) => val === true, {
+    message: "You must confirm to continue",
+  }),
+})
