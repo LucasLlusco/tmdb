@@ -31,6 +31,12 @@ export interface TmdbImagesResponse {
 
 export interface TmdbCreditsResponse {
   id: number;
-  cast: Person[];
-  crew: Person[];
+  cast: MovieCastMember[];
+  crew: MovieCrewMember[];
+} 
+
+export interface TmdbAggregateCreditsResponse {
+  id: number;
+  cast: TvShowCastMember[];
+  crew: TvShowCrewMember[];
 } 

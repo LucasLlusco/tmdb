@@ -2,7 +2,7 @@
 import { tmdbUrls } from "./urls";
 import { TMDB_IMG_URLS } from "@/constants";
 import { tmdbFetch } from "./tmdbFetch";
-import { TmdbGenresResponse, TmdbPaginatedResponse, TmdbProvidersResponse, TmdbRegionsResponse } from "@/types/tmdb";
+import { TmdbGenresResponse, TmdbImagesResponse, TmdbPaginatedResponse, TmdbProvidersResponse, TmdbRegionsResponse, TmdbVideosResponse } from "@/types/tmdb";
 
 export const getTrending = async (time:string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -129,4 +129,35 @@ export const getGenres = async (type: "movie" | "tv") => {
   const { genres } = await tmdbFetch<TmdbGenresResponse>(tmdbUrls.shared.genres(type));
   
   return genres;
+}
+
+export const getMediaImagesById = async (id:number, type: "movie" | "tv") => {
+  const data = await tmdbFetch<TmdbImagesResponse>(tmdbUrls.shared.imagesById(id, type));
+
+  const backdrops: Image[] = data.backdrops.map((backdrop) => ({
+    ...backdrop,
+    file_path: `${TMDB_IMG_URLS.backdrops}/${backdrop.file_path}`
+  }))
+
+  const posters: Image[] = data.posters.map((poster) => ({
+    ...poster,
+    file_path: `${TMDB_IMG_URLS.posters}/${poster.file_path}`
+  }))
+
+  return {
+    backdrops,
+    posters
+  };
+}
+
+export const getMediaVideosById = async (id: number, type: "movie" | "tv") => {
+  const { results } = await tmdbFetch<TmdbVideosResponse>(tmdbUrls.shared.videosById(id, type));
+
+  const trailers = results.filter((video)=> video.type === "Trailer");
+  const videos = results.filter((video) => video.type !== "Trailer");
+  
+  return {
+    trailers,
+    videos
+  };
 }

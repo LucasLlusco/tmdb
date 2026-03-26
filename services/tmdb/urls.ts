@@ -7,19 +7,17 @@ export const tmdbUrls = {
     "availableRegions": `/watch/providers/regions`,
     "providersByRegion": (type:string) => `/watch/providers/${type}`,
     "genres": (type:string) => `/genre/${type}/list`,
+    "imagesById": (id:number, type: "movie" | "tv") => `/${type}/${id}/images`,
+    "videosById": (id:number, type: "movie" | "tv") => `/${type}/${id}/videos`,
   },
   movies: {
     "byId" : (id:number) => `/movie/${id}`,
     "creditsById":(id:number) => `/movie/${id}/credits`,
-    "imagesById": (id:number) => `/movie/${id}/images`,
-    "videosById": (id:number) => `/movie/${id}/videos`,
     "recommendationsById": (id:number) => `/movie/${id}/recommendations`,
   },
   tvShows: {
     "byId" : (id:number) => `/tv/${id}`,
-    "creditsById":(id:number) => `/tv/${id}/credits`,
-    "imagesById": (id:number) => `/tv/${id}/images`,
-    "videosById": (id:number) => `/tv/${id}/videos`,
+    "aggregateCreditsById":(id:number) => `/tv/${id}/aggregate_credits`,
     "recommendationsById": (id:number) => `/tv/${id}/recommendations`,
     "seasonById": (id:number, season_number: number) => `/tv/${id}/season/${season_number}`,
   }
