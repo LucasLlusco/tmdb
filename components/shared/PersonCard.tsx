@@ -2,18 +2,20 @@ import React from 'react'
 import ImageWithFallback from './ImageWithFallback'
 
 interface PersonCardProps {
-  person: Person
+  name: string;
+  character: string;
+  profile_path: string;
 }
 
-const PersonCard = ({person} : PersonCardProps) => {
+const PersonCard = ({name, character, profile_path} : PersonCardProps) => {
   const imageError = "/default-person-img.svg";
    
   return (
     <div className='flex flex-col'>
       <div className="h-[225px] w-[150px]">
         <ImageWithFallback
-          src={person.profile_path} 
-          alt={person.name} 
+          src={profile_path} 
+          alt={name} 
           className="h-full w-full rounded-[8px] bg-[#dbdbdb]"
           width={150}
           height={225}
@@ -22,10 +24,10 @@ const PersonCard = ({person} : PersonCardProps) => {
       </div>
       <div className="px-[8px] py-[15px]">
         <p className='text-base font-bold'>
-          {person.name}
+          {name}
         </p>
         <span className='text-xs text-gray-500'>
-          {person.character}
+          {character}
         </span>
       </div>
     </div>

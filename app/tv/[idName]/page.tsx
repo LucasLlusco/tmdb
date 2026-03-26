@@ -1,12 +1,13 @@
 import TvShowCast from '@/components/tvShow/TvShowCast';
 import TvShowInfo from '@/components/tvShow/TvShowInfo';
-import TvShowMedia from '@/components/tvShow/TvShowMedia';
 import TvShowRecommendations from '@/components/tvShow/TvShowRecommendations';
 import TvShowCurrentSeason from '@/components/tvShow/TvShowCurrentSeason';
 import { Separator } from '@/components/ui/separator';
 import { getTvShowById } from '@/services/tmdb/tvShows';
 import React from 'react'
 import TvShowReviews from '@/components/tvShow/TvShowReviews';
+import MediaImages from '@/components/shared/MediaImages';
+import MediaVideos from '@/components/shared/MediaVideos';
 
 interface TvShowPageProps {
   params: {
@@ -23,8 +24,9 @@ const tvShowPage = async ({params}: TvShowPageProps) => {
   return (
     <main>
       <TvShowInfo tvShow={tvShow} />
-      <TvShowCast tvShowId={id} />
-      <TvShowMedia tvShowId={id} />
+      <TvShowCast tvShowId={id} basePathname={basePathname} />
+      <MediaImages mediaId={id} mediaType="tv" basePathname={basePathname} />
+      <MediaVideos mediaId={id} mediaType="tv" basePathname={basePathname} />
       <TvShowCurrentSeason tvShow={tvShow} basePathname={basePathname} />
       <TvShowReviews tvShowId={id} />
       <div className="container !py-4">
