@@ -5,9 +5,9 @@ import { Separator } from '../ui/separator';
 import { Heart } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import AddListItemForm from '../user/lists/AddListItemForm';
+import ToggleListItemForm from '../user/lists/ToggleListItemForm';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
+import ToggleWatchlistItemForm from '../user/watchlist/ToggleWatchlistItemForm';
 import UserScore from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
 import Link from 'next/link';
@@ -74,8 +74,8 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
-              <AddWatchlistItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
+              <ToggleListItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
+              <ToggleWatchlistItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

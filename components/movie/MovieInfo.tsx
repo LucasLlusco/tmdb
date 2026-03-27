@@ -6,8 +6,8 @@ import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import AddListItemForm from '../user/lists/AddListItemForm';
-import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm';
+import ToggleListItemForm from '../user/lists/ToggleListItemForm';
+import ToggleWatchlistItemForm from '../user/watchlist/ToggleWatchlistItemForm';
 import UserScoreProgress from '../shared/UserScoreProgress';
 import ImageWithFallback from '../shared/ImageWithFallback';
 import { Badge } from '../ui/badge';
@@ -74,8 +74,8 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
             </div>
             <Separator />
             <div className="flex flex-row gap-2 items-center">
-              <AddListItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
-              <AddWatchlistItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
+              <ToggleListItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
+              <ToggleWatchlistItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

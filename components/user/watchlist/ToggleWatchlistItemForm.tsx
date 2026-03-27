@@ -2,13 +2,13 @@
 import { getWatchlist } from '@/lib/actions/user.actions'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import AddWatchlistItemButton from './AddWatchlistItemButton'
+import ToggleWatchlistItemButton from './ToggleWatchlistItemButton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
-interface AddWatchlistItemFormProps {
+interface ToggleWatchlistItemFormProps {
   userId: string;
   mediaId: number;
   mediaTitle: string;
@@ -16,7 +16,7 @@ interface AddWatchlistItemFormProps {
   isInDropDown: boolean;
 }
 
-const AddWatchlistItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: AddWatchlistItemFormProps) => {
+const ToggleWatchlistItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: ToggleWatchlistItemFormProps) => {
   const { data: watchlist, status } = useQuery({
     queryKey: ["watchlist", userId],
     queryFn: () => getWatchlist(userId),
@@ -54,7 +54,7 @@ const AddWatchlistItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropD
     )}
 
     {status === "success" && (
-      <AddWatchlistItemButton 
+      <ToggleWatchlistItemButton 
         userId={userId} 
         watchlist={watchlist} 
         mediaId={mediaId} 
@@ -67,4 +67,4 @@ const AddWatchlistItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropD
   )
 }
 
-export default AddWatchlistItemForm
+export default ToggleWatchlistItemForm

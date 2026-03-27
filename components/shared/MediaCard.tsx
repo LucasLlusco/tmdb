@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis, Heart, List } from 'lucide-react'
 import { cn, getFormattedDate } from '@/lib/utils'
-import AddListItemForm from '../user/lists/AddListItemForm'
-import AddWatchlistItemForm from '../user/watchlist/AddWatchlistItemForm'
+import ToggleListItemForm from '../user/lists/ToggleListItemForm'
+import ToggleWatchlistItemForm from '../user/watchlist/ToggleWatchlistItemForm'
 import UserScoreProgress from './UserScoreProgress'
 import ImageWithFallback from './ImageWithFallback'
 
@@ -68,13 +68,13 @@ const MediaCard = ({item, direction, itemRef, user}: MediaCardProps) => {
               <div className='flex flex-col'>
                 <DropdownMenuItem><Heart className='w-4 h-4 mr-2' />Add to favorites</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <AddWatchlistItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
+                <ToggleWatchlistItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
                 <DropdownMenuSeparator />
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger><List className='w-4 h-4 mr-2' />Add to list</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      <AddListItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
+                      <ToggleListItemForm userId={user.$id} mediaId={item.id} mediaTitle={title} mediaType={type} isInDropDown={true} />
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>

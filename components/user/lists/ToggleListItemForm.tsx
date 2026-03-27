@@ -5,19 +5,19 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '../../ui/button'
 import { List } from 'lucide-react'
 import CreateListForm from './CreateListForm'
-import AddListItemButton from './AddListItemButton'
+import ToggleListItemButton from './ToggleListItemButton'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-interface AddListItemFormProps {
-  userId: string; 
+interface ToggleListItemFormProps {
+  userId: string;
   mediaId: number;
   mediaTitle: string;
   mediaType: "movie" | "tv";
   isInDropDown: boolean;
 }
 
-const AddListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: AddListItemFormProps) => {
+const ToggleListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}: ToggleListItemFormProps) => {
   const { data, status } = useQuery({
     queryKey: ["lists", userId],
     queryFn: () => getListsByUser(userId!),
@@ -52,7 +52,7 @@ const AddListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}:
           </div>
           <CreateListForm userId={userId} />
           {data?.map((list) => (
-            <AddListItemButton 
+            <ToggleListItemButton 
               key={list.$id} 
               userId={userId} 
               list={list} 
@@ -78,7 +78,7 @@ const AddListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}:
           </div>
           <CreateListForm userId={userId} />
           {data?.map((list) => (
-            <AddListItemButton 
+            <ToggleListItemButton 
               key={list.$id} 
               userId={userId} 
               list={list} 
@@ -94,4 +94,4 @@ const AddListItemForm = ({userId, mediaId, mediaTitle, mediaType, isInDropDown}:
   )
 }
 
-export default AddListItemForm
+export default ToggleListItemForm

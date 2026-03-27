@@ -8,7 +8,7 @@ import { Bookmark, BookmarkCheck } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
 
-interface AddWatchlistButtonProps {
+interface ToggleWatchlistItemButtonProps {
   userId: string;
   watchlist: WatchlistDocument;
   mediaId: number;
@@ -17,36 +17,53 @@ interface AddWatchlistButtonProps {
   isInDropDown: boolean;
 }
 
-interface AddWatchlistItemPayload {
+interface ToggleWatchlistItemPayload {
   mediaIds: number[];
   mediaTypes: ("movie" | "tv")[];
   action: "add" | "delete";
 }
 
-const AddWatchlistItemButton = ({userId, watchlist, mediaId, mediaTitle, mediaType, isInDropDown} : AddWatchlistButtonProps) => {
+const ToggleWatchlistItemButton = ({userId, watchlist, mediaId, mediaTitle, mediaType, isInDropDown} : ToggleWatchlistItemButtonProps) => {
   const queryClient = useQueryClient();
   const { index, isInIt } = isItemInList(mediaId, mediaType, watchlist.mediaIds, watchlist.mediaTypes);
   
   const { mutate, isPending } = useMutation({
-    mutationFn: ({mediaIds, mediaTypes, action} : AddWatchlistItemPayload) => updateWatchlist(watchlist.$id, {mediaIds, mediaTypes}),
-    onSuccess: (data, variables) => {
-      if(variables.action === "add") {
+    mutationFn: ({mediaIds, mediaTypes, action} : ToggleWatchlistItemPayload) => updateWatchlist(watchlist.$id, {mediaIds, mediaTypes}),
+    onMutate: async ({mediaIds, mediaTypes}) => {
+      await queryClient.cancelQueries({ queryKey: ["watchlist", userId]});
+
+      const previous = queryClient.getQueryData(["watchlist", userId]);
+
+      queryClient.setQueryData(["watchlist", userId], (old: WatchlistDocument) => {
+        return {
+          ...old,
+          mediaIds: mediaIds,
+          mediaTypes: mediaTypes      
+        };
+      })
+
+      return { previous };
+    },
+    onSuccess: (_, { action }) => {
+      if(action === "add") {
         toast.success(`${mediaTitle} was added to watchlist successfully`);
       } else {
         toast.success(`${mediaTitle} was removed from watchlist successfully`);
       }
       queryClient.invalidateQueries({queryKey: ["watchlist", userId]});
     },
-    onError: (data, variables) => {
-      if(variables.action === "add") {
+    onError: (_, { action }, context) => {
+      if(action === "add") {
         toast.error(`Could not add ${mediaTitle} to watchlist. Please try again`);
       } else {
         toast.error(`Could not remove ${mediaTitle} from watchlist. Please try again`);
       }
+
+      queryClient.setQueryData(["watchlist", userId], context?.previous);
     }
   });
 
-  const handleAddItem = () => {
+  const handleToggle = () => {
     const newMediaIds = watchlist.mediaIds;
     const newMediaTypes = watchlist.mediaTypes;    
     let action: "add" | "delete";
@@ -76,14 +93,14 @@ const AddWatchlistItemButton = ({userId, watchlist, mediaId, mediaTitle, mediaTy
         disabled={isPending}
         onSelect={(event) => {
           event.preventDefault(); //prevent menu close
-          handleAddItem();
+          handleToggle();
         }}
       >
         {isInIt ? <BookmarkCheck className='w-4 h-4 mr-2' /> : <Bookmark className='w-4 h-4 mr-2' />}
         Watchlist
       </DropdownMenuItem>
     ) : (
-      <Button size={'icon'} className="rounded-full bg-slate-800" onClick={handleAddItem} disabled={isPending}>
+      <Button size={'icon'} className="rounded-full bg-slate-800" onClick={handleToggle} disabled={isPending}>
         {isInIt ? <BookmarkCheck /> : <Bookmark />}        
       </Button>
     )}
@@ -91,4 +108,4 @@ const AddWatchlistItemButton = ({userId, watchlist, mediaId, mediaTitle, mediaTy
   )
 }
 
-export default AddWatchlistItemButton
+export default ToggleWatchlistItemButton
