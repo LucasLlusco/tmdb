@@ -1,6 +1,6 @@
 import { getTvShowCreditsById } from '@/services/tmdb/tvShows';
 import React from 'react'
-import PersonList from '../shared/PersonList';
+import CastMemberList from '../shared/CastMemberList';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
@@ -18,7 +18,7 @@ const TvShowCast = async ({tvShowId, basePathname}: TvShowCastProps) => {
         <h3 className='section-title !mb-0'>Top cast</h3>
         <Link href={`${basePathname}/cast`} className='flex items-center'>{cast.length}<ChevronRight /></Link>
       </div>
-      <PersonList cast={cast} variant="tv" />
+      <CastMemberList cast={cast.slice(0, 20)} variant="tv" direction="row" />
     </section>
   )
 }
