@@ -6,6 +6,7 @@ import ReviewCard from '../shared/ReviewCard';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthContext } from '@/lib/providers/AuthContextProvider';
 import { usePathname } from 'next/navigation';
+import { ChevronRight } from 'lucide-react';
 
 interface TvShowReviewsProps {
   tvShowId: number;
@@ -26,14 +27,16 @@ const TvShowReviews = ({tvShowId}: TvShowReviewsProps) => {
 
   return (
     <section className='container'>
-      <h3 className='section-title'>
-        User Reviews
-      </h3>
+      <div className="flex mb-6 gap-2">
+        <h3 className='section-title !mb-0'>User Reviews</h3>
+        <Link href={`${pathname}/reviews`} className='flex items-center'>{reviews.length}<ChevronRight /></Link>
+      </div>
       <article className='grid grid-cols-2 gap-[10px]'>
         {reviews.length > 0 ? (
           <>
           {reviews.slice(0, 2).map((review) =>
             <ReviewCard 
+              key={review.$id}
               review={review} 
               currentUserId={user?.userId!} 
               isOwner={user?.userId === review.userId} 
@@ -47,11 +50,6 @@ const TvShowReviews = ({tvShowId}: TvShowReviewsProps) => {
           <p>No reviews have been created yet</p>
         )}        
       </article>
-      <p className="mt-6">
-        <Link href={`${pathname}/reviews`} className='link-black'>
-          View All Reviews
-        </Link>
-      </p>
     </section>
   )
 }
