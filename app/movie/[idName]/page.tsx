@@ -25,7 +25,7 @@ const MoviePage = async ({params}: moviePageProps) => {
       <MovieInfo movie={movie} />
       <MovieCast movieId={id} basePathname={basePathname} />
       <MediaImages mediaId={id} mediaType="movie" basePathname={basePathname} />
-      <MediaVideos mediaId={id} mediaType="movie" basePathname={basePathname} />
+      <MediaVideos mediaId={id} mediaType="movie" mediaTitle={movie.title} basePathname={basePathname} />
       <MovieReviews movieId={id} />
       <div className="container !py-4">
         <Separator />

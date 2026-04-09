@@ -4,11 +4,12 @@ import React, { useState, useTransition } from 'react'
 import YouTube from 'react-youtube';
 
 interface YoutubeVideoProps {
-  videoId: string,
-  setHasLoaded: React.Dispatch<React.SetStateAction<boolean>>
+  videoId: string;
+  setHasLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 }
 
-const YoutubeVideo = ({videoId, setHasLoaded}:YoutubeVideoProps) => {
+const YoutubeVideo = ({videoId, setHasLoaded, className}:YoutubeVideoProps) => {
   const _onReady = () => {
     setHasLoaded(true);
     //event.target.playVideo();
@@ -18,24 +19,27 @@ const YoutubeVideo = ({videoId, setHasLoaded}:YoutubeVideoProps) => {
     <YouTube  
       videoId={videoId}
       onReady={_onReady}
-      className='youtube-iframe'
-      iframeClassName='youtube-iframe'
+      className={className}
+      iframeClassName={className}
     /> 
   )
 }
 
 interface VideoPlayerProps {
-  videoUrl:string
+  videoUrl: string;
+  width: number;
+  height: number;
+  className?: string;
 }
 
-const VideoPlayer = ({videoUrl}:VideoPlayerProps) => {
+const VideoPlayer = ({videoUrl, width, height, className} : VideoPlayerProps) => {
   const [play, setPlay] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const [, startTransition] = useTransition();
 
   return (
-    <div className='videoplayer-container'>
+    <div className={`videoplayer-container ${className}`}>
       {(!play || !hasLoaded) && (
         <button 
           className='thumbnail-button'
@@ -48,9 +52,9 @@ const VideoPlayer = ({videoUrl}:VideoPlayerProps) => {
           <Image
             src={`https://img.youtube.com/vi/${videoUrl}/hqdefault.jpg`}
             alt={"Thumbnail"} 
-            width={529}
-            height={300} 
-            className='h-[300px]'
+            width={width}
+            height={height}
+            className={className}
             loading='lazy'
           />
           <Image 
@@ -64,7 +68,11 @@ const VideoPlayer = ({videoUrl}:VideoPlayerProps) => {
         </button>
       )}
       {play && ( 
-        <YoutubeVideo videoId={videoUrl} setHasLoaded={setHasLoaded} />        
+        <YoutubeVideo 
+          videoId={videoUrl} 
+          setHasLoaded={setHasLoaded} 
+          className={className}
+        />        
       )}
     </div>
   )

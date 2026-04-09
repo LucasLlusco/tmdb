@@ -99,8 +99,6 @@
 
 .videoplayer-container {
   position: relative;
-  height: 300px;
-  width: 529px;
 }
 
 .videoplayer-container .thumbnail-button {
@@ -108,6 +106,7 @@
   margin: 0;
   border: 0;
   cursor: pointer;
+  width: 100%;
 }
 
 .videoplayer-container .play-icon {
@@ -117,11 +116,6 @@
   top: calc(50% - 21px);
   transition: all 0.3s ease-in-out;
   width: 60px;
-}
-
-.videoplayer-container .youtube-iframe {
-  width: 529px;
-  height: 300px;
 }
 
 /*aplica class solo al tab active*/

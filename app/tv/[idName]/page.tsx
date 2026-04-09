@@ -26,7 +26,7 @@ const tvShowPage = async ({params}: TvShowPageProps) => {
       <TvShowInfo tvShow={tvShow} />
       <TvShowCast tvShowId={id} basePathname={basePathname} />
       <MediaImages mediaId={id} mediaType="tv" basePathname={basePathname} />
-      <MediaVideos mediaId={id} mediaType="tv" basePathname={basePathname} />
+      <MediaVideos mediaId={id} mediaType="tv" mediaTitle={tvShow.name} basePathname={basePathname} />
       <TvShowCurrentSeason tvShow={tvShow} basePathname={basePathname} />
       <TvShowReviews tvShowId={id} />
       <div className="container !py-4">
