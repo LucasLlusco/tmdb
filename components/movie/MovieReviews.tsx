@@ -26,7 +26,7 @@ const MovieReviews = ({movieId}: MovieReviewsProps) => {
   if (isError) return <p>Error loading reviews</p>;
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <div className="flex mb-6 gap-2">
         <h3 className='section-title !mb-0'>User Reviews</h3>
         <Link href={`${pathname}/reviews`} className='flex items-center'>{reviews.length}<ChevronRight /></Link>

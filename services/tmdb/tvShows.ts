@@ -2,7 +2,7 @@
 import { tmdbUrls } from "./urls";
 import { TMDB_IMG_URLS } from "@/constants";
 import { tmdbFetch } from "./tmdbFetch";
-import { TmdbAggregateCreditsResponse, TmdbPaginatedResponse } from "@/types/tmdb";
+import { TmdbAggregateCreditsResponse, TmdbPaginatedResponse, TmdbTvShowKeywordsResponse } from "@/types/tmdb";
 
 export const getTvShowById = async (id: number) => {
   const data = await tmdbFetch<TvShow>(tmdbUrls.tvShows.byId(id));
@@ -67,4 +67,10 @@ export const getTvShowSeasonById = async (id: number, season_number: number) => 
   };
 
   return season;
+}
+
+export const getTvShowKeywordsById = async (id: number, type: "movie" | "tv") => {
+  const { results } = await tmdbFetch<TmdbTvShowKeywordsResponse>(tmdbUrls.shared.keywordsById(id, type));
+
+  return results;
 }

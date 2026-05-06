@@ -1,25 +1,17 @@
-"use client"
-import { getFormattedDate, getYear } from '@/lib/utils';
+import { getYear } from '@/lib/utils';
 import React from 'react'
 import { Separator } from '../ui/separator';
-import { Heart } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import ToggleListItemForm from '../user/lists/ToggleListItemForm';
-import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import ToggleWatchlistItemForm from '../user/watchlist/ToggleWatchlistItemForm';
-import UserScore from '../shared/UserScoreProgress';
-import ImageWithFallback from '../shared/ImageWithFallback';
 import Link from 'next/link';
 import { Badge } from '../ui/badge';
+import ImageCard from '../shared/ImageCard';
+import UserScoreProgress from '../shared/UserScoreProgress';
+import MediaToggleButtons from '../shared/MediaToggleButtons';
 
 interface TvShowInfoProps {
   tvShow: TvShow;
 }
 
 const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
-  const { user } = useAuthContext(); 
-  
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${tvShow.backdrop_path})`,
     backgroundSize: 'cover',
@@ -35,60 +27,48 @@ const TvShowInfo = ({tvShow}: TvShowInfoProps) => {
       <div style={backgroundOverlayStyles}>
         <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
-            <ImageWithFallback
+             <ImageCard
               src={tvShow.poster_path}
-              alt={tvShow.name} 
-              className="rounded-[8px] max-w-none bg-[#dbdbdb]"
               width={300}
-              height={450}
+              height={450}  
+              className="max-w-none"
             />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
-            <div className="flex flex-row gap-2 items-end">
+            <div className="flex flex-col gap-1">
               <h2 className='text-3xl font-bold'>{tvShow.name}</h2>
-              <span className='text-2xl opacity-70'>({getYear(tvShow.first_air_date)})</span> 
-            </div>
-            <div className="flex flex-col">
-              <p>Seasons: {tvShow.number_of_seasons}</p>
-              <p>Episodes {tvShow.number_of_episodes}</p>
-              <p>First air date: {getFormattedDate(tvShow.first_air_date)}</p>
-              <p>Last air date: {getFormattedDate(tvShow.last_air_date)}</p>  
-              <div className="flex flex-wrap gap-2">
-                {tvShow.genres.map((genre) => (              
-                  <Link key={genre.id} href={`/discover/tv?genres=${genre.id}`}>
-                    <Badge>{genre.name}</Badge>
-                  </Link>
-                ))}
-              </div>              
-              <div className='flex gap-2 items-center'>
-                User
-                <br />
-                Score: 
-                <UserScore vote_average={tvShow.vote_average} style="rounded" />                  
+              <div className="flex gap-2 items-center text-sm">
+                <span className="opacity-70"> • {getYear(tvShow.first_air_date)} - {getYear(tvShow.last_air_date)}</span>
+                <span className="opacity-70"> • {tvShow.number_of_seasons} seasons</span>
+                <span className="opacity-70"> • {tvShow.number_of_episodes} episodes </span>
               </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tvShow.genres.map((genre) => (              
+                <Link key={genre.id} href={`/discover/tv?genres=${genre.id}`}>
+                  <Badge variant={"outline"} className="text-white border-gray-500 font-light">{genre.name}</Badge>
+                </Link>
+              ))}
+            </div>
+            <div className='flex gap-5'>
+              <div className="flex items-center gap-2">
+                <strong>User Score</strong>
+                <UserScoreProgress vote_average={tvShow.vote_average} style="rounded" />                  
+              </div>
+              <Separator orientation='vertical' />
+              <MediaToggleButtons mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" />  
             </div>
             <div className="flex flex-col">
               <p className='opacity-70 italic'>{tvShow.tagline}</p>
-              <h4 className='font-bold'>Overview</h4>
-              <p>{tvShow.overview}</p>              
+              <p>
+                <strong className="block">Overview</strong>
+                {tvShow.overview}
+              </p>
             </div>
-            <Separator />
-            <div className="flex flex-row gap-2 items-center">
-              <ToggleListItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
-              <ToggleWatchlistItemForm userId={user?.$id!} mediaId={tvShow.id} mediaTitle={tvShow.name} mediaType="tv" isInDropDown={false} />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button className='rounded-full bg-slate-800' size={'icon'}>
-                      <Heart />
-                    </Button>                  
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Mark as favorite</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>             
+            <p>
+              <strong className="block">Creators</strong>
+              {tvShow.created_by.map((creator => creator.name)).join(", ")}
+            </p>                       
           </div>
         </div>
       </div>      

@@ -16,7 +16,7 @@ const VideoCard = ({video, showDetails} : VideoCardProps) => {
             videoUrl={video.key} 
             width={529} 
             height={300} 
-            className={`max-h-[300px] w-full h-full rounded-[8px]`} 
+            className={`max-h-[300px] w-full rounded-[8px]`} 
           />
           <div className="px-[8px] py-[15px]">
             <p className='text-base font-bold'>{video.name}</p>
@@ -28,7 +28,7 @@ const VideoCard = ({video, showDetails} : VideoCardProps) => {
           videoUrl={video.key} 
           width={529}
           height={300} 
-          className={`max-h-[300px] w-full h-full rounded-[8px]`} 
+          className={`max-h-[300px] w-full rounded-[8px]`} 
         />
       )}
     </>

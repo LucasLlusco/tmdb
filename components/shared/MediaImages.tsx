@@ -11,10 +11,10 @@ interface MediaImagesProps {
 }
 
 const MediaImages = async ({mediaId, mediaType, basePathname}: MediaImagesProps) => {
-  const { backdrops, posters } =  await getMediaImagesById(mediaId, mediaType);
+  const { backdrops, posters } = await getMediaImagesById(mediaId, mediaType);
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <div className="flex mb-6 gap-2">
         <h3 className='section-title !mb-0'>Images</h3>
         <Link href={`${basePathname}/images`} className='flex items-center'>{backdrops.length + posters.length}<ChevronRight /></Link>
@@ -23,9 +23,10 @@ const MediaImages = async ({mediaId, mediaType, basePathname}: MediaImagesProps)
         {backdrops.slice(0, 4).map((backdrop) => (
           <ImageCard
             key={backdrop.file_path}
-            image={backdrop}
+            src={backdrop.file_path}
             width={245}
             height={170}
+            className="h-full w-full"
           />
         ))}
       </article>      

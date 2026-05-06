@@ -44,8 +44,8 @@ const DiscoverPage = async ({params, searchParams}: DiscoverPageProps) => {
         <h2 className='section-title !mb-0 !text-[22px]'>{sortName} {typeName}</h2>
         {total_results > 0 && <span className='text-[14px] opacity-70'>showing {from} - {to} of {total_results.toLocaleString()}</span>}
       </div>
-      <div className='container flex flex-row gap-5 !pt-0'>
-        <aside className="aside-section aside-box card-boxshadow h-fit">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-5 !pt-0">
+        <aside className="aside-section rounded-[5px] p-[10px] card-boxshadow">
           <Sort currentSort={searchParams.sort || SORT_OPTIONS[1].value} />
           <Regions currentRegion={searchParams.region || "AR"} />
           <Providers type={params.type} currentRegion={searchParams.region || "AR"} currentProviders={searchParams.providers!}/>

@@ -13,7 +13,7 @@ const MovieCast = async ({movieId, basePathname}: MovieCastProps) => {
   const { cast } = await getMovieCreditsById(movieId);
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <div className="flex mb-6 gap-2">
         <h3 className='section-title !mb-0'>Top cast</h3>
         <Link href={`${basePathname}/cast`} className='flex items-center'>{cast.length}<ChevronRight /></Link>

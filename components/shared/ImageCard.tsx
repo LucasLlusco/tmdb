@@ -3,20 +3,22 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import ImageWithFallback from './ImageWithFallback'
 
 interface ImageCardProps {
-  image: Image;
+  src: string;
   width: number;
   height: number;
+  className?: string;
 }
 
-const ImageCard = ({image, width, height} : ImageCardProps) => {
+const ImageCard = ({src, width, height, className} : ImageCardProps) => {
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className='cursor-pointer'>
+        <div className={`cursor-pointer ${className} w-[${width}px] h-[${height}px]`}>
           <ImageWithFallback
-            src={image.file_path} 
-            alt={image.file_path} 
-            className="h-full w-full rounded-[8px] bg-[#dbdbdb]"
+            src={src} 
+            alt={src} 
+            className={`${className} rounded-[8px] bg-[#dbdbdb] hover:opacity-80 transition-opacity` }
             width={width}
             height={height}
           />
@@ -26,8 +28,8 @@ const ImageCard = ({image, width, height} : ImageCardProps) => {
         <DialogTitle hidden={true} />
         <DialogDescription hidden={true} />
         <ImageWithFallback
-          src={image.file_path}  
-          alt={image.file_path} 
+          src={src}  
+          alt={src} 
           className="h-full w-full rounded-[8px] bg-[#dbdbdb]"
           width={width}
           height={height}

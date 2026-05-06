@@ -2,7 +2,7 @@
 import { tmdbUrls } from "./urls";
 import { TMDB_IMG_URLS } from "@/constants";
 import { tmdbFetch } from "./tmdbFetch";
-import { TmdbCreditsResponse, TmdbPaginatedResponse } from "@/types/tmdb";
+import { TmdbCollectionResponse, TmdbCreditsResponse, TmdbMovieKeywordsResponse, TmdbPaginatedResponse } from "@/types/tmdb";
 
 export const getMovieById = async(id: number) => {
   const data = await tmdbFetch<Movie>(tmdbUrls.movies.byId(id));
@@ -44,4 +44,27 @@ export const getMovieRecommendationsById = async (id: number) => {
   }));
   
   return results;
+}
+
+export const getMovieKeywordsById = async (id: number, type: "movie" | "tv") => {
+  const { keywords } = await tmdbFetch<TmdbMovieKeywordsResponse>(tmdbUrls.shared.keywordsById(id, type));
+
+  return keywords;
+}
+
+export const getMovieCollectionById = async (id: number) => {
+  const data = await tmdbFetch<TmdbCollectionResponse>(tmdbUrls.movies.collectionById(id));
+
+  const collection: TmdbCollectionResponse = {
+    ...data,
+    poster_path: `${TMDB_IMG_URLS.media}/${data.poster_path}`,
+    backdrop_path: `${TMDB_IMG_URLS.media}/${data.backdrop_path}`,
+    parts: data.parts.map((part:any) => ({
+      ...part,
+      poster_path: `${TMDB_IMG_URLS.media}/${part.poster_path}`,
+      media_type: "movie"
+    }))
+  }
+  
+  return collection;
 }

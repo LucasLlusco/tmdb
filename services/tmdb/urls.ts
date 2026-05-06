@@ -9,11 +9,13 @@ export const tmdbUrls = {
     "genres": (type:string) => `/genre/${type}/list`,
     "imagesById": (id:number, type: "movie" | "tv") => `/${type}/${id}/images`,
     "videosById": (id:number, type: "movie" | "tv") => `/${type}/${id}/videos`,
+    "keywordsById": (id:number, type: "movie" | "tv") => `/${type}/${id}/keywords`,
   },
   movies: {
     "byId" : (id:number) => `/movie/${id}`,
     "creditsById":(id:number) => `/movie/${id}/credits`,
     "recommendationsById": (id:number) => `/movie/${id}/recommendations`,
+    "collectionById": (id:number) => `/collection/${id}`
   },
   tvShows: {
     "byId" : (id:number) => `/tv/${id}`,

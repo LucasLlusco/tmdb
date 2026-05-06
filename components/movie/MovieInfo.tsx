@@ -1,25 +1,22 @@
-"use client"
-import { getFormattedDate, getRuntime, getYear } from '@/lib/utils';
+import { getFormattedDate, getRuntime } from '@/lib/utils';
 import React from 'react'
 import { Separator } from '../ui/separator';
-import { Button } from '../ui/button';
-import { Heart } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { useAuthContext } from '@/lib/providers/AuthContextProvider';
-import ToggleListItemForm from '../user/lists/ToggleListItemForm';
-import ToggleWatchlistItemForm from '../user/watchlist/ToggleWatchlistItemForm';
 import UserScoreProgress from '../shared/UserScoreProgress';
-import ImageWithFallback from '../shared/ImageWithFallback';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
+import ImageCard from '../shared/ImageCard';
+import MediaToggleButtons from '../shared/MediaToggleButtons';
+import { getMovieCreditsById } from '@/services/tmdb/movies';
 
 interface MovieInfoProps {
   movie: Movie;
 }
 
-const MovieInfo = ({movie}: MovieInfoProps) => {
-  const { user } = useAuthContext();
-    
+const MovieInfo = async ({movie}: MovieInfoProps) => {
+  const { crew } = await getMovieCreditsById(movie.id);
+  const directors = crew.filter((person) => person.department === "Directing" && person.job === "Director");
+  const writers = crew.filter((person) => person.department === "Writing");
+
   const backgroundStyles = {
     backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${movie.backdrop_path})`,
     backgroundSize: 'cover',
@@ -35,60 +32,51 @@ const MovieInfo = ({movie}: MovieInfoProps) => {
       <div style={backgroundOverlayStyles}>
         <div className="flex flex-row container text-white">
           <div className="poster-wrapper flex items-center">
-            <ImageWithFallback
+            <ImageCard
               src={movie.poster_path}
-              alt={movie.title} 
-              className="rounded-[8px] max-w-none bg-[#dbdbdb]"
               width={300}
-              height={450}
+              height={450}  
+              className="max-w-none"
             />
           </div>
           <div className="flex flex-col gap-4 justify-center pl-5">
-            <div className="flex flex-row gap-2 items-end">
+            <div className="flex flex-col gap-1">
               <h2 className='text-3xl font-bold'>{movie.title}</h2>
-              <span className='text-2xl opacity-70'>({getYear(movie.release_date)})</span> 
+              <div className="flex gap-2 items-center text-sm">
+                <span className="opacity-70"> • {getFormattedDate(movie.release_date)}</span>
+                <span className="opacity-70"> • {getRuntime(movie.runtime).hours}h {getRuntime(movie.runtime).minutes}min</span>                 
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p>Realease date: {getFormattedDate(movie.release_date)}</p>
-              <p>Runtime: {getRuntime(movie.runtime).hours}h {getRuntime(movie.runtime).minutes}min</p>
-              <p>Budget: ${movie.budget.toLocaleString()}</p>
-              <p>Revenue: ${movie.revenue.toLocaleString()}</p>
-              <div className="flex flex-wrap gap-2">
-                {movie.genres.map((genre) => (              
-                  <Link key={genre.id} href={`/discover/movie?genres=${genre.id}`}>
-                    <Badge>{genre.name}</Badge>
-                  </Link>
-                ))}
+            <div className="flex flex-wrap gap-2">
+              {movie.genres.map((genre) => (              
+                <Link key={genre.id} href={`/discover/movie?genres=${genre.id}`}>
+                  <Badge variant={"outline"} className="text-white border-gray-500 font-light">{genre.name}</Badge>
+                </Link>
+              ))}
+            </div>
+            <div className='flex gap-5'>
+              <div className="flex items-center gap-2">
+                <strong>User Score</strong>
+                <UserScoreProgress vote_average={movie.vote_average} style="rounded" />                  
               </div>
-              <div className='flex gap-2 items-center'>
-                User
-                <br />
-                Score: 
-                <UserScoreProgress vote_average={movie.vote_average} style="rounded" />                 
-              </div>
+              <Separator orientation='vertical' />
+              <MediaToggleButtons mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" />  
             </div>
             <div className="flex flex-col">
               <p className='opacity-70 italic'>{movie.tagline}</p>
-              <h4 className='font-bold'>Overview</h4>
-              <p>{movie.overview}</p>              
+              <p>
+                <strong className="block">Overview</strong>
+                {movie.overview}
+              </p>
             </div>
-            <Separator />
-            <div className="flex flex-row gap-2 items-center">
-              <ToggleListItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
-              <ToggleWatchlistItemForm userId={user?.$id!} mediaId={movie.id} mediaTitle={movie.title} mediaType="movie" isInDropDown={false} />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button className='rounded-full bg-slate-800' size={'icon'}>
-                      <Heart />
-                    </Button>                  
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Mark as favorite</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>             
+            <p>
+              <strong className="block">Director</strong>
+              {directors.map((director => director.name)).join(", ")}   
+            </p>
+            <p>
+              <strong className="block">Writer</strong>
+              {writers.map((writer => writer.name)).join(", ")}   
+            </p>     
           </div>
         </div>
       </div>

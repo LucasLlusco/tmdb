@@ -30,8 +30,8 @@ const SearchPage = async ({searchParams, params}: SearchPageProps) => {
         <h2 className='section-title !mb-0 !text-[22px]'>Search Results</h2>
         {total_results > 0 && <span className='text-[14px] opacity-70'>showing {from} - {to} of {total_results.toLocaleString()}</span>}
       </div>
-      <div className='container flex flex-row gap-5 !pt-0'>
-        <aside className="aside-section h-fit">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-5 !pt-0">
+        <aside className="aside-section">
           <MediaTypes currentType={params.type} currentQuery={searchParams.query} />
         </aside>
         <section className='main-section'>

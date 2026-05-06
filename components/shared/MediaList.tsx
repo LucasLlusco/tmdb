@@ -15,7 +15,7 @@ const MediaList = ({items, direction, itemRef}:MediaListProps) => {
 
   return (
     <article className={cn({
-      "flex flex-row overflow-x-scroll gap-[10px]" : direction === "row",
+      "grid grid-flow-col auto-cols-[150px] overflow-x-auto gap-[10px] overscroll-x-contain" : direction === "row",
       "flex flex-col gap-5" : direction === "column",
       "grid grid-cols-5 gap-5" : direction === "grid",
       "grid grid-cols-6 gap-5" : direction === "grid-xl",

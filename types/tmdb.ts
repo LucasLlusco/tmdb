@@ -40,3 +40,30 @@ export interface TmdbAggregateCreditsResponse {
   cast: TvShowCastMember[];
   crew: TvShowCrewMember[];
 } 
+
+export interface TmdbMovieKeywordsResponse {
+  id: number;
+  keywords: {
+    id: number
+    name: string;
+  }[];
+}
+
+export interface TmdbTvShowKeywordsResponse {
+  id: number;
+  results: {
+    id: number
+    name: string;
+  }[];
+}
+
+export interface TmdbCollectionResponse {
+  id: number;
+  name: string;
+  original_language: string;
+  original_name: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  parts: MediaItem[];
+}

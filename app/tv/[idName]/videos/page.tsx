@@ -1,7 +1,9 @@
 import MediaHeader from '@/components/shared/MediaHeader';
+import ScrollToTop from '@/components/shared/ScrollToTop';
 import VideoCard from '@/components/shared/VideoCard';
 import { getMediaVideosById } from '@/services/tmdb/shared';
 import { getTvShowById } from '@/services/tmdb/tvShows';
+import Link from 'next/link';
 import React from 'react'
 
 interface TvShowVideosPageProps {
@@ -29,8 +31,16 @@ const TvShowVideosPage = async ({params} : TvShowVideosPageProps) => {
         backLinkPathname={basePathname}
         backLinkText='Back to main'
       />
+      <ScrollToTop />
+      <div className="container">
+        <h4 className="font-bold">Jump to</h4>
+        <ul className='flex flex-col text-sm'>
+          <Link href="#Trailers" className="w-fit">Trailers ({trailers.length})</Link>
+          <Link href="#Videos" className="w-fit">Videos ({videos.length})</Link>
+        </ul>
+      </div>
       <section className='container'>
-        <h3 className='section-title'>Trailers <span className='font-normal'>{trailers.length}</span></h3>
+        <h3 className='section-title' id="Trailers">Trailers <span className='font-normal'>{trailers.length}</span></h3>
         <article className='grid grid-cols-3 gap-5'>
           {trailers.length > 0 ? (
             <>
@@ -48,7 +58,7 @@ const TvShowVideosPage = async ({params} : TvShowVideosPageProps) => {
         </article>
       </section>
       <section className='container'>
-        <h3 className='section-title'>Videos <span className='font-normal'>{videos.length}</span></h3>
+        <h3 className='section-title' id="Videos">Videos <span className='font-normal'>{videos.length}</span></h3>
         <article className='grid grid-cols-3 gap-5'>
           {videos.length > 0 ? (
             <>

@@ -16,7 +16,7 @@ const MediaVideos = async ({mediaId, mediaType, mediaTitle, basePathname}: Media
   const videosWithTrailer = [trailers[0], ...videos];
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <div className="flex mb-6 gap-2">
         <h3 className='section-title !mb-0'>Videos</h3>
         <Link href={`${basePathname}/videos`} className='flex items-center'>{trailers.length + videos.length}<ChevronRight /></Link>

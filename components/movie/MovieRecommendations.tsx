@@ -3,14 +3,14 @@ import React from 'react'
 import MediaList from '../shared/MediaList';
 
 interface MovieRecommendationsProps {
-  movieId: number
+  movieId: number;
 }
 
 const MovieRecommendations = async ({movieId}:MovieRecommendationsProps) => {
   const recommendedMovies = await getMovieRecommendationsById(movieId);
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <h3 className='section-title'>Recommendations</h3>
       <MediaList
         items={recommendedMovies} 

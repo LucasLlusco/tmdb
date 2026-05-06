@@ -19,7 +19,7 @@ const TvShowCurrentSeason = ({tvShow, basePathname}: TvShowCurrentSeasonProps) =
   const isLastSeason = tvShow.status === "Ended" ? true : false;
 
   return (
-    <section className='container'>
+    <section className='container !px-0'>
       <h3 className='section-title'>
         {isLastSeason ? "Last Season" : "Current Season"}
       </h3>

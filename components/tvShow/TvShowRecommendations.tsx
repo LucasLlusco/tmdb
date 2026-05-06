@@ -10,7 +10,7 @@ const TvShowRecommendations = async ({tvShowId}: TvShowRecommendationsProps) => 
   const recommendedTvShows = await getTvShowRecommendationsById(tvShowId);
 
   return (
-    <section className='container'>
+    <section className="container !px-0">
       <h3 className='section-title'>Recommendations</h3>
       <MediaList
         items={recommendedTvShows}
