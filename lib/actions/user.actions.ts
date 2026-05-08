@@ -321,61 +321,80 @@ export const getReview = async (reviewId: string) => {
   return document;
 }
 
+//get reviews from 1 user and the current user reactions to them
 export const getReviewsByUser = async (userId: string, currentUserId: string | null) => {
+  //1- get user reviews
   const { database } = await createAdminClient();
-  const { documents: reviews } = await database.listDocuments<ReviewDocument>(
+  const { documents } = await database.listDocuments<ReviewDocument>(
     DATABASE_ID!,
     REVIEWS_COLLECTION_ID!,
     [Query.equal("userId", userId)]
   )
 
+  //check if there are any reviews before proceeding
+  if(documents.length === 0) {
+    return [] as ReviewDocument[];
+  }
+
+  //2- if there are reviews, check if there is a logged in user and get his to this reviews
   let reactions : ReactionDocument[];
   if(currentUserId) {
-    const reviewIds = reviews.map((doc) => doc.$id);
-    
+    const reviewIds = documents.map((doc) => doc.$id);
+  
     reactions = await getReactionsByUserInReviewsGiven(currentUserId, reviewIds);
   }
 
-  const finalReviews: ReviewDocument[] = reviews.map((review) => ({
+  //3- match reviews with the current user reactions
+  const reviews: ReviewDocument[] = documents.map((review) => ({
     ...review,
     currentUserReaction: reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null,
   }));
   
-  return finalReviews;
+  return reviews;
 }
 
+//get reviews from 1 media(movie or tv show) + their owners and current user reactions to them.
 export const getReviewsByMedia = async (mediaId: number, currentUserId: string | null) => {
+  //1- get media reviews
   const { database } = await createAdminClient();
-  const { documents: reviews } = await database.listDocuments<ReviewDocument>(
+  const { documents } = await database.listDocuments<ReviewDocument>(
     DATABASE_ID!,
     REVIEWS_COLLECTION_ID!,
-    [Query.equal("mediaId" , mediaId)]
+    [Query.equal("mediaId", mediaId)]
   )
 
-  const userIds = reviews.map((doc) => doc.userId);
-  const uniqueUserIds = Array.from(new Set(userIds));
+  //check if there are any reviews before proceeding
+  if(documents.length === 0) {
+    return [] as ReviewWithUser[];
+  }
 
-  const users = await Promise.all(
+  //2- if there are reviews, get their owning users
+  const userIds = documents.map((doc) => doc.userId);
+  const uniqueUserIds = Array.from(new Set(userIds));
+  //fetch those users avoiding duplicates
+  const users: UserDocument[] = await Promise.all(
     uniqueUserIds.map((userId) => getUser(userId))
   );
-
-  let reactions : ReactionDocument[];
+  
+  //3- if there is a logged in user, get his reactions to this reviews
+  let reactions: ReactionDocument[];
   if(currentUserId) {
-    const reviewIds = reviews.map((doc) => doc.$id);
+    const reviewIds = documents.map((doc) => doc.$id);
     
     reactions = await getReactionsByUserInReviewsGiven(currentUserId, reviewIds);
   }
 
-  const reviewsWithUser: ReviewWithUser[] = reviews.map((review) => ({
+  //4- finally, match reviews with their owners and the current user reactions.
+  const reviews: ReviewWithUser[] = documents.map((review) => ({
     ...review,
-    currentUserReaction: reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null,
+    currentUserReaction: currentUserId ? reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null : null,
     user: {
-      username: users.find((user) => user.userId === review.userId)?.username ?? "Uknown",
-      avatarPath: users.find((user) => user.userId === review.userId)?.avatarPath ?? "",
+      username: users.find((user) => user.userId === review.userId)?.username ?? "account deleted",
+      avatarPath: users.find((user) => user.userId === review.userId)?.avatarPath ?? ""
     }
   }));
 
-  return reviewsWithUser;
+  return reviews;
 }
 
 /********************* REACTIONS (linked with reviews feature) **********************/
@@ -441,22 +460,27 @@ export const updateReaction = async (reactionId: string, type: "like" | "dislike
   return reaction;
 }
 
+//toggle reaction LIKE/DISLIKE review
 export const toggleReaction = async (currentUserId: string, reviewId: string, type: "like" | "dislike") => {
+
+  //1- Check if there is already a reaction from this current user for this review
   const documents = await getReactionByUserInReviewGiven(currentUserId, reviewId);
-  const existingReview = documents[0];
+  const existingReaction = documents[0];
 
-  if(!existingReview) {
+  //2- Then react to the review accordingly
+  if(!existingReaction) {
+    //CASE 1: There's no reaction -> create and increment the counter
     await createReaction(currentUserId, reviewId, type);
-
     await incrementCounter(reviewId, type, +1);
-  } else if (existingReview.type === type) {
-    await deleteReaction(existingReview.$id);
-
+  } else if (existingReaction.type === type) {
+    //CASE 2: Same reaction type -> delete and decrement the counter.
+    await deleteReaction(existingReaction.$id);
     await incrementCounter(reviewId, type, -1);
   } else {
-    await updateReaction(existingReview.$id, type);
+    //CASE 3: Opposite reaction -> switch reaction type and update the counter
+    await updateReaction(existingReaction.$id, type);
 
-    await incrementCounter(reviewId, existingReview.type, -1);
+    await incrementCounter(reviewId, existingReaction.type, -1);
     await incrementCounter(reviewId, type, +1);
   }
 }

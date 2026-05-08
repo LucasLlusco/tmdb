@@ -7,11 +7,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ImageWithFallback from '@/components/shared/ImageWithFallback';
 import { Separator } from '@/components/ui/separator';
 import ReactReviewForm from '../user/reviews/ReactReviewForm';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Ellipsis } from 'lucide-react';
 
 type ReviewCardProps =
   | { 
     review: ReviewDocument; 
-    currentUserId: string; 
+    currentUserId: string | null; 
     isOwner: boolean;
     queryKey: unknown[];
     showUser: false; 
@@ -19,7 +21,7 @@ type ReviewCardProps =
   }
   | { 
     review: ReviewWithUser; 
-    currentUserId: string;
+    currentUserId: string | null;
     isOwner: boolean; 
     queryKey: unknown[];
     showUser: true; 
@@ -35,7 +37,7 @@ const ReviewCard = ({review, currentUserId, isOwner, queryKey, showUser, showPre
   const mediaPathname = `/${review.mediaType}/${review.mediaId}-${review.mediaTitle}`;
 
   return (
-    <div className='flex flex-col card-boxshadow rounded-[5px] py-[5px] px-[10px]'>
+    <div className='flex flex-col card-boxshadow relative rounded-[5px] py-[5px] px-[10px]'>
       {!showUser && (
         <>
           <div className='flex flex-row items-center gap-[10px]'>
@@ -56,37 +58,51 @@ const ReviewCard = ({review, currentUserId, isOwner, queryKey, showUser, showPre
             </Link>
           </div>
           <Separator className='my-[10px]' />
-          <span className='text-xs'>
+          <p className='text-xs text-gray-500'>
             {getFormattedDate(review.$createdAt)}
-          </span>         
+          </p>         
         </>
       )}
 
       {showUser && (
-        <div className="flex gap-2 items-center text-xs">
+        <div className="flex gap-2 items-center">
           {avatarPath ? (
-            <Avatar className={"w-8 h-8"} >
+            <Avatar className={"w-10 h-10"} >
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>{review.user.username}</AvatarFallback>
             </Avatar>
             ) : (
-              <span className='bg-cyan-600 text-white flex items-center justify-center rounded-full w-8 h-8 uppercase font-bold'>
+              <span className='bg-cyan-600 text-white flex items-center justify-center rounded-full w-10 h-10 uppercase font-bold'>
                 {initial}
               </span>
             )}
-          <span>Written by <Link href={`/user/${review.userId}`} className="text-[#01b4e4e6]">{review.user.username}</Link> on {getFormattedDate(review.$createdAt)}</span>
+          <div className="flex flex-col">
+            <Link href={`/user/${review.userId}`} className="link-black font-bold text-sm">{review.user.username}</Link>
+            <p className="text-xs text-gray-500 mt-[2px]">{getFormattedDate(review.$createdAt)}</p>
+          </div>
         </div>
       )}
 
-      <h4 className='font-bold mt-[10px]'>{review.title}</h4>
-      <p className={`${showPreviewContent && "overflow-txt"} mt-[10px] text-sm`}>{review.content}</p>
-      <ReactReviewForm review={review} currentUserId={currentUserId} isOwner={isOwner} queryKey={queryKey}  />
       {isOwner && (
-        <div className="flex gap-2 items-end mt-3">
-          <EditReviewForm review={review} />
-          <DeleteReviewForm review={review} />
-        </div>
+        <div className="absolute top-[10px] right-[10px] z-[5]">
+          <DropdownMenu>
+            <DropdownMenuTrigger className='bg-slate-400 hover:bg-teal-500 h-[19px] w-[19px] rounded-full'>
+              <Ellipsis className='w-auto h-[19px]' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <div className='flex flex-col'>
+                  <EditReviewForm review={review} />
+                  <DropdownMenuSeparator />
+                  <DeleteReviewForm review={review} />
+                </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>        
       )}
+
+      <h4 className='font-bold mt-[10px]'>{review.title}</h4>
+      <p className={`${showPreviewContent && "overflow-txt"} mt-[5px] text-sm`}>{review.content}</p>
+      <ReactReviewForm review={review} currentUserId={currentUserId} isOwner={isOwner} queryKey={queryKey} />
     </div>
   )
 }

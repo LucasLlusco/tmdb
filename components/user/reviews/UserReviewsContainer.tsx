@@ -34,7 +34,7 @@ const UserReviewsContainer = ({userId} : UserReviewsContainerProps) => {
               <ReviewCard 
                 key={review.$id} 
                 review={review} 
-                currentUserId={user?.userId!} 
+                currentUserId={user?.userId || null} 
                 isOwner={isOwner} 
                 queryKey={["reviews-user", review.userId]}
                 showUser={false}

@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 interface ReactReviewFormProps {
   review: ReviewDocument;
-  currentUserId: string;
+  currentUserId: string | null;
   isOwner: boolean;
   queryKey: unknown[]; //queryKey to invalidate user and media reviews
 }
@@ -18,7 +18,7 @@ const ReactReviewForm = ({review, currentUserId, isOwner, queryKey} : ReactRevie
   const queryClient = useQueryClient();
   
   const { mutate, isPending } = useMutation({
-    mutationFn: (type: "like" | "dislike") => toggleReaction(currentUserId, review.$id, type),
+    mutationFn: (type: "like" | "dislike") => toggleReaction(currentUserId!, review.$id, type),
     onMutate: async (type) => { //OPTIMISTIC UPDATE
       await queryClient.cancelQueries({ queryKey: queryKey });
 
@@ -45,6 +45,7 @@ const ReactReviewForm = ({review, currentUserId, isOwner, queryKey} : ReactRevie
       return { previous };
     },
     onSuccess: () => {
+      toast.success("Reaction updated successfully");
       queryClient.invalidateQueries({queryKey: queryKey});
     },
     onError: (_, __, context) => {
@@ -58,32 +59,32 @@ const ReactReviewForm = ({review, currentUserId, isOwner, queryKey} : ReactRevie
   }
 
   return (
-      <div className="flex gap-2 mt-3">
-        <div className='flex items-center'>
-          <Button 
-            className={`rounded-full bg-transparent border-transparent ${review.currentUserReaction === "like" && "text-[#01b4e4e6]"}`} 
-            size={'icon'} 
-            variant={'outline'} 
-            disabled={isOwner || isPending || !currentUserId}
-            onClick={() => handleReaction("like")}
-            >
-            <ThumbsUp />
-          </Button>
-          <span className='text-sm'>{review.likesCount}</span>
-        </div>
-        <div className='flex items-center'>
-          <Button 
-            className={`rounded-full bg-transparent border-transparent ${review.currentUserReaction === "dislike" && "text-red-500"}`} 
-            size={'icon'} 
-            variant={'outline'} 
-            disabled={isOwner || isPending || !currentUserId}
-            onClick={() => handleReaction("dislike")}
-            >
-            <ThumbsDown />
-          </Button>
-          <span className='text-sm'>{review.dislikesCount}</span>
-        </div>
+    <div className="flex gap-2 mt-3">
+      <div className='flex items-center'>
+        <Button 
+          className={`rounded-full bg-transparent border-transparent ${review.currentUserReaction === "like" && "text-[#01b4e4e6]"}`} 
+          size={'icon'} 
+          variant={'outline'} 
+          disabled={isOwner || isPending || !currentUserId}
+          onClick={() => handleReaction("like")}
+          >
+          <ThumbsUp />
+        </Button>
+        <span className='text-sm'>{review.likesCount}</span>
       </div>
+      <div className='flex items-center'>
+        <Button 
+          className={`rounded-full bg-transparent border-transparent ${review.currentUserReaction === "dislike" && "text-red-500"}`} 
+          size={'icon'} 
+          variant={'outline'} 
+          disabled={isOwner || isPending || !currentUserId}
+          onClick={() => handleReaction("dislike")}
+          >
+          <ThumbsDown />
+        </Button>
+        <span className='text-sm'>{review.dislikesCount}</span>
+      </div>
+    </div>
   )
 }
 

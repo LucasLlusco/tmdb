@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { deleteReview } from '@/lib/actions/user.actions';
 import { deleteReviewFormSchema } from '@/lib/schemas/user.schema';
@@ -47,9 +48,13 @@ const DeleteReviewForm = ({review} : DeletetReviewFormProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" variant="destructive">
-          <Trash/>Delete
-        </Button>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onSelect={(event) => {
+            event.preventDefault();
+          }}>
+            <Trash className='w-4 h-4 mr-2' />Delete
+        </DropdownMenuItem>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

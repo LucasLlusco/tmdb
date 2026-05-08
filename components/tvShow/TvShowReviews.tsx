@@ -38,7 +38,7 @@ const TvShowReviews = ({tvShowId}: TvShowReviewsProps) => {
             <ReviewCard 
               key={review.$id}
               review={review} 
-              currentUserId={user?.userId!} 
+              currentUserId={user?.userId || null} 
               isOwner={user?.userId === review.userId} 
               queryKey={["reviews-media", review.mediaId]}
               showUser={true} 
