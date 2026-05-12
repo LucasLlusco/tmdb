@@ -7,6 +7,7 @@ import { SORT_OPTIONS } from '@/constants'
 import { fromToInShowedMediaItems } from '@/lib/utils'
 import { getDiscoveredItems } from '@/services/tmdb/shared'
 import React from 'react'
+import KeywordsSearchBar from '@/components/discover/KeywordsSearchBar'
 
 interface DiscoverPageProps {
   params: {
@@ -18,11 +19,13 @@ interface DiscoverPageProps {
     region?: string;
     providers?: string;
     genres?: string;
+    keywords?: string;
   }
 }
 
 
 const DiscoverPage = async ({params, searchParams}: DiscoverPageProps) => {
+  const keywords: Keyword[] = JSON.parse(searchParams.keywords ?? "[]");
 
   const formattedParams = {
     page: searchParams.page || 1,
@@ -30,6 +33,7 @@ const DiscoverPage = async ({params, searchParams}: DiscoverPageProps) => {
     watch_region: searchParams.region || "AR", //default AR
     ...(!!searchParams.providers?.length) && {with_watch_providers: searchParams.providers},
     ...(!!searchParams.genres?.length) && {with_genres: searchParams.genres},
+    ...(!!searchParams.keywords?.length) && {with_keywords: keywords.map((k) => k.id).join("|")},
   }
   
   const { page, results, total_pages, total_results } = await getDiscoveredItems(params.type, formattedParams);
@@ -46,10 +50,11 @@ const DiscoverPage = async ({params, searchParams}: DiscoverPageProps) => {
       </div>
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-5 !pt-0">
         <aside className="aside-section rounded-[5px] p-[10px] card-boxshadow">
-          <Sort currentSort={searchParams.sort || SORT_OPTIONS[1].value} />
-          <Regions currentRegion={searchParams.region || "AR"} />
-          <Providers type={params.type} currentRegion={searchParams.region || "AR"} currentProviders={searchParams.providers!}/>
-          <Genres type={params.type} currentGenres={searchParams.genres!} /> 
+          <Sort />
+          <Regions />
+          <Providers type={params.type} selectedRegion={searchParams.region || "AR"} />
+          <Genres type={params.type} /> 
+          <KeywordsSearchBar />
         </aside>
         <section className='main-section'>
           <DiscoverResults

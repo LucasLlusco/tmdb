@@ -264,6 +264,11 @@ declare type Genre = {
   name: string;
 }
 
+declare type Keyword = {
+  id: number;
+  name: string;
+}
+
 declare type UserDocument = {
   $id: string;
   $databaseId: string;

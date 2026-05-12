@@ -2,6 +2,7 @@ import React from 'react'
 import { Badge } from '../ui/badge';
 import { getTvShowKeywordsById } from '@/services/tmdb/tvShows';
 import { getMovieKeywordsById } from '@/services/tmdb/movies';
+import Link from 'next/link';
 
 interface MediaKeywordsProps {
   mediaId: number;
@@ -13,9 +14,17 @@ const MediaKeywords = async ({mediaId, mediaType} : MediaKeywordsProps) => {
 
   return (
     <div className='flex flex-wrap gap-[5px] justify-start'>
-      {keywords.map((keyword) => (
-        <Badge key={keyword.id} variant={"secondary"}>{keyword.name}</Badge>
-      ))}
+      {keywords.map((keyword) => {
+        const keywordJSON = JSON.stringify([keyword]);
+        const pathname = `/discover/${mediaType}?keywords=${keywordJSON}`
+
+        return (
+          <Link key={keyword.id} href={pathname}>
+            <Badge key={keyword.id} variant={"secondary"}>{keyword.name}</Badge>
+          </Link>
+        )
+      })}
+      
     </div>
   )
 }

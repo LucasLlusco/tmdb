@@ -5,13 +5,18 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface GenresButtonGroupProps {
   genres: Genre[];
-  currentGenres: string;
 }
 
-const GenresButtonGroup = ({genres, currentGenres} : GenresButtonGroupProps) => {
+const GenresButtonGroup = ({genres} : GenresButtonGroupProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();  
+  
+  const selectedGenres = searchParams.get("genres");
+  let selectedGenresArray: string[] = [];
+  if(selectedGenres) {
+    selectedGenresArray = selectedGenres.split(",");
+  }
 
   const updateGenresParams = (genres: string[]) => {
     const params = new URLSearchParams(searchParams);
@@ -28,14 +33,9 @@ const GenresButtonGroup = ({genres, currentGenres} : GenresButtonGroupProps) => 
     router.replace(newPathname);
   }
 
-  let currentValues: string[] = [];
-  if(currentGenres) {
-    currentValues = currentGenres.split(",");
-  }
-
   return (
     <ToggleGroup
-      value={currentValues}
+      value={selectedGenresArray}
       type="multiple" 
       onValueChange={(value) => updateGenresParams(value)} 
       className='flex flex-wrap gap-[5px] justify-start'

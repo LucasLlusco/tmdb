@@ -43,18 +43,12 @@ export interface TmdbAggregateCreditsResponse {
 
 export interface TmdbMovieKeywordsResponse {
   id: number;
-  keywords: {
-    id: number
-    name: string;
-  }[];
+  keywords: Keyword[];
 }
 
 export interface TmdbTvShowKeywordsResponse {
   id: number;
-  results: {
-    id: number
-    name: string;
-  }[];
+  results: Keyword[];
 }
 
 export interface TmdbCollectionResponse {
@@ -66,4 +60,11 @@ export interface TmdbCollectionResponse {
   poster_path: string;
   backdrop_path: string;
   parts: MediaItem[];
+}
+
+export interface TmdbSearchKeywordsResponse {
+  page: number;
+  results: Keyword[];
+  total_pages: number;
+  total_results: number;
 }

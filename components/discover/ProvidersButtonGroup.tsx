@@ -8,13 +8,18 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface ProvidersButtonGroup {
   providers: Provider[];
-  currentProviders: string;
 }
 
-const ProvidersButtonGroup = ({providers, currentProviders} : ProvidersButtonGroup) => {
+const ProvidersButtonGroup = ({providers} : ProvidersButtonGroup) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  
+  const selectedProviders = searchParams.get("providers");
+  let selectedProvidersArray: string[] = [];
+  if(selectedProviders) {
+    selectedProvidersArray = selectedProviders.split("|");
+  }
 
   const updateProvidersParams = (providersId: string[]) => {
     const params = new URLSearchParams(searchParams);
@@ -30,16 +35,11 @@ const ProvidersButtonGroup = ({providers, currentProviders} : ProvidersButtonGro
     const newPathname = `${pathname}?${params.toString()}`;
     router.replace(newPathname);
   }
-
-  let currentValues: string[] = [];
-  if(currentProviders) { //re-format providers to an array for toggle group values.
-    currentValues = currentProviders.split("|");
-  }
   
   return (
   <ToggleGroup
     type="multiple"
-    value={currentValues}
+    value={selectedProvidersArray}
     onValueChange={(value) => updateProvidersParams(value)}
     className='providers-grid'
   >

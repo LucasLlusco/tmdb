@@ -5,13 +5,13 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface RegionsSelectProps {
   regions: Region[];
-  currentRegion: string;
 }
 
-const RegionsSelect = ({regions, currentRegion} : RegionsSelectProps) => {
+const RegionsSelect = ({regions} : RegionsSelectProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const selectedRegion = searchParams.get("region") || "AR"; //default AR
 
   const updateRegionParams = (region: string) => {
     const params = new URLSearchParams(searchParams);
@@ -25,8 +25,8 @@ const RegionsSelect = ({regions, currentRegion} : RegionsSelectProps) => {
 
   return (
     <Select
-      defaultValue={currentRegion}
-      value={currentRegion} 
+      defaultValue={selectedRegion}
+      value={selectedRegion} 
       onValueChange={(value) => updateRegionParams(value)}
       >
       <SelectTrigger className="w-full">
@@ -34,7 +34,13 @@ const RegionsSelect = ({regions, currentRegion} : RegionsSelectProps) => {
       </SelectTrigger>
       <SelectContent>
         {regions?.map((region) => (
-          <SelectItem value={region.iso_3166_1} key={region.iso_3166_1}>{region.english_name}</SelectItem>
+          <SelectItem 
+            value={region.iso_3166_1} 
+            key={region.iso_3166_1}
+            className="cursor-pointer"
+            >
+              {region.english_name}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>

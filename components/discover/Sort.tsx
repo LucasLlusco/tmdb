@@ -4,14 +4,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { SORT_OPTIONS } from '@/constants'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-interface SortProps {
-  currentSort: string;
-}
-
-const Sort = ({currentSort} : SortProps) => {
+const Sort = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const selectedSort = searchParams.get("sort") || SORT_OPTIONS[1].value;
 
   const updateSortParams = (value:string) => {
     const params = new URLSearchParams(searchParams);
@@ -25,13 +22,19 @@ const Sort = ({currentSort} : SortProps) => {
   return (
     <div>
       <p className='mb-4'>Sort results by</p>
-      <Select defaultValue={currentSort} value={currentSort} onValueChange={(value) => updateSortParams(value)}>
+      <Select defaultValue={selectedSort} value={selectedSort} onValueChange={(value) => updateSortParams(value)}>
         <SelectTrigger className="w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {SORT_OPTIONS.map((option) => (
-            <SelectItem value={option.value} key={option.value}>{option.name}</SelectItem>
+            <SelectItem 
+              value={option.value} 
+              key={option.value}
+              className="cursor-pointer"
+              >
+                {option.name}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>

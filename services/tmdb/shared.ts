@@ -2,7 +2,8 @@
 import { tmdbUrls } from "./urls";
 import { TMDB_IMG_URLS } from "@/constants";
 import { tmdbFetch } from "./tmdbFetch";
-import { TmdbGenresResponse, TmdbImagesResponse, TmdbPaginatedResponse, TmdbProvidersResponse, TmdbRegionsResponse, TmdbVideosResponse } from "@/types/tmdb";
+import { TmdbGenresResponse, TmdbImagesResponse, TmdbPaginatedResponse, TmdbProvidersResponse, 
+  TmdbRegionsResponse, TmdbSearchKeywordsResponse, TmdbVideosResponse } from "@/types/tmdb";
 
 export const getTrending = async (time:string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -160,4 +161,10 @@ export const getMediaVideosById = async (id: number, type: "movie" | "tv") => {
     trailers,
     videos
   };
+}
+
+export const getSearchedKeywords = async (query: string) => {
+  const { results } = await tmdbFetch<TmdbSearchKeywordsResponse>(tmdbUrls.shared.searchKeywords, {query: query});
+
+  return results
 }

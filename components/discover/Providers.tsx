@@ -4,15 +4,14 @@ import ProvidersButtonGroup from './ProvidersButtonGroup'
 
 interface ProvidersProps {
   type: "movie" | "tv";
-  currentRegion: string;
-  currentProviders: string;
+  selectedRegion: string;
 }
 
-const Providers = async ({type, currentRegion, currentProviders} : ProvidersProps) => {
-  const providers = await getProvidersByRegion(type, currentRegion);
+const Providers = async ({type, selectedRegion} : ProvidersProps) => {
+  const providers = await getProvidersByRegion(type, selectedRegion);
 
   return (
-    <ProvidersButtonGroup providers={providers} currentProviders={currentProviders} />
+    <ProvidersButtonGroup providers={providers} />
   )
 }
 

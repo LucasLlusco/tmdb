@@ -4,17 +4,16 @@ import GenresButtonGroup from './GenresButtonGroup';
 
 interface GenresProps {
   type: "movie" | "tv";
-  currentGenres: string;
 }
 
-const Genres = async ({type, currentGenres} : GenresProps) => {
+const Genres = async ({type} : GenresProps) => {
   const genres = await getGenres(type);
 
   return (
     <div>
-      <p className='mb-4'>Filter by genres</p>
+      <p className='mb-4'>Genres</p>
       <div className='flex flex-col gap-4'>
-        <GenresButtonGroup genres={genres} currentGenres={currentGenres} />
+        <GenresButtonGroup genres={genres} />
       </div>
     </div>
   )
