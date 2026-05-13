@@ -10,6 +10,7 @@ export const tmdbUrls = {
     "imagesById": (id:number, type: "movie" | "tv") => `/${type}/${id}/images`,
     "videosById": (id:number, type: "movie" | "tv") => `/${type}/${id}/videos`,
     "keywordsById": (id:number, type: "movie" | "tv") => `/${type}/${id}/keywords`,
+    "searchKeywords": "/search/keyword"
   },
   movies: {
     "byId" : (id:number) => `/movie/${id}`,
