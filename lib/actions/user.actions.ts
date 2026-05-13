@@ -347,7 +347,7 @@ export const getReviewsByUser = async (userId: string, currentUserId: string | n
   //3- match reviews with the current user reactions
   const reviews: ReviewDocument[] = documents.map((review) => ({
     ...review,
-    currentUserReaction: reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null,
+    currentUserReaction: currentUserId ? reactions.find((reaction) => reaction.reviewId === review.$id)?.type ?? null : null
   }));
   
   return reviews;
