@@ -51,12 +51,13 @@ export const getPopular = async (type:string) => {
   return data.results;
 }
 
-export const getSearchedItems = async (type: "movie" | "tv", params:any) => {
+//works for searchbar and search page
+export const getSearchedItems = async (type: "movie" | "tv" | "multi", params:any) => {
   const data = await tmdbFetch<TmdbPaginatedResponse<MediaItem>>(tmdbUrls.shared.search(type), params);
 
   const results: MediaItem[] = data.results.map((item:any) => ({
     ...item,
-    media_type: type,
+    media_type: type === "multi" ? item.media_type : type,
     poster_path: `${TMDB_IMG_URLS.media}${item.poster_path}`
   }));
 

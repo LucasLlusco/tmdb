@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import React, { useState } from 'react'
-import SearchBar from './SearchBar'
 import MobileNav from './MobileNav'
 import Link from 'next/link'
 import { useAuthContext } from '@/lib/providers/AuthContextProvider'
@@ -17,6 +16,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import SearchBar from './SearchBar'
 
 const Navbar = () => {
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -47,21 +47,22 @@ const Navbar = () => {
   return (
     <header className='text-white bg-black min-h-[64px]'>
       <div className="container flex justify-between items-center !py-4">
-        <div className='flex sm:hidden'>
+        <div className='flex mr-3 md:hidden'>
           <MobileNav />
         </div>
-        <nav className='flex items-center gap-5'>
+        <nav className='w-full flex items-center gap-5'>
           <h1 className='mr-2 text-xl font-bold'><Link href={"/"}>TheMovieDB</Link></h1>
-          <div className="hidden gap-5 items-center sm:flex">
+          <div className="w-full hidden gap-5 items-center md:flex text-nowrap">
             <Link href={"/discover/movie"}>Movies</Link>
             <Link href={"/discover/tv"}>TV Shows</Link>
+            <SearchBar />
           </div>            
         </nav>
-        <div className='flex gap-5 items-center'>
+        <div className='flex gap-3 items-center text-nowrap ml-5 md:gap-5'>
           {!user && (
             <>
-              <Link href={"/login"} className='hidden sm:block'>Login</Link>
-              <Link href={"/signup"} className='hidden sm:block'>Sign up</Link>
+              <Link href={"/login"} className='hidden md:block'>Login</Link>
+              <Link href={"/signup"} className='hidden md:block'>Sign up</Link>
             </>
           )}
           <DropdownMenu>
@@ -79,7 +80,7 @@ const Navbar = () => {
                 )}
               </DropdownMenuTrigger>         
             ) : (
-              <DropdownMenuTrigger className='sm:hidden'><UserIcon /></DropdownMenuTrigger>
+              <DropdownMenuTrigger className='md:hidden'><UserIcon /></DropdownMenuTrigger>
             )}
             <DropdownMenuContent className='w-40'>
               {user ? (
@@ -108,13 +109,19 @@ const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           {searchBarOpen ? (
-            <CloseIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer' />
+            <CloseIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer md:hidden' />
           ) : (
-            <SearchIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer'/>  
+            <SearchIcon onClick={() => setSearchBarOpen(!searchBarOpen)} className='cursor-pointer md:hidden'/>  
           )}          
         </div>
-      </div> 
-      <SearchBar searchBarOpen={searchBarOpen} setSearchBarOpen={setSearchBarOpen} />     
+      </div>
+      {searchBarOpen && (
+        <div className='bg-white md:hidden'>
+          <div className="container !py-1">
+            <SearchBar />
+          </div>
+        </div>
+      )}
     </header>
   )
 }
